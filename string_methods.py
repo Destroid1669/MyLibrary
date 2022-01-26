@@ -12,6 +12,7 @@ Date: 25-jan-2022 ; tuesday
 # |--> Author: Destroid <--|
 
 """
+
 # List of all string methods written within this module
 __all__ = ["isupper", "islower", "isalpha", "isdecimal", "isalnum", "isspace", "istitle",
            "isprintable", "startswith", "endswith", "upper", "lower", "swapcase", "title",
@@ -50,6 +51,7 @@ def get_ascii_letters_pairs():
     for i in range(len(ascii_uppercase)):
         ascii_letters_pairs[ascii_lowercase[i]] = ascii_uppercase[i]
     return ascii_letters_pairs
+
 ascii_letters_pairs = get_ascii_letters_pairs()
 
 def getkey(dct, value):
@@ -155,19 +157,22 @@ def istitle(self):
 
     errorhandler({str: self})
     
+    ISTitle = False
     IsTrue = True
     for i in self:
         if i in ascii_letters:
             if IsTrue:
                 if i in ascii_lowercase:
                     return False
+                else:
+                    ISTitle = True
             elif not i in ascii_lowercase:
                 return False
             IsTrue = False
         else:
             IsTrue = True
    
-    return True if self != "" else False
+    return True if ISTitle else False
     
 def isprintable(self):
     """Returns True if the string is printable, False otherwise.

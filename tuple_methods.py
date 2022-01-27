@@ -1,6 +1,6 @@
 r"""This is Re-write of tuple methods """
 
-# there are two tuple methods in python
+# these are two tuple methods in python
 __all__ = ["count", "index"]
 
 def errorhandler(self):

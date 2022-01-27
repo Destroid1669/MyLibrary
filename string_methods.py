@@ -51,7 +51,6 @@ def get_ascii_letters_pairs():
     for i in range(len(ascii_uppercase)):
         ascii_letters_pairs[ascii_lowercase[i]] = ascii_uppercase[i]
     return ascii_letters_pairs
-
 ascii_letters_pairs = get_ascii_letters_pairs()
 
 def getkey(dct, value):

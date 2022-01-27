@@ -1,4 +1,4 @@
-r"""This is Re-write tuple methods """
+r"""This is Re-write of tuple methods """
 
 # these are two tuple methods
 __all__ = ["count", "index"]

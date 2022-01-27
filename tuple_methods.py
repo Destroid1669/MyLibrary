@@ -37,13 +37,11 @@ def count(self, sub, start = 0, end = None):
         iter(self) # checking for iterable object
         # raising `AssertionError` if not found `str`
         assert isinstance(self, str)
-        if sub == "" and self == "":
-            return 1
         Count, len_sub = 0, len(sub)
         for i in range(len(iterable)):
             if sub == iterable[i: i+len_sub]:
                 Count += 1
-        return Count
+        return Count if sub != "" else Count+1
     except AssertionError:
         # expecting for iterable object
         Count = 0

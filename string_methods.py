@@ -433,6 +433,31 @@ def rpartition(self, sep):
 
     return (self, '', '')
 
+def splitlines(self, keepends = False):
+    """Returns a list of the lines in the string, breaking at line boundaries.
+
+    Line breaks are not included in the resulting list unless keepends is given and true."""
+
+    errorhandler({str: self, bool: keepends})
+
+    line_breaks = "\n\r\v\f"
+    string, output = "", []
+    for i in self:
+        if i in line_breaks:
+            if keepends:
+                output.append(string+i)
+            else:
+                output.append(string)
+            # emptying the `string` variable 
+            # to clear previous stored strings
+            string = ""
+        else:
+            string += i
+    else:
+        if i not in line_breaks:
+            output.append(string)
+    return output
+
 def find(self, sub, start = 0, end = None):
     """find(self, sub[, start[, end]]) -> int
 
@@ -482,7 +507,7 @@ def index(self, sub, start = 0, end = None):
 
     Raises ValueError when the substring is not found."""
 
-    errorhandler({str: self, str: sub, int: start})
+    errorhandler({int: start})
     if end is not None and not isinstance(end, int):
         errorhandler({int: end})
     
@@ -513,7 +538,7 @@ def rindex(self, sub, start = 0, end = None):
 
     Raises ValueError when the substring is not found."""
 
-    errorhandler({str: self, str: sub, int: start})
+    errorhandler({int: start})
     if end is not None and not isinstance(end, int):
         errorhandler({int: end})
     
@@ -535,38 +560,13 @@ def rindex(self, sub, start = 0, end = None):
         raise # Raising exception if not found iterable
     raise ValueError("%s substring not found" % sub)
 
-def splitlines(self, keepends = False):
-    """Returns a list of the lines in the string, breaking at line boundaries.
-
-    Line breaks are not included in the resulting list unless keepends is given and true."""
-
-    errorhandler({str: self, bool: keepends})
-
-    line_breaks = "\n\r\v\f"
-    string, output = "", []
-    for i in self:
-        if i in line_breaks:
-            if keepends:
-                output.append(string+i)
-            else:
-                output.append(string)
-            # emptying the `string` variable 
-            # to clear previous stored strings
-            string = ""
-        else:
-            string += i
-    else:
-        if i not in line_breaks:
-            output.append(string)
-    return output
-
 def count(self, sub, start = 0, end = None):
     """count(self, sub[, start[, end]]) -> int
 
     Return the number of non-overlapping occurrences of substring sub in string self[start:end].
     Optional arguments start and end are interpreted as in slice notation."""
 
-    errorhandler({str: self, str: sub, int: start})
+    errorhandler({int: start})
     if end is not None and not isinstance(end, int):
         errorhandler({int: end})
     

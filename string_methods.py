@@ -510,7 +510,9 @@ def index(self, sub, start = 0, end = None):
     errorhandler({int: start})
     if end is not None and not isinstance(end, int):
         errorhandler({int: end})
-    
+    if sub == "":
+        raise ValueError("'' is not in %s" % type(self).__name__)
+
     iterable = self[start: end]
     try:
         iter(self) # checking for iterable object
@@ -531,33 +533,23 @@ def index(self, sub, start = 0, end = None):
 
 def rindex(self, sub, start = 0, end = None):
     """rindex(self, sub[, start[, end]]) -> int
-
     Returns the highest index in self where substring sub is found,
     such that sub is contained within self[start:end].  Optional
     arguments start and end are interpreted as in slice notation.
-
     Raises ValueError when the substring is not found."""
 
-    errorhandler({int: start})
+    errorhandler({str: self, str: sub, int: start})
     if end is not None and not isinstance(end, int):
         errorhandler({int: end})
+    if sub == "":
+        raise ValueError("'' is not in %s" % type(self).__name__)
     
-    iterable = self[start: end]
-    try:
-        iter(self) # checking for iterable object
-        # raising `AssertionError` if not found `str`
-        assert isinstance(self, str)
-        len_sub = len(sub)
-        for i in reversed(range(len(self))):
-            if sub == iterable[i: i+len_sub]:
-                return i
-    except AssertionError:
-        # expecting for iterable object
-        for i in reversed(range(len(iterable))):
-            if sub == iterable[i]:
-                return i
-    except:
-        raise # Raising exception if not found iterable
+    string = self[start: end]
+    len_sub = len(sub)
+    for i in reversed(range(len(self))):
+        if sub == string[i: i+len_sub]:
+            return i
+    
     raise ValueError("%s substring not found" % sub)
 
 def count(self, sub, start = 0, end = None):
@@ -575,6 +567,10 @@ def count(self, sub, start = 0, end = None):
         iter(self) # checking for iterable object
         # raising `AssertionError` if not found `str`
         assert isinstance(self, str)
+        if sub == "" and self == "":
+            return 1
+        # issue with counting empty string
+        # returns wrong result for this case
         Count, len_sub = 0, len(sub)
         for i in range(len(iterable)):
             if sub == iterable[i: i+len_sub]:

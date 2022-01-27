@@ -470,6 +470,8 @@ def find(self, sub, start = 0, end = None):
     errorhandler({str: self, str: sub, int: start})
     if end is not None and not isinstance(end, int):
         errorhandler({int: end})
+    if sub == "":
+        return 0
 
     string = self[start: end]
     len_sub = len(sub)
@@ -480,22 +482,22 @@ def find(self, sub, start = 0, end = None):
 
 def rfind(self, sub, start = 0, end = None):
     """rfind(self, sub[, start[, end]]) -> int
-
     Returns the highest index in self where substring sub is found,
     such that sub is contained within self[start:end].  Optional
     arguments start and end are interpreted as in slice notation.
-
     Returns -1 on failure."""
 
     errorhandler({str: self, str: sub, int: start})
     if end is not None and not isinstance(end, int):
         errorhandler({int: end})
+    if sub == "" and self == "":
+        return 0
 
     string = self[start: end]
     len_sub = len(sub)
     for i in reversed(range(len(self))):
         if sub == string[i: i+len_sub]:
-            return i
+            return i if sub != "" else i+1
     return -1
 
 def index(self, sub, start = 0, end = None):

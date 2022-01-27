@@ -511,7 +511,7 @@ def index(self, sub, start = 0, end = None):
     if end is not None and not isinstance(end, int):
         errorhandler({int: end})
     if sub == "":
-        raise ValueError("'' is not in %s" % type(self).__name__)
+        return 0
 
     iterable = self[start: end]
     try:
@@ -541,8 +541,8 @@ def rindex(self, sub, start = 0, end = None):
     errorhandler({str: self, str: sub, int: start})
     if end is not None and not isinstance(end, int):
         errorhandler({int: end})
-    if sub == "":
-        raise ValueError("'' is not in %s" % type(self).__name__)
+    if sub == "" and self == "":
+        return 0
     
     string = self[start: end]
     len_sub = len(sub)

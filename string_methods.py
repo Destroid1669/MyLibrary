@@ -548,7 +548,7 @@ def rindex(self, sub, start = 0, end = None):
     len_sub = len(sub)
     for i in reversed(range(len(self))):
         if sub == string[i: i+len_sub]:
-            return i
+            return i if sub != "" else i+1
     
     raise ValueError("%s substring not found" % sub)
 

@@ -555,7 +555,7 @@ def rindex(self, sub, start = 0, end = None):
 def count(self, sub, start = 0, end = None):
     """count(self, sub[, start[, end]]) -> int
 
-    Return the number of non-overlapping occurrences of substring sub in string self[start:end].
+    Returns the number of non-overlapping occurrences of substring sub in string self[start:end].
     Optional arguments start and end are interpreted as in slice notation."""
 
     errorhandler({int: start})

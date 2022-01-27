@@ -63,7 +63,7 @@ def getkey(dct, value):
     return ''
 
 def errorhandler(self):
-    """Raises Type error accordingly to the arguments passed to it"""
+    """Raises Type error according to the arguments passed to it"""
 
     for i in self:
         if not isinstance(self[i], i):

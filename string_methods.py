@@ -648,7 +648,7 @@ def do_strip(self, striptype):
     return self[i: j+1]
 
 def do_argstrip(self, striptype, chars):
-    sep = tuple(i for i in chars)
+    sep = tuple(chars)
     i = 0
     if striptype != RIGHSTRIP:
         while i < len(self) and startswith(self[i], sep):

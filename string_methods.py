@@ -61,47 +61,53 @@ def getkey(dct, value):
             return key[0]
     return ''
 
-def errorhandler(self):
-    """Raises Type error according to the arguments passed to it"""
+def errorhandler(*args):
+    """Raises Type error accordingly to the arguments passed to it"""
 
-    for i in self:
-        if not isinstance(self[i], i):
-            raise TypeError("expected {} found {}".format(i.__name__, type(self[i]).__name__,))
+    for value, datatype in args:
+        if not isinstance(value, datatype):
+            raise TypeError("expected {} found {}".format(datatype.__name__, type(value).__name__))
 
 def isupper(self):
     """Returns True if the string is an uppercase string, False otherwise.
 
     A string is uppercase if all cased characters in the string are uppercase and there is at least one cased character in the string."""
 
-    errorhandler({str: self})
+    errorhandler((self, str))
 
+    IsTrue = False
     for letters in self:
         if letters in ascii_letters:
             if letters in ascii_lowercase:
                 return False
+            else:
+                IsTrue = True
 
-    return True if self != "" else False
+    return True if IsTrue else False
 
 def islower(self):
     """Returns True if the string is a lowercase string, False otherwise.
 
     A string is lowercase if all cased characters in the string are lowercase and there is at least one cased character in the string."""
 
-    errorhandler({str: self})
+    errorhandler((self, str))
 
+    IsTrue = False
     for letters in self:
         if letters in ascii_letters:
             if letters in ascii_uppercase:
                 return False
+            else:
+                IsTrue = True
 
-    return True if self != "" else False
+    return True if IsTrue else False
 
 def isalpha(self):
     """Returns True if the string is an alphabetic string, False otherwise.
 
     A string is alphabetic if all characters in the string are alphabetic and there is at least one character in the string."""
 
-    errorhandler({str: self})
+    errorhandler((self, str))
 
     for i in self:
         if not i in ascii_letters:
@@ -114,7 +120,7 @@ def isdecimal(self):
 
     A string is a decimal string if all characters in the string are decimal and there is at least one character in the string"""
 
-    errorhandler({str: self})
+    errorhandler((self, str))
 
     for i in self:
         if i not in digits:
@@ -127,7 +133,7 @@ def isalnum(self):
     
     A string is alpha-numeric if all characters in the string are alpha-numeric and there is at least one character in the string."""
 
-    errorhandler({str: self})
+    errorhandler((self, str))
 
     ascii_alphanumeric = ascii_letters + digits
     for i in self:
@@ -141,7 +147,7 @@ def isspace(self):
     
     A string is whitespace if all characters in the string are whitespace and there is at least one character in the string."""
 
-    errorhandler({str: self})
+    errorhandler((self, str))
     
     for i in self:
         if i not in whitespace:
@@ -154,7 +160,7 @@ def istitle(self):
 
     More specifically, words start with uppercased characters and all remaining cased characters have lower case."""
 
-    errorhandler({str: self})
+    errorhandler((self, str))
     
     ISTitle = False
     IsTrue = True
@@ -178,7 +184,7 @@ def isprintable(self):
     
     A string is printable if all of its characters are considered printable in repr() or if it is empty."""
 
-    errorhandler({str: self})
+    errorhandler((self, str))
     
     for i in self:
         if i not in printable:
@@ -192,9 +198,9 @@ def startswith(self, prefix, start = 0, end = None):
     With optional end, stop comparing self at that position.
     prefix can also be a tuple of strings to try."""
 
-    errorhandler({str: self, int: start})
+    errorhandler((self, str), (start, int))
     if end is not None and not isinstance(end, int):
-        errorhandler({int: end})
+        errorhandler((end, int))
     if not isinstance(prefix, str):
         if isinstance(prefix, tuple):
             for _p in prefix:
@@ -223,9 +229,9 @@ def endswith(self, suffix, start = 0, end = None):
     With optional end, stop comparing self at that position.
     suffix can also be a tuple of strings to try."""
 
-    errorhandler({str: self, int: start})
+    errorhandler((self, str), (start, int))
     if end is not None and not isinstance(end, int):
-        errorhandler({int: end})
+        errorhandler((end, int))
     if not isinstance(suffix, str):
         if isinstance(suffix, tuple):
             for _s in suffix:
@@ -251,7 +257,7 @@ def endswith(self, suffix, start = 0, end = None):
 def upper(self):
     "Returns a copy of the string converted to uppercase."
 
-    errorhandler({str: self})
+    errorhandler((self, str))
     
     string = ""
     for i in self:
@@ -267,7 +273,7 @@ def upper(self):
 def lower(self):
     "Returns a copy of the string converted to lowercase."
 
-    errorhandler({str: self})
+    errorhandler((self, str))
     
     string = ""
     for i in self:
@@ -283,7 +289,7 @@ def lower(self):
 def swapcase(self):
     "Converts uppercase characters to lowercase and lowercase characters to uppercase."
 
-    errorhandler({str: self})
+    errorhandler((self, str))
     
     string = ""
     for i in self:
@@ -301,7 +307,7 @@ def title(self):
 
     More specifically, words start with uppercased characters and all remaining cased characters have lower case."""
 
-    errorhandler({str: self})
+    errorhandler((self, str))
     
     string, IsTrue = "", True
     for i in self:
@@ -324,7 +330,7 @@ def capitalize(self):
 
     More specifically, make the first character have upper case and the rest lower case."""
 
-    errorhandler({str: self})
+    errorhandler((self, str))
     
     string = ""
     for n,i in enumerate(self):
@@ -339,7 +345,7 @@ def zfill(self, width):
 
     The string is never truncated."""
 
-    errorhandler({str: self, int: width})
+    errorhandler((self, str), (width, int))
 
     n_zero = width - len(self) if width > 1 else 0
     if self[0] == "+":
@@ -356,7 +362,7 @@ def ljust(self, width, fillchar = " "):
 
     Padding is done using the specified fill character (default is a space)."""
     
-    errorhandler({str: self, int: width, str: fillchar})
+    errorhandler((self, str), (width, int), (fillchar, str))
     
     n_allign = width - len(self)
     return self + fillchar * n_allign
@@ -366,7 +372,7 @@ def rjust(self, width, fillchar = " "):
 
     Padding is done using the specified fill character (default is a space)."""
     
-    errorhandler({str: self, int: width, str: fillchar})
+    errorhandler((self, str), (width, int), (fillchar, str))
 
     n_allign = width - len(self)
     return fillchar * n_allign + self
@@ -376,7 +382,7 @@ def center(self, width, fillchar = " "):
 
     Padding is done using the specified fill character (default is a space)."""
     
-    errorhandler({str: self, int: width, str: fillchar})
+    errorhandler((self, str), (width, int), (fillchar, str))
 
     n_allign = width - len(self)
     return (fillchar * (n_allign if n_allign == 1 else n_allign // 2)) + self + (fillchar * (n_allign // 2))
@@ -386,7 +392,7 @@ def expandtabs(self, tabsize = 8):
 
     If tabsize is not given, a tab size of 8 characters is assumed."""
 
-    errorhandler({str: self, int: tabsize})
+    errorhandler((self, str), (tabsize, int))
 
     string = ""
     for i in self:
@@ -405,7 +411,7 @@ def partition(self, sep):
 
     If the separator is not found, returns a 3-tuple containing the original string and two empty strings."""
 
-    errorhandler({str: self, str: sep})
+    errorhandler((self, str), (sep, str))
 
     len_sep = len(sep)
     for i in range(len(self)):
@@ -423,7 +429,7 @@ def rpartition(self, sep):
 
     If the separator is not found, returns a 3-tuple containing two empty strings and the original string."""
 
-    errorhandler({str: self, str: sep})
+    errorhandler((self, str), (sep, str))
 
     len_sep = len(sep)
     for i in reversed(range(len(self))):
@@ -437,7 +443,7 @@ def splitlines(self, keepends = False):
 
     Line breaks are not included in the resulting list unless keepends is given and true."""
 
-    errorhandler({str: self, bool: keepends})
+    errorhandler((self, str), (keepends, bool))
 
     line_breaks = "\n\r\v\f"
     string, output = "", []
@@ -466,9 +472,9 @@ def find(self, sub, start = 0, end = None):
 
     Returns -1 on failure."""
 
-    errorhandler({str: self, str: sub, int: start})
+    errorhandler((self, str), (sub, str), (start, int))
     if end is not None and not isinstance(end, int):
-        errorhandler({int: end})
+        errorhandler((end, int))
     if sub == "":
         return 0
 
@@ -486,9 +492,9 @@ def rfind(self, sub, start = 0, end = None):
     arguments start and end are interpreted as in slice notation.
     Returns -1 on failure."""
 
-    errorhandler({str: self, str: sub, int: start})
+    errorhandler((self, str), (sub, str), (start, int))
     if end is not None and not isinstance(end, int):
-        errorhandler({int: end})
+        errorhandler((end, int))
     if sub == "" and self == "":
         return 0
 
@@ -508,9 +514,9 @@ def index(self, sub, start = 0, end = None):
 
     Raises ValueError when the substring is not found."""
 
-    errorhandler({int: start})
+    errorhandler((start, int))
     if end is not None and not isinstance(end, int):
-        errorhandler({int: end})
+        errorhandler((end, int))
     if sub == "":
         return 0
 
@@ -539,9 +545,9 @@ def rindex(self, sub, start = 0, end = None):
     arguments start and end are interpreted as in slice notation.
     Raises ValueError when the substring is not found."""
 
-    errorhandler({str: self, str: sub, int: start})
+    errorhandler((self, str), (sub, str), (start, int))
     if end is not None and not isinstance(end, int):
-        errorhandler({int: end})
+        errorhandler((end, int))
     if sub == "" and self == "":
         return 0
     
@@ -559,9 +565,9 @@ def count(self, sub, start = 0, end = None):
     Returns the number of non-overlapping occurrences of substring sub in string self[start:end].
     Optional arguments start and end are interpreted as in slice notation."""
 
-    errorhandler({int: start})
+    errorhandler((start, int))
     if end is not None and not isinstance(end, int):
-        errorhandler({int: end})
+        errorhandler((end, int))
     
     iterable = self[start: end]
     try:
@@ -593,7 +599,7 @@ def join(self, iterable):
 
     Example: join('.', ['ab', 'pq', 'rs']) -> 'ab.pq.rs'"""
 
-    errorhandler({str: self})
+    errorhandler((self, str))
     try:
         # checking for iterable object
         iter(iterable)
@@ -613,7 +619,7 @@ def replace(self, old, new, count = -1):
     If the optional argument count is given, only the first count occurrences are replaced."""
 
     # Checking for invalid arguments and raising error if not valid
-    errorhandler({str: self, str: old, str: new, int: count})
+    errorhandler((self, str), (old, str), (new, str), (count, int))
 
     IsTrue = True if count <= -1 else False
     i, string, old_len = 0, "", len(old)
@@ -667,9 +673,9 @@ def strip(self, chars = None):
     Returns a copy of the string S with leading and trailing whitespace removed.
     If chars is given and not None, remove characters in chars instead."""
 
-    errorhandler({str: self})
+    errorhandler((self, str))
     if chars is not None and not isinstance(chars, str):
-        errorhandler({str: chars})
+        errorhandler((chars, str))
 
     if chars is None:
         return do_strip(self, BOTHSTRIP)
@@ -682,9 +688,9 @@ def lstrip(self, chars = None):
     Returns a copy of the string self with leading whitespace removed.
     If chars is given and not None, remove characters in chars instead."""
 
-    errorhandler({str: self})
+    errorhandler((self, str))
     if chars is not None and not isinstance(chars, str):
-        errorhandler({str: chars})
+        errorhandler((chars, str))
 
     if chars is None:
         return do_strip(self, LEFTSTRIP)
@@ -697,9 +703,9 @@ def rstrip(self, chars = None):
     Returns a copy of the string self with trailing whitespace removed.
     If chars is given and not None, remove characters in chars instead."""
 
-    errorhandler({str: self})
+    errorhandler((self, str))
     if chars is not None and not isinstance(chars, str):
-        errorhandler({str: chars})
+        errorhandler((chars, str))
 
     if chars is None:
         return do_strip(self, RIGHSTRIP)
@@ -795,9 +801,9 @@ def split(self, sep = None, maxsplit = -1):
     """
 
     # Checking for string and raising error if not found
-    errorhandler({str: self, int: maxsplit})
+    errorhandler((self, str), (maxsplit, int))
     if sep is not None and not isinstance(sep, str):
-        errorhandler({str: sep})
+        errorhandler((sep, str))
     if sep == "":
         raise ValueError("empty separator")
 
@@ -818,9 +824,9 @@ def rsplit(self, sep = None, maxsplit = -1):
     """
 
     # Checking for string and raising error if not found
-    errorhandler({str: self, int: maxsplit})
+    errorhandler((self, str), (maxsplit, int))
     if sep is not None and not isinstance(sep, str):
-        errorhandler({str: sep})
+        errorhandler((sep, str))
     if sep == "":
         raise ValueError("empty separator")
     

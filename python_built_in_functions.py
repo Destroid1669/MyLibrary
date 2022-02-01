@@ -13,7 +13,7 @@ Date: 31-jan-2022 ; Monday
 # functions name have been capitalized to prevent conflict.
 """
 __all__ = ["Abs", "Any", "Bool", "All", "Chr", "Ord", "Tuple", "List",
-           "Divmod","Min", "Max", "Sum", "Sorted", "Pow", "Round",
+           "Divmod", "Min", "Max", "Sum", "Sorted", "Pow", "Round",
            "IS", "Len", "Map", "Range", "Emumerate"]
 """
 

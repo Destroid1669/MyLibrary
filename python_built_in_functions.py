@@ -195,7 +195,6 @@ def Max(*iterable, default = False, key = None):
     the provided iterable is empty.
     With two or more arguments, return the largest argument."""
     
-    # ! fix key argument implementation
     try:
         # cheking for iterable data type
         iter(iterable)
@@ -210,17 +209,13 @@ def Max(*iterable, default = False, key = None):
                 for i in x:
                     if Big < i:
                         Big = i
-                return Big
-
         else:
-            # ! this condition doesn't work as expected
             for x in iterable:
                 Big = x[0]
                 for i in x:
-                    if Big < key(i):
+                    if key(Big) < key(i):
                         Big = i
-                return Big
-            
+        return Big
     except:
         raise # Raising error if not found iterable
 

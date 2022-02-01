@@ -13,7 +13,7 @@ Date: 31-jan-2022 ; Monday
 # functions name have been capitalized to prevent conflict.
 
 __all__ = ["Abs", "Any", "Bool", "All", "Chr", "Ord", "Tuple", "List",
-           "Divmod", "Sum", "Min", "Max", "Sorted", "Pow", "Round",
+           "Divmod","Min", "Max", "Sum", "Sorted", "Pow", "Round",
            "IS", "Len", "Map", "Range", "Emumerate"]
 
 def Merge(self, *args):
@@ -29,7 +29,6 @@ def getkey(dct, value):
         if dct[key] == value:
             return key[0]
     return ''
-
 
 def errorhandler(message, *args):
     """Raises Type error accordingly to the arguments passed to it"""
@@ -186,11 +185,38 @@ def Pow(base, exp, mod = None):
 
     return number if base > 0 else -number
 
+def Min(*iterable, default = False, key = None):
+    """With a single iterable argument, return its smallest item. The
+    default keyword-only argument specifies an object to return if
+    the provided iterable is empty.
+    With two or more arguments, return the smallest argument."""
+    
+    try:
+        # cheking for iterable data type
+        iter(iterable)
+        if len(iterable) == 0:
+            if default != False:
+                return default
+            raise ValueError("Max() arg is an empty sequence")
+        
+        if key is None:
+            for x in iterable:
+                small = x[0]
+                for i in x:
+                    if small > i:
+                        small = i
+        else:
+            for x in iterable:
+                small = x[0]
+                for i in x:
+                    if key(small) > key(i):
+                        small = i
+        return small
+    except:
+        raise # Raising error if not found iterable
 
 def Max(*iterable, default = False, key = None):
-    """max(arg1, arg2, *args, *[, key=func]) -> value
-
-    With a single iterable argument, return its biggest item. The
+    """With a single iterable argument, return its biggest item. The
     default keyword-only argument specifies an object to return if
     the provided iterable is empty.
     With two or more arguments, return the largest argument."""
@@ -335,7 +361,6 @@ def IS(self, iterable) -> bool:
 
     # python for loop uses `in` statement which iterates
     # over range function, Therefore using while loop
-
     try:
         # checking for iterable object
         iter(iterable)

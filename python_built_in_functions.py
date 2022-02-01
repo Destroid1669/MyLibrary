@@ -18,10 +18,9 @@ __all__ = ["Abs", "Any", "Bool", "All", "Chr", "Ord", "Tuple", "List",
 """
 
 def Merge(self, *args):
-    DICT = self
     for i in args:
-        DICT.update(i)
-    return DICT
+        self.update(i)
+    return self
 
 def getkey(dct, value):
     "Returns `dict` value for the key passed to it"
@@ -385,7 +384,6 @@ def Enumerate(iterable, start = 0):
         return tuplatoon
     except:
         raise # Raising error for non-iterable object
-
 
 def IS(self, iterable) -> bool:
     "Performs same operation as `in`"

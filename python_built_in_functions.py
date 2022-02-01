@@ -146,15 +146,24 @@ def All(iterable):
 def Len(obj):
     "Returns the number of items in a container."
 
-    Count = 0
-    for x in obj:
-        Count += 1
-    return Count
+    try:
+        # checking for iterable object
+        iter(obj)
+        Count = 0
+        for x in obj:
+            Count += 1
+        return Count
+    except:
+        raise # Raising error for non-iterable object
 
 def Map(self, *args):
     """Makes an iterator that computes the function using arguments from
     each of the iterables. Stops when the shortest iterable is exhausted."""
-
+    
+    """/* 
+        Note: In python map returns a iterable object not a tuple sequence,
+              This function is simpler pythonic implementation of that function.
+    */"""
     tuplatoon = ()
     for i in args:
         tuplatoon += (self(i),)
@@ -253,6 +262,7 @@ def Sum(iterable, start = 0):
     reject non-numeric types."""
 
     try:
+        # checking for iterable object
         iter(iterable)
         if isinstance(iterable, str):
             raise TypeError("Sum() can't sum strings [use ''.join(seq) instead]")
@@ -262,7 +272,7 @@ def Sum(iterable, start = 0):
             SUM += element
         return SUM + start
     except:
-        raise
+        raise # Raising error if not found iterable
 
 def Tuple(iterable):
     """If no argument is given, the function returns an empty tuple.
@@ -272,20 +282,29 @@ def Tuple(iterable):
     
     if isinstance(iterable, tuple):
         return iterable
-
-    tuplatoon = ()
-    for i in iterable:
-        tuplatoon += (i,)
-    return tuplatoon
+    try:
+        # checking for iterable object
+        iter(iterable)
+        tuplatoon = ()
+        for i in iterable:
+            tuplatoon += (i,)
+        return tuplatoon
+    except:
+        raise # Raising error if not found iterable
 
 def List(iterable):
     """If no argument is given, the function creates a new empty list.
     The argument must be an iterable if specified."""
-    
-    LIST = []
-    for i in iterable:
-        LIST.append(i)
-    return LIST
+
+    try:
+        # checking for iterable object
+        iter(iterable)
+        LIST = []
+        for i in iterable:
+            LIST.append(i)
+        return LIST
+    except:
+        raise # Raising error if not found iterable
 
 def Round(number, ndigits = None):
     """Rounds a number to a given precision in decimal digits.
@@ -366,6 +385,7 @@ def Enumerate(iterable, start = 0):
         return tuplatoon
     except:
         raise # Raising error for non-iterable object
+
 
 def IS(self, iterable) -> bool:
     "Performs same operation as `in`"

@@ -206,7 +206,7 @@ def Min(*iterable, default = False, key = None):
         if len(iterable) == 0:
             if default != False:
                 return default
-            raise ValueError("Max() arg is an empty sequence")
+            raise ValueError("Min() arg is an empty sequence")
         
         if key is None:
             for x in iterable:

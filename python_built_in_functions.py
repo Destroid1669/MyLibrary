@@ -7,14 +7,15 @@ Date: 31-jan-2022 ; Monday
 # |--> Author: Destroid <--|
 
 """
-# ! INCOMPLETE STATE NEEDS SUGGESTION TO FIX ISSUES !
+# ! INCOMPLETE STATE NEED SUGGESTIONS TO FIX ISSUES !
 
 # List of all built_in functions written within this module
 # functions name have been capitalized to prevent conflict.
-
+"""
 __all__ = ["Abs", "Any", "Bool", "All", "Chr", "Ord", "Tuple", "List",
            "Divmod","Min", "Max", "Sum", "Sorted", "Pow", "Round",
            "IS", "Len", "Map", "Range", "Emumerate"]
+"""
 
 def Merge(self, *args):
     DICT = self
@@ -109,26 +110,25 @@ def Any(iterable = None):
 def Bool(value):
     """Returns True when the argument is true, False otherwise."""
 
-    # TODO: implement complex numbers
-    # TODO: range function handling
     if value is True:
         return True
     elif value is False or value is None:
         return False
 
-    if not isinstance(value, int) and not isinstance(value, float):
-        errorhandler("expected str or int but found %s", (value, str))
-
-    if isinstance(value, str):
-        try:
-            value = int(value)
-        except:
-            value = float(value)
-
-    if abs(value) > 0:
-        return True
-    else:
+    try:
+        iter(value)
+        for x in value:
+                return True
         return False
+    
+    except:
+        if isinstance(value, str):
+            value = eval(value)
+
+        if abs(value) > 0:
+            return True
+        else:
+            return False
 
 def All(iterable):
     """Returns True if Bool(x) is True for all values x in the iterable.
@@ -355,6 +355,7 @@ def Enumerate(iterable, start = 0):
         tuplatoon += ((n, i),)
         n += 1
     return tuplatoon
+
 
 def IS(self, iterable) -> bool:
     "Performs same operation as `in`"

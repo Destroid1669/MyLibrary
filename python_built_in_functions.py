@@ -359,8 +359,9 @@ def Enumerate(iterable, start = 0):
 def IS(self, iterable) -> bool:
     "Performs same operation as `in`"
 
-    # python for loop uses `in` statement which iterates
-    # over range function, Therefore using while loop
+    # Note: python `in` isn't a function nor `IS` is any python function
+    # rather this function is `in` implementation of python as function
+
     try:
         # checking for iterable object
         iter(iterable)

@@ -12,9 +12,9 @@ Date: 31-jan-2022 ; Monday
 # List of all built_in functions written within this module
 # functions name have been capitalized to prevent conflict.
 """
-__all__ = ["Abs", "Any", "Bool", "All", "Chr", "Ord", "Tuple", "List",
-           "Divmod", "Min", "Max", "Sum", "Sorted", "Pow", "Round",
-           "IS", "Len", "Map", "Range", "Emumerate"]
+__all__ = ["Abs", "Any", "Bool", "All", "Chr", "Ord", "Tuple",
+           "List", "Divmod", "Min", "Max", "Sum", "Pow", "Round",
+           "Len", "Map", "Range", "Emumerate"]
 """
 
 def Merge(self, *args):

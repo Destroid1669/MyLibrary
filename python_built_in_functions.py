@@ -314,10 +314,14 @@ def Range(start = 0, stop = 0, step = 1):
     When step is given, it specifies the increment (or decrement)."""
 
     errorhandler("%s object cannot be interpreted as an integer", (start, int), (stop, int), (step, int))
-    # Note: python original range function produces an object.
     if step == 0:
         raise ValueError("Range() arg 3 must not be zero")
     
+    """/* 
+        Note: In python range returns a iterable object not a tuple sequence,
+              This function is simpler pythonic implementation of that function.
+    */"""
+
     if start != 0 and stop == 0:
         start, stop = stop, start
 
@@ -334,7 +338,7 @@ def Range(start = 0, stop = 0, step = 1):
     return tuplatoon
 
 def Enumerate(iterable, start = 0):
-    """Returns an enumerate object.
+    """Returns a tuple sequence.
   
     iterable
         an object supporting iteration
@@ -345,17 +349,23 @@ def Enumerate(iterable, start = 0):
     enumerate is useful for obtaining an indexed list:
         (0, seq[0]), (1, seq[1]), (2, seq[2]), ..."""
 
-    """/* Note: In python enumerate returns a object not a tuple sequence,
-    and is meant to be used directly for iteration being a class.
+    """/* 
+        Note: In python enumerate returns a iterable object not a tuple sequence,
+              This function is simpler pythonic implementation of that function. 
     */"""
 
-    n = 0 + start
-    tuplatoon = ()
-    for i in iterable:
-        tuplatoon += ((n, i),)
-        n += 1
-    return tuplatoon
-
+    errorhandler("%s object cannot be interpreted as an integer", (start, int))
+    try:
+        # checking for iterable object
+        iter(iterable)
+        n = 0 + start
+        tuplatoon = ()
+        for i in iterable:
+            tuplatoon += ((n, i),)
+            n += 1
+        return tuplatoon
+    except:
+        raise # Raising error for non-iterable object
 
 def IS(self, iterable) -> bool:
     "Performs same operation as `in`"

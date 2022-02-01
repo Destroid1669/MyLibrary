@@ -1,5 +1,5 @@
 r"""This is Re-write of python existing built_in functions on the basis of
-function's execution output, I only wrote this to improve my programming skills
+functions execution output, I only wrote this to improve my programming skills
 its is written to Imitate those functions, not intended to be used in programs.
 
 Date: 31-jan-2022 ; Monday

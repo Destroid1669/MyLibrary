@@ -384,6 +384,7 @@ def Enumerate(iterable, start = 0):
     except:
         raise # Raising error for non-iterable object
 
+
 def IS(self, iterable) -> bool:
     "Performs same operation as `in`"
 

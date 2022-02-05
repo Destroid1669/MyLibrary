@@ -7,7 +7,6 @@ Date: 31-jan-2022 ; Monday
 # |--> Author: Destroid <--|
 
 """
-# ! INCOMPLETE STATE NEED SUGGESTIONS TO FIX ISSUES !
 
 # List of all built_in functions written within this module
 # functions name have been capitalized to prevent conflict.

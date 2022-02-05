@@ -14,7 +14,7 @@ Date: 31-jan-2022 ; Monday
 
 __all__ = ["Abs", "Any", "Bool", "All", "Chr", "Ord", "Tuple",
            "List", "Divmod", "Min", "Max", "Sum", "Pow", "Round",
-           "Len", "Map", "Range", "Emumerate"]
+           "Len", "Map", "Range", "Enumerate"]
 
 def Merge(self, *args):
     for i in args:

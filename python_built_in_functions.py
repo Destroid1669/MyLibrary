@@ -345,11 +345,11 @@ def Enumerate(iterable, start = 0):
     except:
         raise # Raising error for non-iterable object
 
+__all__.extend(["IS"])
+# Note: python `in` isn't a function nor `IS` is any python function
+# rather this function is `in` implementation of python as function.
 def IS(self, iterable) -> bool:
     "Performs same operation as `in`"
-
-    # Note: python `in` isn't a function nor `IS` is any python function
-    # rather this function is `in` implementation of python as function
 
     try:
         # checking for iterable object

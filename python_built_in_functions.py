@@ -12,9 +12,9 @@ Date: 31-jan-2022 ; Monday
 # List of all built_in functions written within this module
 # functions name have been capitalized to prevent conflict.
 
-__all__ = ["Abs", "Any", "Bool", "All", "Chr", "Ord", "Tuple",
-           "List", "Divmod", "Min", "Max", "Sum", "Pow", "Round",
-           "Len", "Map", "Range", "Enumerate"]
+__all__ = ["Any", "Bool", "All", "Chr", "Ord", "Complex",
+           "Tuple", "List", "Divmod", "Min", "Max",
+           "Sum", "Len", "Map", "Range", "Enumerate"]
 
 def Merge(self, *args):
     for i in args:
@@ -86,14 +86,6 @@ def Ord(value):
     
     return getkey(all_ascii_characters, value)
  
-def Abs(value):
-    "Returns the absolute value of the argument."
-
-    # TODO: implement complex numbers
-    if value < 0:
-        value = -value
-    return value
-
 def Any(iterable = None):
     """Returns True if any element of the iterable is true.
     If the iterable is empty, returns False."""
@@ -141,6 +133,16 @@ def All(iterable):
             return False
     return True
 
+def Complex(real = 0, imag = 0):
+    """Create a complex number from a real part and an optional imaginary part.
+  
+    This is equivalent to (real + imag*1j) where imag defaults to 0."""
+
+    Complex.real = real
+    Complex.imag = imag
+
+    return (real + imag*1j)
+
 def Len(obj):
     "Returns the number of items in a container."
 
@@ -171,26 +173,6 @@ def Divmod(x, y):
     "Returns the tuple (x//y, x%y).  Invariant: div*y + mod == x."
 
     return (x//y, x%y)
-
-def Pow(base, exp, mod = None):
-    """Equivalent to base**exp with 2 arguments or base**exp % mod with 3 arguments
-
-    Some types, such as ints, are able to use a more efficient algorithm when
-    invoked using the three argument form."""
-    
-    # TODO: implement float numbers
-    # TODO: as well as mod argument
-    i, number = 0, 1
-    if exp > 0:
-        while i < abs(exp):
-            number *= base
-            i += 1
-    else:
-        while i < abs(exp):
-            number /= base
-            i += 1
-
-    return number if base > 0 else -number
 
 def Min(*iterable, default = False, key = None):
     """With a single iterable argument, return its smallest item. The
@@ -304,25 +286,6 @@ def List(iterable):
     except:
         raise # Raising error if not found iterable
 
-def Round(number, ndigits = None):
-    """Rounds a number to a given precision in decimal digits.
-
-    The return value is an integer if ndigits is omitted or None.  Otherwise
-    the return value has the same type as the number.  ndigits may be negative."""
-
-    if not isinstance(number, int) and not isinstance(number, float):
-        raise TypeError("expected int or float but found %s" % type(number).__name__)
-
-    # ! int() unexpected value issue: it converts floats more than 17 digits to incorrect int values
-
-    import math
-    fnum, inum = math.modf(number)
-
-    if fnum > 0.5:
-        return int(inum) + 1
-    else:
-        return int(inum)
-
 def Range(start = 0, stop = 0, step = 1):
     """Returns a tuple that produces a sequence of integers from start (inclusive)
     to stop (exclusive) by step.  range(i, j) produces i, i+1, i+2, ..., j-1.
@@ -383,7 +346,6 @@ def Enumerate(iterable, start = 0):
         return tuplatoon
     except:
         raise # Raising error for non-iterable object
-
 
 def IS(self, iterable) -> bool:
     "Performs same operation as `in`"

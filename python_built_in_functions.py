@@ -10,7 +10,6 @@ Date: 31-jan-2022 ; Monday
 
 # List of all built_in functions written within this module
 # functions name have been capitalized to prevent conflict.
-
 __all__ = ["Any", "Bool", "All", "Chr", "Ord", "Complex",
            "Tuple", "List", "Divmod", "Min", "Max",
            "Sum", "Len", "Map", "Range", "Enumerate"]

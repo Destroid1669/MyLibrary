@@ -8,7 +8,7 @@ def errorhandler(self):
 
     for i in self:
         if not isinstance(self[i], i):
-            raise TypeError("expected {} found {}".format(i.__name__, type(self[i]).__name__,))
+            raise TypeError("expected {} found {}".format(i.__name__, type(self[i]).__name__))
 
 """/*
 # A sort Note about these methods.

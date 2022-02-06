@@ -178,26 +178,26 @@ def Min(*iterable, default = False, key = None):
     the provided iterable is empty.
     With two or more arguments, return the smallest argument."""
     
+    values = iterable[-1]
     try:
         # cheking for iterable data type
-        iter(iterable)
-        if len(iterable) == 0:
-            if default != False:
+        iter(values)
+        if len(values) == 0:
+            if default is not False:
                 return default
             raise ValueError("Min() arg is an empty sequence")
         
+        for small in values:
+            break
+
         if key is None:
-            for x in iterable:
-                small = x[0]
-                for i in x:
-                    if small > i:
-                        small = i
+            for i in values:
+                if small > i:
+                    small = i
         else:
-            for x in iterable:
-                small = x[0]
-                for i in x:
-                    if key(small) > key(i):
-                        small = i
+            for i in values:
+                if key(small) > key(i):
+                    small = i
         return small
     except:
         raise # Raising error if not found iterable
@@ -208,26 +208,26 @@ def Max(*iterable, default = False, key = None):
     the provided iterable is empty.
     With two or more arguments, return the largest argument."""
     
+    values = iterable[-1]
     try:
         # cheking for iterable data type
-        iter(iterable)
-        if len(iterable) == 0:
-            if default != False:
+        iter(values)
+        if len(values) == 0:
+            if default is not False:
                 return default
             raise ValueError("Max() arg is an empty sequence")
         
-        if key is None:
-            for x in iterable:
-                Big = x[0]
-                for i in x:
-                    if Big < i:
-                        Big = i
+        for Big in values:
+            break
+
+        if key is None: 
+            for i in values:
+                if Big < i:
+                    Big = i
         else:
-            for x in iterable:
-                Big = x[0]
-                for i in x:
-                    if key(Big) < key(i):
-                        Big = i
+            for i in values:
+                if key(Big) < key(i):
+                    Big = i
         return Big
     except:
         raise # Raising error if not found iterable

@@ -178,7 +178,13 @@ def Min(*iterable, default = False, key = None):
     the provided iterable is empty.
     With two or more arguments, return the smallest argument."""
     
-    values = iterable[-1]
+    if len(iterable) == 0:
+        raise TypeError("Max expected at least 1 argument, got 0")
+    
+    if len(iterable) == 1:
+        values = iterable[0]
+    else:
+        values = iterable
     try:
         # cheking for iterable data type
         iter(values)
@@ -208,7 +214,13 @@ def Max(*iterable, default = False, key = None):
     the provided iterable is empty.
     With two or more arguments, return the largest argument."""
     
-    values = iterable[-1]
+    if len(iterable) == 0:
+        raise TypeError("Max expected at least 1 argument, got 0")
+    
+    if len(iterable) == 1:
+        values = iterable[0]
+    else:
+        values = iterable
     try:
         # cheking for iterable data type
         iter(values)

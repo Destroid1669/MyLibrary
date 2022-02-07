@@ -198,11 +198,11 @@ def Min(*iterable, default = False, key = None):
 
         if key is None:
             for i in values:
-                if small > i:
+                if i < small:
                     small = i
         else:
             for i in values:
-                if key(small) > key(i):
+                if key(i) < key(small):
                     small = i
         return small
     except:
@@ -234,11 +234,11 @@ def Max(*iterable, default = False, key = None):
 
         if key is None: 
             for i in values:
-                if Big < i:
+                if i > Big:
                     Big = i
         else:
             for i in values:
-                if key(Big) < key(i):
+                if key(i) > key(Big):
                     Big = i
         return Big
     except:

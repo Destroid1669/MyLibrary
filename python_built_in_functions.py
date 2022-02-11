@@ -89,7 +89,7 @@ def Any(iterable = None):
     If the iterable is empty, returns False."""
     
     try:
-        for x in iterable:
+        for _ in iterable:
             return True
     except:
         return False
@@ -105,8 +105,8 @@ def Bool(value):
 
     try:
         iter(value)
-        for x in value:
-                return True
+        for _ in value:
+            return True
         return False
     
     except:
@@ -147,10 +147,10 @@ def Len(obj):
     try:
         # checking for iterable object
         iter(obj)
-        Count = 0
-        for x in obj:
-            Count += 1
-        return Count
+        count = 0
+        for _ in obj:
+            count += 1
+        return count
     except:
         raise # Raising error for non-iterable object
 
@@ -172,7 +172,7 @@ def Divmod(x, y):
 
     return (x//y, x%y)
 
-def Min(*iterable, default = False, key = None):
+def Min(*iterable, default = object, key = None):
     """With a single iterable argument, return its smallest item. The
     default keyword-only argument specifies an object to return if
     the provided iterable is empty.
@@ -189,7 +189,7 @@ def Min(*iterable, default = False, key = None):
         # cheking for iterable data type
         iter(values)
         if len(values) == 0:
-            if default is not False:
+            if default is not object:
                 return default
             raise ValueError("Min() arg is an empty sequence")
         
@@ -208,7 +208,7 @@ def Min(*iterable, default = False, key = None):
     except:
         raise # Raising error if not found iterable
 
-def Max(*iterable, default = False, key = None):
+def Max(*iterable, default = object, key = None):
     """With a single iterable argument, return its biggest item. The
     default keyword-only argument specifies an object to return if
     the provided iterable is empty.
@@ -225,22 +225,22 @@ def Max(*iterable, default = False, key = None):
         # cheking for iterable data type
         iter(values)
         if len(values) == 0:
-            if default is not False:
+            if default is not object:
                 return default
             raise ValueError("Max() arg is an empty sequence")
         
-        for Big in values:
+        for big in values:
             break
 
-        if key is None: 
+        if key is None:
             for i in values:
-                if i > Big:
-                    Big = i
+                if i > big:
+                    big = i
         else:
             for i in values:
-                if key(i) > key(Big):
-                    Big = i
-        return Big
+                if key(i) > key(big):
+                    big = i
+        return big
     except:
         raise # Raising error if not found iterable
 
@@ -257,10 +257,10 @@ def Sum(iterable, start = 0):
         if isinstance(iterable, str):
             raise TypeError("Sum() can't sum strings [use ''.join(seq) instead]")
         
-        SUM = 0
+        _sum = 0
         for element in iterable:
-            SUM += element
-        return SUM + start
+            _sum += element
+        return _sum + start
     except:
         raise # Raising error if not found iterable
 
@@ -289,10 +289,10 @@ def List(iterable):
     try:
         # checking for iterable object
         iter(iterable)
-        LIST = []
+        _list = []
         for i in iterable:
-            LIST.append(i)
-        return LIST
+            _list.append(i)
+        return _list
     except:
         raise # Raising error if not found iterable
 

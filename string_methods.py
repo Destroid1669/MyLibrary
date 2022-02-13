@@ -62,7 +62,7 @@ def getkey(dct, value):
     return ''
 
 def errorhandler(*args):
-    """Raises Type error accordingly to the arguments passed to it"""
+    "Raises Type error according to the arguments passed to it"
 
     for value, datatype in args:
         if not isinstance(value, datatype):
@@ -576,18 +576,18 @@ def count(self, sub, start = 0, end = None):
         assert isinstance(self, str)
         # issue with counting empty string
         # returns wrong result for this case
-        Count, len_sub = 0, len(sub)
+        _count, len_sub = 0, len(sub)
         for i in range(len(iterable)):
             if sub == iterable[i: i+len_sub]:
-                Count += 1
-        return Count if sub != "" else Count+1
+                _count += 1
+        return _count if sub != "" else _count+1
     except AssertionError:
         # expecting for iterable object
-        Count = 0
+        _count = 0
         for i in iterable:
             if sub == i:
-                Count += 1
-        return Count
+                _count += 1
+        return _count
     except:
         raise # Raising exception if not found iterable
 
@@ -668,9 +668,7 @@ def do_argstrip(self, striptype, chars):
     return self[i: j+1]
 
 def strip(self, chars = None):
-    """"strip(self, [chars]) -> string
-
-    Returns a copy of the string S with leading and trailing whitespace removed.
+    """"Returns a copy of the string S with leading and trailing whitespace removed.
     If chars is given and not None, remove characters in chars instead."""
 
     errorhandler((self, str))
@@ -683,9 +681,7 @@ def strip(self, chars = None):
         return do_argstrip(self, BOTHSTRIP, chars)
 
 def lstrip(self, chars = None):
-    """lstrip(self, [chars]) -> string
-    
-    Returns a copy of the string self with leading whitespace removed.
+    """Returns a copy of the string self with leading whitespace removed.
     If chars is given and not None, remove characters in chars instead."""
 
     errorhandler((self, str))
@@ -698,9 +694,7 @@ def lstrip(self, chars = None):
         return do_argstrip(self, LEFTSTRIP, chars)
 
 def rstrip(self, chars = None):
-    """rstrip(self, [chars]) -> string
-    
-    Returns a copy of the string self with trailing whitespace removed.
+    """Returns a copy of the string self with trailing whitespace removed.
     If chars is given and not None, remove characters in chars instead."""
 
     errorhandler((self, str))
@@ -748,8 +742,8 @@ def do_split(self, split_type, maxsplit = -1):
             string += self[I]
         I += 1
     output.append(string)
-    out = [x for x in output if x != ""]
     # Returning a new output with all whitespaces elements removed
+    out = [x for x in output if x != ""]
     if split_type == LEFTSTRIP:
         return [lstrip(x) for x in out]
     else:

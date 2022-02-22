@@ -10,9 +10,9 @@ Date: 31-jan-2022 ; Monday
 
 # List of all built_in functions written within this module
 # functions name have been capitalized to prevent conflict.
-__all__ = ["Any", "Bool", "All", "Chr", "Ord", "Complex",
-           "Tuple", "List", "Divmod", "Min", "Max",
-           "Sum", "Len", "Map", "Range", "Enumerate"]
+__all__ = ["Any", "Bool", "All", "Chr", "Ord", "Complex", "Tuple",
+           "List", "Divmod", "Min", "Max", "Sum", "Len", "Map",
+           "Range", "Enumerate", "Reversed", "Sorted"]
 
 def Merge(self, *args):
     for i in args:
@@ -65,7 +65,7 @@ punctuation = {33: '!', 34: '"', 35: '#', 36: '$', 37: '%', 38: '&', 39: "'", 40
                96: '`', 123: '{', 124: '|', 125: '}', 126: '~'}
 
 digits = {48: '0', 49: '1', 50: '2', 51: '3', 52: '4', 53: '5', 54: '6', 55: '7', 56: '8', 57: '9'}
-# These aren't all unicode characters within python it's only some general used ones for demenestration!
+# These aren't all unicode characters within python these are only some general used ones for demenestration!
 all_ascii_characters = Merge(ascii_lowercase, ascii_uppercase, whitespace, digits, punctuation)
 
 def Chr(number):
@@ -96,7 +96,7 @@ def Any(iterable = None):
     return False
 
 def Bool(value):
-    """Returns True when the argument is true, False otherwise."""
+    "Returns True when the argument is true, False otherwise."
 
     if value is True:
         return True
@@ -126,7 +126,6 @@ def All(iterable):
     for x in iterable:
         if iter(x):
             continue
-
         if not Bool(x):
             return False
     return True
@@ -144,15 +143,11 @@ def Complex(real = 0, imag = 0):
 def Len(obj):
     "Returns the number of items in a container."
 
-    try:
-        # checking for iterable object
-        iter(obj)
-        count = 0
-        for _ in obj:
-            count += 1
-        return count
-    except:
-        raise # Raising error for non-iterable object
+    iter(obj) # Raises error for non-iterable object
+    count = 0
+    for _ in obj:
+        count += 1
+    return count
 
 def Map(self, *args):
     """Makes an iterator that computes the function using arguments from
@@ -185,28 +180,24 @@ def Min(*iterable, default = object, key = None):
         values = iterable[0]
     else:
         values = iterable
-    try:
-        # cheking for iterable data type
-        iter(values)
-        if len(values) == 0:
-            if default is not object:
-                return default
-            raise ValueError("Min() arg is an empty sequence")
-        
-        for small in values:
-            break
 
-        if key is None:
-            for i in values:
-                if i < small:
-                    small = i
-        else:
-            for i in values:
-                if key(i) < key(small):
-                    small = i
-        return small
-    except:
-        raise # Raising error if not found iterable
+    iter(values) # Raises error for non iterables
+    if len(values) == 0:
+        if default is not object:
+            return default
+        raise ValueError("Min() arg is an empty sequence")
+    
+    for small in values:
+        break
+    if key is None:
+        for i in values:
+            if i < small:
+                small = i
+    else:
+        for i in values:
+            if key(i) < key(small):
+                small = i
+    return small
 
 def Max(*iterable, default = object, key = None):
     """With a single iterable argument, return its biggest item. The
@@ -221,28 +212,24 @@ def Max(*iterable, default = object, key = None):
         values = iterable[0]
     else:
         values = iterable
-    try:
-        # cheking for iterable data type
-        iter(values)
-        if len(values) == 0:
-            if default is not object:
-                return default
-            raise ValueError("Max() arg is an empty sequence")
-        
-        for big in values:
-            break
 
-        if key is None:
-            for i in values:
-                if i > big:
-                    big = i
-        else:
-            for i in values:
-                if key(i) > key(big):
-                    big = i
-        return big
-    except:
-        raise # Raising error if not found iterable
+    iter(values) # raises error for non iterables
+    if len(values) == 0:
+        if default is not object:
+            return default
+        raise ValueError("Max() arg is an empty sequence")
+    
+    for big in values:
+        break
+    if key is None:
+        for i in values:
+            if i > big:
+                big = i
+    else:
+        for i in values:
+            if key(i) > key(big):
+                big = i
+    return big
 
 def Sum(iterable, start = 0):
     """Returns the sum of a 'start' value (default: 0) plus an iterable of numbers
@@ -251,18 +238,14 @@ def Sum(iterable, start = 0):
     This function is intended specifically for use with numeric values and may
     reject non-numeric types."""
 
-    try:
-        # checking for iterable object
-        iter(iterable)
-        if isinstance(iterable, str):
-            raise TypeError("Sum() can't sum strings [use ''.join(seq) instead]")
-        
-        _sum = 0
-        for element in iterable:
-            _sum += element
-        return _sum + start
-    except:
-        raise # Raising error if not found iterable
+    iter(iterable) # Raises error for non iterables
+    if isinstance(iterable, str):
+        raise TypeError("Sum() can't sum strings [use ''.join(seq) instead]")
+    
+    _sum = 0
+    for element in iterable:
+        _sum += element
+    return _sum + start
 
 def Tuple(iterable):
     """If no argument is given, the function returns an empty tuple.
@@ -272,29 +255,23 @@ def Tuple(iterable):
     
     if isinstance(iterable, tuple):
         return iterable
-    try:
-        # checking for iterable object
-        iter(iterable)
-        tuplatoon = ()
-        for i in iterable:
-            tuplatoon += (i,)
-        return tuplatoon
-    except:
-        raise # Raising error if not found iterable
+    iter(iterable) # Raises error for non iterables
+
+    tuplatoon = ()
+    for i in iterable:
+        tuplatoon += (i,)
+    return tuplatoon
 
 def List(iterable):
     """If no argument is given, the function creates a new empty list.
     The argument must be an iterable if specified."""
 
-    try:
-        # checking for iterable object
-        iter(iterable)
-        _list = []
-        for i in iterable:
-            _list.append(i)
-        return _list
-    except:
-        raise # Raising error if not found iterable
+    iter(iterable) # Raises error for non iterables
+
+    _list = []
+    for i in iterable:
+        _list.append(i)
+    return _list
 
 def Range(start = 0, stop = 0, step = 1):
     """Returns a tuple that produces a sequence of integers from start (inclusive)
@@ -345,48 +322,144 @@ def Enumerate(iterable, start = 0):
     */"""
 
     errorhandler("%s object cannot be interpreted as an integer", (start, int))
-    try:
-        # checking for iterable object
-        iter(iterable)
-        n = 0 + start
-        tuplatoon = ()
-        for i in iterable:
-            tuplatoon += ((n, i),)
-            n += 1
-        return tuplatoon
-    except:
-        raise # Raising error for non-iterable object
+    iter(iterable) # Raises error for non iterables
+
+    n = 0 + start
+    tuplatoon = ()
+    for i in iterable:
+        tuplatoon += ((n, i),)
+        n += 1
+    return tuplatoon
+
+def Reversed(sequence):
+    "Return a reverse iterator over the values of the given sequence."
+    
+    #* Note: In python Reversed returns a iterable object not a list sequence
+    iter(sequence) # raises error for non iterables 
+    if isinstance(sequence, set):
+        raise TypeError("'set' object is not reversible")
+    if not isinstance(sequence, list):
+        sequence = list(sequence)
+
+    length = len(sequence)
+    for i in range(int(length / 2)):
+        temp = sequence[i]
+        sequence[i] = sequence[length-i-1]
+        sequence[length-i-1] = temp
+    
+    return sequence
+
+def binary_search(array, item, start, end):
+    if start == end:
+        if array[start] > item:
+            return start
+        else:
+            return start + 1
+    if start > end:
+        return start
+
+    mid = round((start + end)/ 2)
+
+    if array[mid] < item:
+        return binary_search(array, item, mid + 1, end)
+    elif array[mid] > item:
+        return binary_search(array, item, start, mid - 1)
+    else:
+        return mid
+
+#* insertion sort is used by timsort for small array or small runs.
+def insertion_sort(array):
+    for index in range(1, len(array)):
+        value = array[index]
+        pos = binary_search(array, value, 0, index - 1)
+        array = array[:pos] + [value] + array[pos:index] + array[index+1:]
+    return array
+
+#* Returns a single sorted array from two sorted array
+def merge(left, right):
+    if not left:
+        return right
+    if not right:
+        return left
+    if left[0] < right[0]:
+        return [left[0]] + merge(left[1:], right)
+    return [right[0]] + merge(left, right[1:])
+
+def Sorted(iterable, *, key = None, reverse = False):
+    """Return a new list containing all items from the iterable in ascending order.
+
+    A custom key function can be supplied to customize the sort order, and the
+    reverse flag can be set to request the result in descending order.
+    
+    /* Note: This is pythonic implementation of timsort algorithm */
+    
+    """
+
+    if key is not None:
+        raise Exception("currently key argument hasn't been implemented !")
+    iter(iterable) # raises error for non iterables
+    
+    if not isinstance(iterable, list):
+        array = list(array)
+    else:
+        array = iterable
+
+    runs, sorted_runs = [], []
+    length = len(array)
+    new_run = [array[0]]
+
+    for i in range(1, length):
+        # if i is at the last index
+        if i == length-1:
+            new_run.append(array[i])
+            runs.append(new_run)
+            break
+        if array[i] < array[i-1]:
+            # if new_run is None (empty)
+            if not new_run:
+                runs.append([array[i]])
+                new_run.append(array[i])
+            else:
+                runs.append(new_run)
+                new_run = [array[i]]
+        else:
+            new_run.append(array[i])
+
+    # for every item in runs, append it using insertion sort
+    for item in runs:
+        sorted_runs.append(insertion_sort(item))
+    
+    # for every run in sorted_runs, merge them
+    sorted_array = []
+    for run in sorted_runs:
+        sorted_array = merge(sorted_array, run)
+
+    if not reverse:
+        return sorted_array
+    return Reversed(sorted_array)
+
 
 __all__.extend(["IS"])
-# Note: python `in` isn't a function nor `IS` is any python function
-# rather this function is `in` implementation of python as function.
+# Note: python `in` is an operator not a function and `IS` isn't any python
+# function rather this is `in` implementation of python operator as function.
 def IS(self, iterable) -> bool:
     "Performs same operation as `in`"
 
-    try:
-        # checking for iterable object
-        iter(iterable)
-        # raising error if not found string object
-        assert isinstance(iterable, str)
+    iter(iterable) # Raises error for non-iterable object
+    i, length = 0, len(iterable)
+    if isinstance(iterable, str):
         if not isinstance(self, str):
             raise TypeError("'IS <string>' requires string as left operand, not %s" % type(self).__name__)
 
-        len_self = len(self)
-        i = 0
-        while i < len(iterable):
-            if self == iterable[i: i+len_self]:
+        s_len = len(self)
+        while i < length:
+            if self == iterable[i: i+s_len]:
                 return True
             i += 1
         return False
-
-    except AssertionError:
-        # expecting for iterable object
-        i = 0
-        while i < len(iterable):
+    else:
+        while i < length:
             if self == iterable[i]:
                 return True
             i += 1
         return False
-
-    except:
-        raise # Raising error for non-iterable object

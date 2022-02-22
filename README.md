@@ -20,8 +20,8 @@ execution output and in an attempt to closely resemble them.
 ## THIS IS MY FIRST LIBRARY on github
 * Release Date: 22-feb-2022; tuesday
 
-I'm currently in the first semester in my
-university at this time of releasing this library.
+I'm currently in the first semester in my </br>
+university at this time of releasing this library. </br>
 
 
 ## Reason behind writing this library
@@ -42,8 +42,8 @@ external help that sometimes made me feel lost and confused in what I was doing.
 
 
 ## CONCLUSION
-Overall This was worth the time and effort because it improved and polished
-my skills as I intended, it was challenging and fun and it taught me concepts
+Overall This was worth the time and effort because it improved and polished </br>
+my skills as I intended, it was challenging and fun and it taught me concepts </br>
 I was not aware of or didn't care about which taught me those concepts very deeply.
 
 ## Everyone is welcome to make contributions to this repository

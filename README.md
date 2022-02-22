@@ -42,8 +42,8 @@ external help that sometimes made me feel lost and confused in what I was doing.
 
 
 ## CONCLUSION
-Overall This was worth the time and effort because it improved and polished </br>
-my skills as I intended, it was challenging and fun and it taught me concepts </br>
+Overall This was worth the time and effort because it improved and polished
+my skills as I intended, it was challenging and fun and it taught me concepts
 I was not aware of or didn't care about which taught me those concepts very deeply.
 
 ## Everyone is welcome to make contributions to this repository

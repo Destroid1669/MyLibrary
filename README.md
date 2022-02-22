@@ -6,8 +6,8 @@ ones nor this is an attempt to reinvent the wheel.
 
 >> python version 3.10
 ## PURPOSE OF THIS LIBRARY
-This library is meant to be studied to get understanding
-of working of the Python built-in functions and methods.
+This library is meant to be studied to get better
+understanding of the Python built-in functions and methods.
 
 ## SOURCE BEHIND THE CODE
 

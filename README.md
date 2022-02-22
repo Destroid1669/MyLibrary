@@ -17,7 +17,7 @@ execution output and in an attempt to closely resemble them.
 * Note: this library doesn't contain all python_built ones.
 
 ## THIS IS MY FIRST LIBRARY on github
-* Release Date: 22-feb-2022; tuesday
+* Release Date: 22-feb-2022; tuesday *
 I'm currently in the first semester in my
 university at this time of releasing this library.
 

@@ -10,6 +10,7 @@ This library is meant to be studied to understand the working of the
 Python built-in functions and methods to get a better understanding of them.
 
 ## SOURCE BEHIND THE CODE
+
 It was solely written based on the python built-in ones
 execution output and in an attempt to closely resemble them.
 
@@ -36,7 +37,7 @@ there was no progress which paid of next day, I anticipated this to take max one
 but it took me more than that I had to make re-corrections fixes, improvements to code
 whenever I found some code-breaking bugs or learned some new concepts i intended to make
 this library as much perfect as possible so couldn't let any imperfection left unattended
-resulting in exceeding my expected time limit, I did this all by own without anyone's
+resulting in exceeding my expected time limit, I did this all by myself without anyone's
 external help that sometimes made me feel lost and confused in what I was doing.
 
 

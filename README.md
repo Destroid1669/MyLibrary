@@ -47,5 +47,5 @@ my skills as I intended, it was challenging and fun and it taught me concepts
 I was not aware of or didn't care about which taught me those concepts very deeply.
 
 ## Everyone is welcome to make contributions to this repository
-I initially solely wrote this library to improve my programming skills
+I initially solely wrote this library to improve my programming skills </br>
 anyone interested to make use of it or make contributions are warmly welcomed.

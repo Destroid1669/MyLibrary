@@ -15,7 +15,7 @@ It was solely written based on the python built-in ones
 execution output and in an attempt to closely resemble them.
 
 * Note: it might not result same result in some rare cases.
-* Note: this library doesn't contain all python_built ones.
+* Note: this library doesn't contain all python built-in ones.
 
 ## THIS IS MY FIRST LIBRARY on github
 * Release Date: 22-feb-2022; tuesday
@@ -36,14 +36,14 @@ it was a bit difficult as I anticipated things didn't go as planned somedays fel
 there was no progress which paid of next day, I anticipated this to take max one month
 but it took me more than that I had to make re-corrections fixes, improvements to code
 whenever I found some code-breaking bugs or learned some new concepts i intended to make
-this library as much perfect as possible so couldn't let any imperfection left unattended
+this library as much perfect as possible so i couldn't let any imperfection left unattended
 resulting in exceeding my expected time limit, I did this all by myself without anyone's
 external help that sometimes made me feel lost and confused in what I was doing.
 
 
 ## CONCLUSION
-Overall This was worth the time and effort because it improved and polished my skills as I intended, it was challenging </br>
-and fun and it taught me concepts I was not aware of or didn't care about which taught me those concepts very deeply.
+Overall This was worth the time and effort because it improved and polished my skills as I intended, it was challenging and fun
+and it taught me concepts I was not aware of or didn't care about because of that </br> i could learn these concepts very deeply.
 
 ## Everyone is welcomed to make contributions to this repository
 I initially solely wrote this library to improve my programming skills </br>

@@ -42,8 +42,8 @@ external help that sometimes made me feel lost and confused in what I was doing.
 
 
 ## CONCLUSION
-Overall This was worth the time and effort because it improved and polished my skills as I intended, it was challenging and fun
-and it taught me concepts I was not aware of or didn't care about because of that </br> i could learn these concepts very deeply.
+Overall This was worth the time and effort because it improved and polished my skills as I intended, it was challenging and fun and it taught me concepts I was not aware of or didn't care about because of that </br>
+i could learn these concepts very deeply.
 
 ## Everyone is welcomed to make contributions to this repository
 I initially solely wrote this library to improve my programming skills </br>

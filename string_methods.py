@@ -162,7 +162,7 @@ def istitle(self):
 
     errorhandler([self, str])
     
-    ISTitle = False
+    IsTitle = False
     IsTrue = True
     for i in self:
         if i in ascii_letters:
@@ -170,14 +170,14 @@ def istitle(self):
                 if i in ascii_lowercase:
                     return False
                 else:
-                    ISTitle = True
+                    IsTitle = True
             elif not i in ascii_lowercase:
                 return False
             IsTrue = False
         else:
             IsTrue = True
    
-    return True if ISTitle else False
+    return True if IsTitle else False
     
 def isprintable(self):
     """Returns True if the string is printable, False otherwise.
@@ -332,8 +332,7 @@ def capitalize(self):
 
     errorhandler([self, str])
     
-    string = ""
-    string += upper(self[0])
+    string = upper(self[0])
     for i in self[1: ]:
         string += lower(i)
     return string
@@ -560,18 +559,18 @@ def count(self, sub, start = 0, end = None):
     if isinstance(self, str):
         #! issue with counting empty string
         #! returns wrong result for this case
-        Count, len_sub = 0, len(sub)
+        _count, len_sub = 0, len(sub)
         for i in range(len(iterable)):
             if sub == iterable[i: i+len_sub]:
-                Count += 1
-        return Count if sub != "" else Count+1
+                _count += 1
+        return _count if sub != "" else _count+1
     else:
         # expecting for iterable object
-        Count = 0
+        _count = 0
         for i in iterable:
             if sub == i:
-                Count += 1
-        return Count
+                _count += 1
+        return _count
 
 def join(self, iterable):
     """Concatenate any number of strings.
@@ -601,8 +600,8 @@ def replace(self, old, new, count = -1):
     errorhandler([self, str], [old, str], [new, str], [count, int])
 
     IsTrue = True if count <= -1 else False
-    i, string, old_len = 0, "", len(old)
-    while i < len(self):
+    string, old_len = "", len(old)
+    for i in range(len(self)):
         if old == self[i: i+old_len]:
             if 0 < count or IsTrue: 
                 string += new
@@ -612,7 +611,6 @@ def replace(self, old, new, count = -1):
                 string += self[i]
         else:
             string += self[i]
-        i += 1
     return string
 
 LEFTSTRIP = 0
@@ -774,7 +772,7 @@ def split(self, sep = None, maxsplit = -1):
         -1 (the default value) means no limit.
     """
 
-    # Checking for valid arguments and raising error if not found
+    # Checking for valid arguments and raising error if not valid
     errorhandler([self, str], [maxsplit, int])
     if sep is not None and not isinstance(sep, str):
         errorhandler([sep, str])
@@ -797,7 +795,7 @@ def rsplit(self, sep = None, maxsplit = -1):
         -1 (the default value) means no limit.
     """
 
-    # Checking for valid arguments and raising error if not found
+    # Checking for valid arguments and raising error if not valid
     errorhandler([self, str], [maxsplit, int])
     if sep is not None and not isinstance(sep, str):
         errorhandler([sep, str])

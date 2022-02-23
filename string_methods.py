@@ -73,7 +73,7 @@ def isupper(self):
 
     A string is uppercase if all cased characters in the string are uppercase and there is at least one cased character in the string."""
 
-    errorhandler((self, str))
+    errorhandler([self, str])
 
     IsTrue = False
     for letters in self:
@@ -90,7 +90,7 @@ def islower(self):
 
     A string is lowercase if all cased characters in the string are lowercase and there is at least one cased character in the string."""
 
-    errorhandler((self, str))
+    errorhandler([self, str])
 
     IsTrue = False
     for letters in self:
@@ -107,7 +107,7 @@ def isalpha(self):
 
     A string is alphabetic if all characters in the string are alphabetic and there is at least one character in the string."""
 
-    errorhandler((self, str))
+    errorhandler([self, str])
 
     for i in self:
         if not i in ascii_letters:
@@ -120,7 +120,7 @@ def isdecimal(self):
 
     A string is a decimal string if all characters in the string are decimal and there is at least one character in the string"""
 
-    errorhandler((self, str))
+    errorhandler([self, str])
 
     for i in self:
         if i not in digits:
@@ -133,7 +133,7 @@ def isalnum(self):
     
     A string is alpha-numeric if all characters in the string are alpha-numeric and there is at least one character in the string."""
 
-    errorhandler((self, str))
+    errorhandler([self, str])
 
     ascii_alphanumeric = ascii_letters + digits
     for i in self:
@@ -147,7 +147,7 @@ def isspace(self):
     
     A string is whitespace if all characters in the string are whitespace and there is at least one character in the string."""
 
-    errorhandler((self, str))
+    errorhandler([self, str])
     
     for i in self:
         if i not in whitespace:
@@ -160,7 +160,7 @@ def istitle(self):
 
     More specifically, words start with uppercased characters and all remaining cased characters have lower case."""
 
-    errorhandler((self, str))
+    errorhandler([self, str])
     
     ISTitle = False
     IsTrue = True
@@ -184,7 +184,7 @@ def isprintable(self):
     
     A string is printable if all of its characters are considered printable in repr() or if it is empty."""
 
-    errorhandler((self, str))
+    errorhandler([self, str])
     
     for i in self:
         if i not in printable:
@@ -198,9 +198,9 @@ def startswith(self, prefix, start = 0, end = None):
     With optional end, stop comparing self at that position.
     prefix can also be a tuple of strings to try."""
 
-    errorhandler((self, str), (start, int))
+    errorhandler([self, str], [start, int])
     if end is not None and not isinstance(end, int):
-        errorhandler((end, int))
+        errorhandler([end, int])
     if not isinstance(prefix, str):
         if isinstance(prefix, tuple):
             for _p in prefix:
@@ -229,9 +229,9 @@ def endswith(self, suffix, start = 0, end = None):
     With optional end, stop comparing self at that position.
     suffix can also be a tuple of strings to try."""
 
-    errorhandler((self, str), (start, int))
+    errorhandler([self, str], [start, int])
     if end is not None and not isinstance(end, int):
-        errorhandler((end, int))
+        errorhandler([end, int])
     if not isinstance(suffix, str):
         if isinstance(suffix, tuple):
             for _s in suffix:
@@ -257,7 +257,7 @@ def endswith(self, suffix, start = 0, end = None):
 def upper(self):
     "Returns a copy of the string converted to uppercase."
 
-    errorhandler((self, str))
+    errorhandler([self, str])
     
     string = ""
     for i in self:
@@ -273,7 +273,7 @@ def upper(self):
 def lower(self):
     "Returns a copy of the string converted to lowercase."
 
-    errorhandler((self, str))
+    errorhandler([self, str])
     
     string = ""
     for i in self:
@@ -289,7 +289,7 @@ def lower(self):
 def swapcase(self):
     "Converts uppercase characters to lowercase and lowercase characters to uppercase."
 
-    errorhandler((self, str))
+    errorhandler([self, str])
     
     string = ""
     for i in self:
@@ -307,7 +307,7 @@ def title(self):
 
     More specifically, words start with uppercased characters and all remaining cased characters have lower case."""
 
-    errorhandler((self, str))
+    errorhandler([self, str])
     
     string, IsTrue = "", True
     for i in self:
@@ -330,14 +330,12 @@ def capitalize(self):
 
     More specifically, make the first character have upper case and the rest lower case."""
 
-    errorhandler((self, str))
+    errorhandler([self, str])
     
     string = ""
-    for n,i in enumerate(self):
-        if n == 0:
-            string += upper(i)
-        else:
-            string += lower(i)
+    string += upper(self[0])
+    for i in self[1: ]:
+        string += lower(i)
     return string
 
 def zfill(self, width):
@@ -345,7 +343,7 @@ def zfill(self, width):
 
     The string is never truncated."""
 
-    errorhandler((self, str), (width, int))
+    errorhandler([self, str], [width, int])
 
     n_zero = width - len(self) if width > 1 else 0
     if self[0] == "+":
@@ -362,7 +360,7 @@ def ljust(self, width, fillchar = " "):
 
     Padding is done using the specified fill character (default is a space)."""
     
-    errorhandler((self, str), (width, int), (fillchar, str))
+    errorhandler([self, str], [width, int], [fillchar, str])
     
     n_allign = width - len(self)
     return self + fillchar * n_allign
@@ -372,7 +370,7 @@ def rjust(self, width, fillchar = " "):
 
     Padding is done using the specified fill character (default is a space)."""
     
-    errorhandler((self, str), (width, int), (fillchar, str))
+    errorhandler([self, str], [width, int], [fillchar, str])
 
     n_allign = width - len(self)
     return fillchar * n_allign + self
@@ -382,7 +380,7 @@ def center(self, width, fillchar = " "):
 
     Padding is done using the specified fill character (default is a space)."""
     
-    errorhandler((self, str), (width, int), (fillchar, str))
+    errorhandler([self, str], [width, int], [fillchar, str])
 
     n_allign = width - len(self)
     return (fillchar * (n_allign if n_allign == 1 else n_allign // 2)) + self + (fillchar * (n_allign // 2))
@@ -392,7 +390,7 @@ def expandtabs(self, tabsize = 8):
 
     If tabsize is not given, a tab size of 8 characters is assumed."""
 
-    errorhandler((self, str), (tabsize, int))
+    errorhandler([self, str], [tabsize, int])
 
     string = ""
     for i in self:
@@ -411,7 +409,7 @@ def partition(self, sep):
 
     If the separator is not found, returns a 3-tuple containing the original string and two empty strings."""
 
-    errorhandler((self, str), (sep, str))
+    errorhandler([self, str], [sep, str])
 
     len_sep = len(sep)
     for i in range(len(self)):
@@ -429,7 +427,7 @@ def rpartition(self, sep):
 
     If the separator is not found, returns a 3-tuple containing two empty strings and the original string."""
 
-    errorhandler((self, str), (sep, str))
+    errorhandler([self, str], [sep, str])
 
     len_sep = len(sep)
     for i in reversed(range(len(self))):
@@ -443,7 +441,7 @@ def splitlines(self, keepends = False):
 
     Line breaks are not included in the resulting list unless keepends is given and true."""
 
-    errorhandler((self, str), (keepends, bool))
+    errorhandler([self, str], [keepends, bool])
 
     line_breaks = "\n\r\v\f"
     string, output = "", []
@@ -464,17 +462,15 @@ def splitlines(self, keepends = False):
     return output
 
 def find(self, sub, start = 0, end = None):
-    """find(self, sub[, start[, end]]) -> int
-
-    Returns the lowest index in self where substring sub is found,
+    """Returns the lowest index in self where substring sub is found,
     such that sub is contained within self[start:end].  Optional
     arguments start and end are interpreted as in slice notation.
 
     Returns -1 on failure."""
 
-    errorhandler((self, str), (sub, str), (start, int))
+    errorhandler([self, str], [sub, str], [start, int])
     if end is not None and not isinstance(end, int):
-        errorhandler((end, int))
+        errorhandler([end, int])
     if sub == "":
         return 0
 
@@ -486,15 +482,14 @@ def find(self, sub, start = 0, end = None):
     return -1
 
 def rfind(self, sub, start = 0, end = None):
-    """rfind(self, sub[, start[, end]]) -> int
-    Returns the highest index in self where substring sub is found,
+    """Returns the highest index in self where substring sub is found,
     such that sub is contained within self[start:end].  Optional
     arguments start and end are interpreted as in slice notation.
     Returns -1 on failure."""
 
-    errorhandler((self, str), (sub, str), (start, int))
+    errorhandler([self, str], [sub, str], [start, int])
     if end is not None and not isinstance(end, int):
-        errorhandler((end, int))
+        errorhandler([end, int])
     if sub == "" and self == "":
         return 0
 
@@ -506,36 +501,29 @@ def rfind(self, sub, start = 0, end = None):
     return -1
 
 def index(self, sub, start = 0, end = None):
-    """index(self, sub[, start[, end]]) -> int
-
-    Returns the lowest index in self where substring sub is found,
+    """Returns the lowest index in self where substring sub is found,
     such that sub is contained within self[start:end].  Optional
     arguments start and end are interpreted as in slice notation.
-
     Raises ValueError when the substring is not found."""
 
-    errorhandler((start, int))
+    errorhandler([start, int])
     if end is not None and not isinstance(end, int):
-        errorhandler((end, int))
+        errorhandler([end, int])
     if sub == "":
         return 0
+    iter(self) # Raises error for non iterables
 
     iterable = self[start: end]
-    try:
-        iter(self) # checking for iterable object
-        # raising `AssertionError` if not found `str`
-        assert isinstance(self, str)
+    if isinstance(self, str):
         len_sub = len(sub)
         for i in range(len(self)):
             if sub == iterable[i: i+len_sub]:
                 return i
-    except AssertionError:
+    else:
         # expecting for iterable object
         for i in range(len(iterable)):
             if sub == iterable[i]:
                 return i
-    except:
-        raise # Raising exception if not found iterable
     raise ValueError("%s substring not found" % sub)
 
 def rindex(self, sub, start = 0, end = None):
@@ -545,9 +533,9 @@ def rindex(self, sub, start = 0, end = None):
     arguments start and end are interpreted as in slice notation.
     Raises ValueError when the substring is not found."""
 
-    errorhandler((self, str), (sub, str), (start, int))
+    errorhandler([self, str], [sub, str], [start, int])
     if end is not None and not isinstance(end, int):
-        errorhandler((end, int))
+        errorhandler([end, int])
     if sub == "" and self == "":
         return 0
     
@@ -560,36 +548,30 @@ def rindex(self, sub, start = 0, end = None):
     raise ValueError("%s substring not found" % sub)
 
 def count(self, sub, start = 0, end = None):
-    """count(self, sub[, start[, end]]) -> int
-
-    Returns the number of non-overlapping occurrences of substring sub in string self[start:end].
+    """Returns the number of non-overlapping occurrences of substring sub in string self[start:end].
     Optional arguments start and end are interpreted as in slice notation."""
 
-    errorhandler((start, int))
+    errorhandler([start, int])
     if end is not None and not isinstance(end, int):
-        errorhandler((end, int))
+        errorhandler([end, int])
+    iter(self) # Raises error for non iterables
     
     iterable = self[start: end]
-    try:
-        iter(self) # checking for iterable object
-        # raising `AssertionError` if not found `str`
-        assert isinstance(self, str)
-        # issue with counting empty string
-        # returns wrong result for this case
-        _count, len_sub = 0, len(sub)
+    if isinstance(self, str):
+        #! issue with counting empty string
+        #! returns wrong result for this case
+        Count, len_sub = 0, len(sub)
         for i in range(len(iterable)):
             if sub == iterable[i: i+len_sub]:
-                _count += 1
-        return _count if sub != "" else _count+1
-    except AssertionError:
+                Count += 1
+        return Count if sub != "" else Count+1
+    else:
         # expecting for iterable object
-        _count = 0
+        Count = 0
         for i in iterable:
             if sub == i:
-                _count += 1
-        return _count
-    except:
-        raise # Raising exception if not found iterable
+                Count += 1
+        return Count
 
 def join(self, iterable):
     """Concatenate any number of strings.
@@ -599,16 +581,13 @@ def join(self, iterable):
 
     Example: join('.', ['ab', 'pq', 'rs']) -> 'ab.pq.rs'"""
 
-    errorhandler((self, str))
-    try:
-        # checking for iterable object
-        iter(iterable)
-        output = ""
-        for i in iterable:
-            output += i + self
-        return output
-    except:
-        raise # Raising exception if not found iterable
+    errorhandler([self, str])
+    iter(iterable) # Raises error for non iterables
+
+    output = ""
+    for i in iterable:
+        output += i + self
+    return output
 
 def replace(self, old, new, count = -1):
     """Returns a copy with all occurrences of substring old replaced by new.
@@ -619,7 +598,7 @@ def replace(self, old, new, count = -1):
     If the optional argument count is given, only the first count occurrences are replaced."""
 
     # Checking for invalid arguments and raising error if not valid
-    errorhandler((self, str), (old, str), (new, str), (count, int))
+    errorhandler([self, str], [old, str], [new, str], [count, int])
 
     IsTrue = True if count <= -1 else False
     i, string, old_len = 0, "", len(old)
@@ -668,12 +647,12 @@ def do_argstrip(self, striptype, chars):
     return self[i: j+1]
 
 def strip(self, chars = None):
-    """"Returns a copy of the string S with leading and trailing whitespace removed.
+    """Returns a copy of the string S with leading and trailing whitespace removed.
     If chars is given and not None, remove characters in chars instead."""
 
-    errorhandler((self, str))
+    errorhandler([self, str])
     if chars is not None and not isinstance(chars, str):
-        errorhandler((chars, str))
+        errorhandler([chars, str])
 
     if chars is None:
         return do_strip(self, BOTHSTRIP)
@@ -684,9 +663,9 @@ def lstrip(self, chars = None):
     """Returns a copy of the string self with leading whitespace removed.
     If chars is given and not None, remove characters in chars instead."""
 
-    errorhandler((self, str))
+    errorhandler([self, str])
     if chars is not None and not isinstance(chars, str):
-        errorhandler((chars, str))
+        errorhandler([chars, str])
 
     if chars is None:
         return do_strip(self, LEFTSTRIP)
@@ -697,9 +676,9 @@ def rstrip(self, chars = None):
     """Returns a copy of the string self with trailing whitespace removed.
     If chars is given and not None, remove characters in chars instead."""
 
-    errorhandler((self, str))
+    errorhandler([self, str])
     if chars is not None and not isinstance(chars, str):
-        errorhandler((chars, str))
+        errorhandler([chars, str])
 
     if chars is None:
         return do_strip(self, RIGHSTRIP)
@@ -742,8 +721,9 @@ def do_split(self, split_type, maxsplit = -1):
             string += self[I]
         I += 1
     output.append(string)
-    # Returning a new output with all whitespaces elements removed
+    # removing all whitespace elements
     out = [x for x in output if x != ""]
+    # removing extra whitespaces of the elements
     if split_type == LEFTSTRIP:
         return [lstrip(x) for x in out]
     else:
@@ -794,10 +774,10 @@ def split(self, sep = None, maxsplit = -1):
         -1 (the default value) means no limit.
     """
 
-    # Checking for string and raising error if not found
-    errorhandler((self, str), (maxsplit, int))
+    # Checking for valid arguments and raising error if not found
+    errorhandler([self, str], [maxsplit, int])
     if sep is not None and not isinstance(sep, str):
-        errorhandler((sep, str))
+        errorhandler([sep, str])
     if sep == "":
         raise ValueError("empty separator")
 
@@ -817,10 +797,10 @@ def rsplit(self, sep = None, maxsplit = -1):
         -1 (the default value) means no limit.
     """
 
-    # Checking for string and raising error if not found
-    errorhandler((self, str), (maxsplit, int))
+    # Checking for valid arguments and raising error if not found
+    errorhandler([self, str], [maxsplit, int])
     if sep is not None and not isinstance(sep, str):
-        errorhandler((sep, str))
+        errorhandler([sep, str])
     if sep == "":
         raise ValueError("empty separator")
     

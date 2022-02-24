@@ -17,7 +17,7 @@ count, index methods are same for string,
 tuple and list for these iterable data types.
 
 these functions compares each element to substring passed
-to it for iterable data types, only with for string this case changes
+to it for iterable data types, only for strings this case change
 whereas substring is compared with same length of string slice iterations.
 
 */"""

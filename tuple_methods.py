@@ -1,6 +1,6 @@
 r"This is Re-write of tuple methods"
 
-# these are two tuple methods in python
+# These are two tuple methods in Python.
 __all__ = ["count", "index"]
 
 def errorhandler(*args):
@@ -11,12 +11,12 @@ def errorhandler(*args):
             raise TypeError("expected {} found {}".format(datatype.__name__, type(value).__name__))
 
 """/*
-# A sort Note about these methods.
+# A sort note about these methods:
 
 count, index methods are same for string,
 tuple and list for these iterable data types.
 
-these functions compares each element to substring passed
+These functions compares each element to substring passed
 to it for iterable data types, only for strings this case change
 whereas substring is compared with same length of string slice iterations.
 
@@ -33,15 +33,15 @@ def count(self, sub, start = 0, end = None):
     
     iterable = self[start: end]
     if isinstance(self, str):
-        #! issue with counting empty string
-        #! returns wrong result for this case
+        #! Issue with counting empty string
+        #! Returns wrong result for this case
         Count, len_sub = 0, len(sub)
         for i in range(len(iterable)):
             if sub == iterable[i: i+len_sub]:
                 Count += 1
         return Count if sub != "" else Count+1
     else:
-        # expecting for iterable object
+        # Expecting for iterable object
         Count = 0
         for i in iterable:
             if sub == i:
@@ -68,7 +68,7 @@ def index(self, sub, start = 0, end = None):
             if sub == iterable[i: i+len_sub]:
                 return i
     else:
-        # expecting for iterable object
+        # Expecting for iterable object
         for i in range(len(iterable)):
             if sub == iterable[i]:
                 return i

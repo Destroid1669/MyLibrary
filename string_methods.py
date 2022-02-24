@@ -2,18 +2,19 @@ r"""This is Re-write of python existing string methods as functions on the basis
 of method's execution output, I only wrote this to improve my programming skills
 its is written to Imitate those methods, not intended to be used in programs.
 
--->  No Unicode implementation  <--
-Please note: no unicode implementation was done
-within this module meaning using this module for
-checking unicode characters is meaningless.
+-->  No Unicode Implementation  <--
 
-Date: 25-jan-2022 ; tuesday
+Please note: No Unicode Implementation was done
+within this module - means using this module for checking unicode 
+characters is meaningless.
+
+Date: 25-Jan-2022 ; Tuesday
 
 # |--> Author: Destroid <--|
 
 """
 
-# List of all string methods written within this module
+# List of all string methods written within this module.
 __all__ = ["isupper", "islower", "isalpha", "isdecimal", "isalnum", "isspace", "istitle",
            "isprintable", "startswith", "endswith", "upper", "lower", "swapcase", "title",
            "capitalize", "zfill", "ljust", "rjust", "center", "expandtabs", "partition",
@@ -54,7 +55,7 @@ def get_ascii_letters_pairs():
 ascii_letters_pairs = get_ascii_letters_pairs()
 
 def getkey(dct, value):
-    "Returns `dict` value for the key passed to it"
+    "Returns `dct` value for the key passed to it"
 
     for key in dct:
         if dct[key] == value:
@@ -62,7 +63,7 @@ def getkey(dct, value):
     return ''
 
 def errorhandler(*args):
-    "Raises Type error according to the arguments passed to it"
+    "Raises Type Error based on the arguments passed to it"
 
     for value, datatype in args:
         if not isinstance(value, datatype):
@@ -118,7 +119,7 @@ def isalpha(self):
 def isdecimal(self):
     """Return True if the string is a decimal string, False otherwise.
 
-    A string is a decimal string if all characters in the string are decimal and there is at least one character in the string"""
+    A string is a decimal string if all characters in the string is decimal and there is at least one character in the string"""
 
     errorhandler([self, str])
 
@@ -129,9 +130,9 @@ def isdecimal(self):
     return True if self != "" else False
 
 def isalnum(self):
-    """Returns True if the string is an alpha-numeric string, False otherwise.
+    """Returns True if the string is an alphanumeric string, False otherwise.
     
-    A string is alpha-numeric if all characters in the string are alpha-numeric and there is at least one character in the string."""
+    A string is alphanumeric if all characters in the string are alphanumeric and there is at least one character in the string."""
 
     errorhandler([self, str])
 
@@ -196,7 +197,7 @@ def startswith(self, prefix, start = 0, end = None):
     
     With optional start, test self beginning at that position.
     With optional end, stop comparing self at that position.
-    prefix can also be a tuple of strings to try."""
+    Prefix can also be a tuple of strings to try."""
 
     errorhandler([self, str], [start, int])
     if end is not None and not isinstance(end, int):
@@ -304,7 +305,6 @@ def swapcase(self):
 
 def title(self):
     """Returns a version of the string where each word is titlecased.
-
     More specifically, words start with uppercased characters and all remaining cased characters have lower case."""
 
     errorhandler([self, str])
@@ -327,7 +327,6 @@ def title(self):
 
 def capitalize(self):
     """Returns a capitalized version of the string.
-
     More specifically, make the first character have upper case and the rest lower case."""
 
     errorhandler([self, str])
@@ -339,7 +338,6 @@ def capitalize(self):
 
 def zfill(self, width):
     """Pad a numeric string with zeros on the left, to fill a field of the given width.
-
     The string is never truncated."""
 
     errorhandler([self, str], [width, int])
@@ -356,7 +354,6 @@ def zfill(self, width):
 
 def ljust(self, width, fillchar = " "):
     """Returns a left-justified string of length width.
-
     Padding is done using the specified fill character (default is a space)."""
     
     errorhandler([self, str], [width, int], [fillchar, str])
@@ -366,7 +363,6 @@ def ljust(self, width, fillchar = " "):
 
 def rjust(self, width, fillchar = " "):
     """Returns a right-justified string of length width.
-
     Padding is done using the specified fill character (default is a space)."""
     
     errorhandler([self, str], [width, int], [fillchar, str])
@@ -376,7 +372,6 @@ def rjust(self, width, fillchar = " "):
 
 def center(self, width, fillchar = " "):
     """Returns a centered string of length width.
-
     Padding is done using the specified fill character (default is a space)."""
     
     errorhandler([self, str], [width, int], [fillchar, str])
@@ -386,7 +381,6 @@ def center(self, width, fillchar = " "):
 
 def expandtabs(self, tabsize = 8):
     """Returns a copy where all tab characters are expanded using spaces.
-
     If tabsize is not given, a tab size of 8 characters is assumed."""
 
     errorhandler([self, str], [tabsize, int])
@@ -401,11 +395,9 @@ def expandtabs(self, tabsize = 8):
 
 def partition(self, sep):
     """Partition the string into three parts using the given separator.
-
     This will search for the separator in the string.  If the separator is found,
     returns a 3-tuple containing the part before the separator, the separator
     itself, and the part after it.
-
     If the separator is not found, returns a 3-tuple containing the original string and two empty strings."""
 
     errorhandler([self, str], [sep, str])
@@ -419,11 +411,9 @@ def partition(self, sep):
 
 def rpartition(self, sep):
     """Partition the string into three parts using the given separator.
-
     This will search for the separator in the string, starting at the end.
     If the separator is found, returns a 3-tuple containing the part before the
     separator, the separator itself, and the part after it.
-
     If the separator is not found, returns a 3-tuple containing two empty strings and the original string."""
 
     errorhandler([self, str], [sep, str])
@@ -437,7 +427,6 @@ def rpartition(self, sep):
 
 def splitlines(self, keepends = False):
     """Returns a list of the lines in the string, breaking at line boundaries.
-
     Line breaks are not included in the resulting list unless keepends is given and true."""
 
     errorhandler([self, str], [keepends, bool])
@@ -462,9 +451,8 @@ def splitlines(self, keepends = False):
 
 def find(self, sub, start = 0, end = None):
     """Returns the lowest index in self where substring sub is found,
-    such that sub is contained within self[start:end].  Optional
-    arguments start and end are interpreted as in slice notation.
-
+    such that sub is contained within self[start:end]. 
+    Optional arguments start and end are interpreted as in slice notation.
     Returns -1 on failure."""
 
     errorhandler([self, str], [sub, str], [start, int])
@@ -482,8 +470,8 @@ def find(self, sub, start = 0, end = None):
 
 def rfind(self, sub, start = 0, end = None):
     """Returns the highest index in self where substring sub is found,
-    such that sub is contained within self[start:end].  Optional
-    arguments start and end are interpreted as in slice notation.
+    such that sub is contained within self[start:end].  
+    Optional arguments start and end are interpreted as in slice notation.
     Returns -1 on failure."""
 
     errorhandler([self, str], [sub, str], [start, int])
@@ -501,8 +489,8 @@ def rfind(self, sub, start = 0, end = None):
 
 def index(self, sub, start = 0, end = None):
     """Returns the lowest index in self where substring sub is found,
-    such that sub is contained within self[start:end].  Optional
-    arguments start and end are interpreted as in slice notation.
+    such that sub is contained within self[start:end].  
+    Optional arguments start and end are interpreted as in slice notation.
     Raises ValueError when the substring is not found."""
 
     errorhandler([start, int])
@@ -528,8 +516,8 @@ def index(self, sub, start = 0, end = None):
 def rindex(self, sub, start = 0, end = None):
     """rindex(self, sub[, start[, end]]) -> int
     Returns the highest index in self where substring sub is found,
-    such that sub is contained within self[start:end].  Optional
-    arguments start and end are interpreted as in slice notation.
+    such that sub is contained within self[start:end].  
+    Optional arguments start and end are interpreted as in slice notation.
     Raises ValueError when the substring is not found."""
 
     errorhandler([self, str], [sub, str], [start, int])
@@ -565,7 +553,7 @@ def count(self, sub, start = 0, end = None):
                 _count += 1
         return _count if sub != "" else _count+1
     else:
-        # expecting for iterable object
+        # Expecting for iterable object
         _count = 0
         for i in iterable:
             if sub == i:
@@ -712,8 +700,10 @@ def do_split(self, split_type, maxsplit = -1):
     while I < len(self):
         if I in indexes:
             output.append(string)
-            # emptying the `string` variable 
+            """
+            # Emptying the `string` variable 
             # to clear pervious stored strings
+            """
             string = ""
         else: 
             string += self[I]
@@ -752,8 +742,10 @@ def do_argsplit(self, split_type, sep, maxsplit =-1):
         if I in indexes:
             output.append(string)
             string = ""
-            # emptying the `string` variable 
-            # to clear previous stored strings
+            """
+            # Emptying the `string` variable 
+            # to clear pervious stored strings
+            """
             I += sep_len-1
         else: 
             string += self[I]

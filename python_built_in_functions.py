@@ -1,6 +1,6 @@
 r"""This is Re-write of python existing built_in functions on the basis of
 functions execution output, I only wrote this to improve my programming skills
-its is written to Imitate those functions, not intended to be used in programs.
+it is written to Imitate those functions, not intended to be used in programs.
 
 Date: 31-jan-2022 ; Monday
 
@@ -71,14 +71,14 @@ all_ascii_characters = Merge(ascii_lowercase, ascii_uppercase, whitespace, digit
 def Chr(number):
     "Returns a Unicode string of one character"
 
-    errorhandler("%s object cannot be interpreted as an integer", (number, int))
+    errorhandler("%s object cannot be interpreted as an integer", [number, int])
     
     return all_ascii_characters.get(number)
 
 def Ord(value):
     "Returns the Unicode code point for a one-character string."
 
-    errorhandler("Ord() expected string of length 1, but %s found", (value, str))
+    errorhandler("Ord() expected string of length 1, but %s found", [value, str])
     if len(value) > 1:
         raise TypeError("Ord() expected a character, but string of length %s found" % len(value))
     
@@ -280,7 +280,7 @@ def Range(start = 0, stop = 0, step = 1):
     These are exactly the valid indices for a list of 4 elements.
     When step is given, it specifies the increment (or decrement)."""
 
-    errorhandler("%s object cannot be interpreted as an integer", (start, int), (stop, int), (step, int))
+    errorhandler("%s object cannot be interpreted as an integer", [start, int], [stop, int], [step, int])
     if step == 0:
         raise ValueError("Range() arg 3 must not be zero")
     
@@ -321,7 +321,7 @@ def Enumerate(iterable, start = 0):
               This function is simpler pythonic implementation of that function. 
     */"""
 
-    errorhandler("%s object cannot be interpreted as an integer", (start, int))
+    errorhandler("%s object cannot be interpreted as an integer", [start, int])
     iter(iterable) # Raises error for non iterables
 
     n = 0 + start
@@ -443,7 +443,7 @@ __all__.extend(["IS"])
 # Note: python `in` is an operator not a function and `IS` isn't any python
 # function rather this is `in` implementation of python operator as function.
 def IS(self, iterable) -> bool:
-    "Performs same operation as `in`"
+    "Performs same operation as `in` operator"
 
     iter(iterable) # Raises error for non-iterable object
     i, length = 0, len(iterable)
@@ -456,10 +456,9 @@ def IS(self, iterable) -> bool:
             if self == iterable[i: i+s_len]:
                 return True
             i += 1
-        return False
     else:
         while i < length:
             if self == iterable[i]:
                 return True
             i += 1
-        return False
+    return False

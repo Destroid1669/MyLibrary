@@ -445,10 +445,8 @@ def Sorted(iterable, *, key = None, reverse = False):
 
 
 __all__.extend(["IS"])
-"""
-# Note: Python `in` is an operator not a function and `IS` isn't any Python function rather 
-        this is `in` implementation of Python operator as function.
-"""
+# Note: python `in` is an operator not a function and `IS` isn't any python
+# function rather this is `in` implementation of python operator as function.
 def IS(self, iterable) -> bool:
     "Performs same operation as `in` operator"
 

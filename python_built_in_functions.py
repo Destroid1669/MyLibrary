@@ -44,7 +44,6 @@ ascii_uppercase -- a dict containing all unicode uppercase letters
 ascii_letters -- a dict containing all unicode letters
 digits -- a dict containing all unicode decimal digits
 punctuation -- a dict containing all unicode punctuation characters
-
 */"""
 
 whitespace = {32: ' ', 9: '\t', 10: '\n', 13: '\r', 11: '\x0b', 12: '\x0c'}

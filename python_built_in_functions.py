@@ -1,15 +1,15 @@
 r"""This is Re-write of python existing built_in functions on the basis of
-functions execution output, I only wrote this to improve my programming skills
-it is written to Imitate those functions, not intended to be used in programs.
+functions execution output, I only wrote this to improve my programming skills.
+It is written to imitate those function which is not intended to be used in the programs.
 
-Date: 31-jan-2022 ; Monday
+Date: 31-Jan-2022 ; Monday
 
 # |--> Author: Destroid <--|
 
 """
 
 # List of all built_in functions written within this module
-# functions name have been capitalized to prevent conflict.
+# Functions name have been capitalized to prevent conflict.
 __all__ = ["Any", "Bool", "All", "Chr", "Ord", "Complex", "Tuple",
            "List", "Divmod", "Min", "Max", "Sum", "Len", "Map",
            "Range", "Enumerate", "Reversed", "Sorted"]
@@ -44,7 +44,6 @@ ascii_uppercase -- a dict containing all unicode uppercase letters
 ascii_letters -- a dict containing all unicode letters
 digits -- a dict containing all unicode decimal digits
 punctuation -- a dict containing all unicode punctuation characters
-
 */"""
 
 whitespace = {32: ' ', 9: '\t', 10: '\n', 13: '\r', 11: '\x0b', 12: '\x0c'}
@@ -65,7 +64,7 @@ punctuation = {33: '!', 34: '"', 35: '#', 36: '$', 37: '%', 38: '&', 39: "'", 40
                96: '`', 123: '{', 124: '|', 125: '}', 126: '~'}
 
 digits = {48: '0', 49: '1', 50: '2', 51: '3', 52: '4', 53: '5', 54: '6', 55: '7', 56: '8', 57: '9'}
-# These aren't all unicode characters within python these are only some general used ones for demenestration!
+# These are not all unicode characters within python, these are only some general used ones for demonstration only!
 all_ascii_characters = Merge(ascii_lowercase, ascii_uppercase, whitespace, digits, punctuation)
 
 def Chr(number):
@@ -155,7 +154,7 @@ def Map(self, *args):
     
     """/* 
         Note: In python map returns a iterable object not a tuple sequence,
-              This function is simpler pythonic implementation of that function.
+              this function is simpler pythonic implementation of that function.
     */"""
     tuplatoon = ()
     for i in args:
@@ -213,7 +212,7 @@ def Max(*iterable, default = object, key = None):
     else:
         values = iterable
 
-    iter(values) # raises error for non iterables
+    iter(values) # Raises error for non iterables
     if len(values) == 0:
         if default is not object:
             return default
@@ -233,7 +232,6 @@ def Max(*iterable, default = object, key = None):
 
 def Sum(iterable, start = 0):
     """Returns the sum of a 'start' value (default: 0) plus an iterable of numbers
-
     When the iterable is empty, return the start value.
     This function is intended specifically for use with numeric values and may
     reject non-numeric types."""
@@ -251,7 +249,7 @@ def Tuple(iterable):
     """If no argument is given, the function returns an empty tuple.
     If iterable is specified the tuple is initialized from iterable's items.
   
-    If the argument is a tuple, the return value is the same object."""
+    If the argument is a tuple, then the return value is the same object."""
     
     if isinstance(iterable, tuple):
         return iterable
@@ -275,8 +273,14 @@ def List(iterable):
 
 def Range(start = 0, stop = 0, step = 1):
     """Returns a tuple that produces a sequence of integers from start (inclusive)
-    to stop (exclusive) by step.  range(i, j) produces i, i+1, i+2, ..., j-1.
-    start defaults to 0, and stop is omitted!  range(4) produces 0, 1, 2, 3.
+    to stop (exclusive) by step.  
+    
+    range(i, j) produces i, i+1, i+2, ..., j-1
+    
+    start defaults to 0, and stop is omitted!  
+    
+    range(4) produces 0, 1, 2, 3
+    
     These are exactly the valid indices for a list of 4 elements.
     When step is given, it specifies the increment (or decrement)."""
 
@@ -286,7 +290,7 @@ def Range(start = 0, stop = 0, step = 1):
     
     """/* 
         Note: In python range returns a iterable object not a tuple sequence,
-              This function is simpler pythonic implementation of that function.
+              this function is simpler pythonic implementation of that function.
     */"""
 
     if start != 0 and stop == 0:
@@ -318,7 +322,7 @@ def Enumerate(iterable, start = 0):
 
     """/* 
         Note: In python enumerate returns a iterable object not a tuple sequence,
-              This function is simpler pythonic implementation of that function. 
+              this function is simpler pythonic implementation of that function. 
     */"""
 
     errorhandler("%s object cannot be interpreted as an integer", [start, int])
@@ -367,7 +371,7 @@ def binary_search(array, item, start, end):
     else:
         return mid
 
-#* insertion sort is used by timsort for small array or small runs.
+#* Insertion sort is used by timsort for small array or small runs.
 def insertion_sort(array):
     for index in range(1, len(array)):
         value = array[index]
@@ -397,7 +401,7 @@ def Sorted(iterable, *, key = None, reverse = False):
 
     if key is not None:
         raise Exception("currently key argument hasn't been implemented !")
-    iter(iterable) # raises error for non iterables
+    iter(iterable) # Raises error for non iterables
     
     if not isinstance(iterable, list):
         array = list(array)
@@ -425,11 +429,11 @@ def Sorted(iterable, *, key = None, reverse = False):
         else:
             new_run.append(array[i])
 
-    # for every item in runs, append it using insertion sort
+    # For every item in runs, append it using insertion sort
     for item in runs:
         sorted_runs.append(insertion_sort(item))
     
-    # for every run in sorted_runs, merge them
+    # For every run in sorted_runs, merge them
     sorted_array = []
     for run in sorted_runs:
         sorted_array = merge(sorted_array, run)

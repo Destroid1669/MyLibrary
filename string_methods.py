@@ -55,7 +55,7 @@ def get_ascii_letters_pairs():
 ascii_letters_pairs = get_ascii_letters_pairs()
 
 def getkey(dct, value):
-    "Returns `dct` value for the key passed to it"
+    "Returns `dct` value for the key passed to it."
 
     for key in dct:
         if dct[key] == value:
@@ -63,7 +63,7 @@ def getkey(dct, value):
     return ''
 
 def errorhandler(*args):
-    "Raises Type Error based on the arguments passed to it"
+    "Raises Type Error based on the arguments passed to it."
 
     for value, datatype in args:
         if not isinstance(value, datatype):
@@ -119,7 +119,7 @@ def isalpha(self):
 def isdecimal(self):
     """Return True if the string is a decimal string, False otherwise.
 
-    A string is a decimal string if all characters in the string are decimal and there is at least one character in the string"""
+    A string is a decimal string if all characters in the string are decimal and there is at least one character in the string."""
 
     errorhandler([self, str])
 
@@ -305,6 +305,7 @@ def swapcase(self):
 
 def title(self):
     """Returns a version of the string where each word is titlecased.
+
     More specifically, words start with uppercased characters and all remaining cased characters have lower case."""
 
     errorhandler([self, str])
@@ -327,6 +328,7 @@ def title(self):
 
 def capitalize(self):
     """Returns a capitalized version of the string.
+
     More specifically, make the first character have upper case and the rest lower case."""
 
     errorhandler([self, str])
@@ -338,6 +340,7 @@ def capitalize(self):
 
 def zfill(self, width):
     """Pad a numeric string with zeros on the left, to fill a field of the given width.
+
     The string is never truncated."""
 
     errorhandler([self, str], [width, int])
@@ -354,6 +357,7 @@ def zfill(self, width):
 
 def ljust(self, width, fillchar = " "):
     """Returns a left-justified string of length width.
+
     Padding is done using the specified fill character (default is a space)."""
     
     errorhandler([self, str], [width, int], [fillchar, str])
@@ -363,6 +367,7 @@ def ljust(self, width, fillchar = " "):
 
 def rjust(self, width, fillchar = " "):
     """Returns a right-justified string of length width.
+
     Padding is done using the specified fill character (default is a space)."""
     
     errorhandler([self, str], [width, int], [fillchar, str])
@@ -372,6 +377,7 @@ def rjust(self, width, fillchar = " "):
 
 def center(self, width, fillchar = " "):
     """Returns a centered string of length width.
+
     Padding is done using the specified fill character (default is a space)."""
     
     errorhandler([self, str], [width, int], [fillchar, str])
@@ -381,6 +387,7 @@ def center(self, width, fillchar = " "):
 
 def expandtabs(self, tabsize = 8):
     """Returns a copy where all tab characters are expanded using spaces.
+
     If tabsize is not given, a tab size of 8 characters is assumed."""
 
     errorhandler([self, str], [tabsize, int])
@@ -397,8 +404,8 @@ def partition(self, sep):
     """Partition the string into three parts using the given separator.
     This will search for the separator in the string.  If the separator is found,
     returns a 3-tuple containing the part before the separator, the separator
-    itself, and the part after it.
-    If the separator is not found, returns a 3-tuple containing the original string and two empty strings."""
+    itself, and the part after it. If the separator is not found,
+    returns a 3-tuple containing the original string and two empty strings."""
 
     errorhandler([self, str], [sep, str])
 
@@ -413,8 +420,8 @@ def rpartition(self, sep):
     """Partition the string into three parts using the given separator.
     This will search for the separator in the string, starting at the end.
     If the separator is found, returns a 3-tuple containing the part before the
-    separator, the separator itself, and the part after it.
-    If the separator is not found, returns a 3-tuple containing two empty strings and the original string."""
+    separator, the separator itself, and the part after it. If the separator is not found,
+    returns a 3-tuple containing two empty strings and the original string."""
 
     errorhandler([self, str], [sep, str])
 
@@ -427,6 +434,7 @@ def rpartition(self, sep):
 
 def splitlines(self, keepends = False):
     """Returns a list of the lines in the string, breaking at line boundaries.
+
     Line breaks are not included in the resulting list unless keepends is given and true."""
 
     errorhandler([self, str], [keepends, bool])
@@ -511,11 +519,11 @@ def index(self, sub, start = 0, end = None):
         for i in range(len(iterable)):
             if sub == iterable[i]:
                 return i
+
     raise ValueError("%s substring not found" % sub)
 
 def rindex(self, sub, start = 0, end = None):
-    """rindex(self, sub[, start[, end]]) -> int
-    Returns the highest index in self where substring sub is found,
+    """Returns the highest index in self where substring sub is found,
     such that sub is contained within self[start:end].  
     Optional arguments start and end are interpreted as in slice notation.
     Raises ValueError when the substring is not found."""
@@ -536,6 +544,7 @@ def rindex(self, sub, start = 0, end = None):
 
 def count(self, sub, start = 0, end = None):
     """Returns the number of non-overlapping occurrences of substring sub in string self[start:end].
+
     Optional arguments start and end are interpreted as in slice notation."""
 
     errorhandler([start, int])
@@ -634,6 +643,7 @@ def do_argstrip(self, striptype, chars):
 
 def strip(self, chars = None):
     """Returns a copy of the string S with leading and trailing whitespace removed.
+
     If chars is given and not None, remove characters in chars instead."""
 
     errorhandler([self, str])
@@ -647,6 +657,7 @@ def strip(self, chars = None):
 
 def lstrip(self, chars = None):
     """Returns a copy of the string self with leading whitespace removed.
+
     If chars is given and not None, remove characters in chars instead."""
 
     errorhandler([self, str])
@@ -660,6 +671,7 @@ def lstrip(self, chars = None):
 
 def rstrip(self, chars = None):
     """Returns a copy of the string self with trailing whitespace removed.
+
     If chars is given and not None, remove characters in chars instead."""
 
     errorhandler([self, str])

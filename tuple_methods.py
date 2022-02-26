@@ -4,7 +4,7 @@ r"This is Re-write of tuple methods"
 __all__ = ["count", "index"]
 
 def errorhandler(*args):
-    "Raises Type error according to the arguments passed to it"
+    "Raises Type error based on arguments passed to it"
 
     for value, datatype in args:
         if not isinstance(value, datatype):

@@ -35,18 +35,18 @@ def count(self, sub, start = 0, end = None):
     if isinstance(self, str):
         #! Issue with counting empty string
         #! Returns wrong result for this case
-        Count, len_sub = 0, len(sub)
+        _count, len_sub = 0, len(sub)
         for i in range(len(iterable)):
             if sub == iterable[i: i+len_sub]:
-                Count += 1
-        return Count if sub != "" else Count+1
+                _count += 1
+        return _count if sub != "" else _count+1
     else:
         # Expecting for iterable object
-        Count = 0
+        _count = 0
         for i in iterable:
             if sub == i:
-                Count += 1
-        return Count
+                _count += 1
+        return _count
 
 def index(self, sub, start = 0, end = None):
     """Returns the lowest index in self where substring sub is found,

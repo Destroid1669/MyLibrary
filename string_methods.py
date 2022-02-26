@@ -5,8 +5,8 @@ its is written to Imitate those methods, not intended to be used in programs.
 -->  No Unicode Implementation  <--
 
 Please note: No Unicode Implementation was done
-within this module - means using this module for checking unicode 
-characters is meaningless.
+within this module - means using this module for
+checking unicode characters is meaningless.
 
 Date: 25-Jan-2022 ; Tuesday
 
@@ -119,7 +119,7 @@ def isalpha(self):
 def isdecimal(self):
     """Return True if the string is a decimal string, False otherwise.
 
-    A string is a decimal string if all characters in the string is decimal and there is at least one character in the string"""
+    A string is a decimal string if all characters in the string are decimal and there is at least one character in the string"""
 
     errorhandler([self, str])
 
@@ -471,8 +471,8 @@ def find(self, sub, start = 0, end = None):
 def rfind(self, sub, start = 0, end = None):
     """Returns the highest index in self where substring sub is found,
     such that sub is contained within self[start:end].  
-    Optional arguments start and end are interpreted as in slice notation.
-    Returns -1 on failure."""
+    Optional arguments start and end are interpreted 
+    as in slice notation. Returns -1 on failure."""
 
     errorhandler([self, str], [sub, str], [start, int])
     if end is not None and not isinstance(end, int):
@@ -700,10 +700,8 @@ def do_split(self, split_type, maxsplit = -1):
     while I < len(self):
         if I in indexes:
             output.append(string)
-            """
             # Emptying the `string` variable 
             # to clear pervious stored strings
-            """
             string = ""
         else: 
             string += self[I]
@@ -742,10 +740,8 @@ def do_argsplit(self, split_type, sep, maxsplit =-1):
         if I in indexes:
             output.append(string)
             string = ""
-            """
             # Emptying the `string` variable 
             # to clear pervious stored strings
-            """
             I += sep_len-1
         else: 
             string += self[I]

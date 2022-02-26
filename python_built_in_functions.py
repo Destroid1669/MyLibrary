@@ -1,6 +1,6 @@
 r"""This is Re-write of python existing built_in functions on the basis of
 functions execution output, I only wrote this to improve my programming skills.
-It is written to imitate those function which is not intended to be used in the programs.
+It is written to imitate those functions, not intended to be used in the programs.
 
 Date: 31-Jan-2022 ; Monday
 
@@ -28,7 +28,7 @@ def getkey(dct, value):
     return ''
 
 def errorhandler(message, *args):
-    "Raises Type error according to the arguments passed to it."
+    "Raises Type error based on arguments passed to it."
 
     for value, datatype in args:
         if not isinstance(value, datatype):
@@ -44,6 +44,7 @@ ascii_uppercase -- a dict containing all unicode uppercase letters
 ascii_letters -- a dict containing all unicode letters
 digits -- a dict containing all unicode decimal digits
 punctuation -- a dict containing all unicode punctuation characters
+
 */"""
 
 whitespace = {32: ' ', 9: '\t', 10: '\n', 13: '\r', 11: '\x0b', 12: '\x0c'}
@@ -64,7 +65,7 @@ punctuation = {33: '!', 34: '"', 35: '#', 36: '$', 37: '%', 38: '&', 39: "'", 40
                96: '`', 123: '{', 124: '|', 125: '}', 126: '~'}
 
 digits = {48: '0', 49: '1', 50: '2', 51: '3', 52: '4', 53: '5', 54: '6', 55: '7', 56: '8', 57: '9'}
-# These are not all unicode characters within python, these are only some general used ones for demonstration only!
+# These are not all unicode characters within python, these are some general used ones for demonstration only!
 all_ascii_characters = Merge(ascii_lowercase, ascii_uppercase, whitespace, digits, punctuation)
 
 def Chr(number):
@@ -106,16 +107,13 @@ def Bool(value):
         iter(value)
         for _ in value:
             return True
-        return False
-    
     except:
         if isinstance(value, str):
             value = eval(value)
 
         if abs(value) > 0:
             return True
-        else:
-            return False
+    return False
 
 def All(iterable):
     """Returns True if Bool(x) is True for all values x in the iterable.
@@ -142,7 +140,7 @@ def Complex(real = 0, imag = 0):
 def Len(obj):
     "Returns the number of items in a container."
 
-    iter(obj) # Raises error for non-iterable object
+    iter(obj) # Raises error for non iterables
     count = 0
     for _ in obj:
         count += 1
@@ -152,10 +150,10 @@ def Map(self, *args):
     """Makes an iterator that computes the function using arguments from
     each of the iterables. Stops when the shortest iterable is exhausted."""
     
-    """/* 
-        Note: In python map returns a iterable object not a tuple sequence,
-              this function is simpler pythonic implementation of that function.
+    """/* Note: In python map returns a iterable object not a tuple sequence,
+            this function is simpler pythonic implementation of that function.
     */"""
+
     tuplatoon = ()
     for i in args:
         tuplatoon += (self(i),)

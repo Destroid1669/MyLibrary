@@ -387,25 +387,7 @@ def merge(left, right):
         return [left[0]] + merge(left[1:], right)
     return [right[0]] + merge(left, right[1:])
 
-def Sorted(iterable, *, key = None, reverse = False):
-    """Return a new list containing all items from the iterable in ascending order.
-
-    A custom key function can be supplied to customize the sort order, and the
-    reverse flag can be set to request the result in descending order.
-    
-    /* Note: This is pythonic implementation of timsort algorithm */
-    
-    """
-
-    if key is not None:
-        raise Exception("currently key argument hasn't been implemented !")
-    iter(iterable) # Raises error for non iterables
-    
-    if not isinstance(iterable, list):
-        array = list(array)
-    else:
-        array = iterable
-
+def timsort(array):
     runs, sorted_runs = [], []
     length = len(array)
     new_run = [array[0]]
@@ -427,18 +409,46 @@ def Sorted(iterable, *, key = None, reverse = False):
         else:
             new_run.append(array[i])
 
-    # For every item in runs, append it using insertion sort
+    # for every item in runs, append it using insertion sort
     for item in runs:
         sorted_runs.append(insertion_sort(item))
-    
-    # For every run in sorted_runs, merge them
+    # for every run in sorted_runs, merge them
     sorted_array = []
     for run in sorted_runs:
         sorted_array = merge(sorted_array, run)
+    return sorted_array
 
-    if not reverse:
-        return sorted_array
-    return Reversed(sorted_array)
+def Sorted(iterable, *, key = None, reverse = False):
+    """Return a new list containing all items from the iterable in ascending order.
+
+    A custom key function can be supplied to customize the sort order, and the
+    reverse flag can be set to request the result in descending order.
+    
+    /* Note: This is pythonic implementation of timsort algorithm */
+    
+    """
+
+    iter(iterable) # Raises error for non iterables
+    if isinstance(iterable, list):
+        array = iterable
+    else:
+        array = list(iterable)
+
+    if key is None:
+        sorted_array = timsort(array)
+    else:
+        # getting sorted key elements for the array
+        key_sorted = timsort([key(k) for k in array])
+        # getting sorted array using key elements
+        sorted_array = []
+        s_array = array.copy()
+        for k_elem in key_sorted:
+            for elem in s_array:
+                if k_elem == key(elem):
+                    sorted_array.append(elem)
+                    s_array.remove(elem)
+
+    return sorted_array if not reverse else Reversed(sorted_array)
 
 
 __all__.extend(["IS"])

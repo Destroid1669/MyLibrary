@@ -443,14 +443,14 @@ def Sorted(iterable, *, key = None, reverse = False):
         key_sorted = timsort([key(k) for k in array])
         # getting sorted array using key elements
         sorted_array = []
+        s_array = array.copy()
         for k_elem in key_sorted:
-            for elem in array:
+            for elem in s_array:
                 if k_elem == key(elem):
                     sorted_array.append(elem)
-
-    if not reverse:
-        return sorted_array
-    return Reversed(sorted_array)
+                    s_array.remove(elem)
+    
+    return sorted_array if not reverse else Reversed(sorted_array)
 
 
 __all__.extend(["IS"])

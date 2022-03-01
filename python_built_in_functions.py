@@ -429,10 +429,9 @@ def Sorted(iterable, *, key = None, reverse = False):
     """
 
     iter(iterable) # Raises error for non iterables
-    if isinstance(iterable, list):
-        array = iterable
-    else:
-        array = list(iterable)
+
+    Array = iterable if isinstance(iterable, list) else list(iterable)
+    array = Array.copy() if not reverse else Reversed(Array.copy())
 
     if key is None:
         sorted_array = timsort(array)
@@ -441,12 +440,11 @@ def Sorted(iterable, *, key = None, reverse = False):
         key_sorted = timsort([key(k) for k in array])
         # getting sorted array using key elements
         sorted_array = []
-        s_array = array.copy()
         for k_elem in key_sorted:
-            for elem in s_array:
+            for elem in array:
                 if k_elem == key(elem):
                     sorted_array.append(elem)
-                    s_array.remove(elem)
+                    array.remove(elem)
 
     return sorted_array if not reverse else Reversed(sorted_array)
 

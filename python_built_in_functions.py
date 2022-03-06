@@ -10,9 +10,9 @@ Date: 31-Jan-2022 ; Monday
 
 # List of all built_in functions written within this module
 # Functions name have been capitalized to prevent conflict.
-__all__ = ["Any", "Bool", "All", "Chr", "Ord", "Complex", "Tuple",
-           "List", "Divmod", "Min", "Max", "Sum", "Len", "Map",
-           "Range", "Enumerate", "Reversed", "Sorted"]
+__all__ = ["Any", "Bool", "All", "Chr", "Ord", "Bin", "Complex",
+           "Tuple", "List", "Divmod", "Min", "Max", "Sum", "Len",
+           "Map", "Range", "Enumerate", "Reversed", "Sorted"]
 
 def Merge(self, *args):
     for i in args:
@@ -126,6 +126,30 @@ def All(iterable):
         if not Bool(x):
             return False
     return True
+
+def Bin(number: int):
+  """Returns the binary representation of an integer.
+
+  >>> bin(2796202)
+  '0b1010101010101010101010'
+  
+  """
+
+  errorhandler("%s object cannot be interpreted as an integer", [number, int])
+  
+  if number == 0:
+    return "0b0"
+  num = abs(number)
+
+  binary = ''
+  while num != 0:
+    num, remainder = Divmod(num, 2)
+    binary += str(remainder)
+
+  if number > -1:
+    return f"0b{binary[::-1]}"
+  else:
+    return f"-0b{binary[::-1]}"
 
 def Complex(real = 0, imag = 0):
     """Create a complex number from a real part and an optional imaginary part.

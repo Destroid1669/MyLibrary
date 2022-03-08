@@ -24,18 +24,20 @@ I'm currently in 1st semester at my university at the time of releasing this lib
 
 
 ## Reason behind writing this library
-Initially as intermediate, I didn't care much about remembering and utilizing these built-it ones were provided </br>
-to use in the programs when I could simply write my own functions to do the same operation. While writing this library </br>
-I realized the importance and benefits </br> of these libraries when I compared their execution time and well-written code </br>
-efficiency to mine, and also the reason behind their weirdness.
+Initially as intermediate, I didn't care much about remembering and utilizing these built-it ones </br>
+were provided to use in the programs when I could simply write my own functions to do the same  </br>
+operation. While writing this library, I realized the importance and benefits of these libraries </br>
+when I compared their execution time and well-written code efficiency to mine and </br>
+also the reason behind their weirdness.
 
 ## My experience while writing this library
-It was a bit difficult as I anticipated things didn't go as planned somedays felt like there were no progress </br>
-which paid of next day, I anticipated this to take max one month but it took me more than that. I had to make </br>
-re-corrections fixes, improvements to code whenever I found some code-breaking bugs or learned some new concepts</br>
-I intended to make this library as much perfect as possible so I couldn't let any imperfection left unattended </br>
-resulting in exceeding my expected time limit, I did this all by myself without anyone's external help that </br>
-sometimes made me feel lost and confused in what I was doing.
+It was a bit difficult as I anticipated things didn't go as planned somedays felt like there </br>
+were no progress which paid of next day, I anticipated this to take max one month but it took </br>
+me more than that. I had to make re-corrections fixes, improvements to code whenever I found </br>
+some code-breaking bugs or learned some new concepts, I intended to make this library as much </br>
+perfect as possible so I couldn't let any imperfection left unattended resulting in exceeding  </br>
+my expected time limit, I did this all by myself without anyone's external help that </br>
+sometimes made me feel lost and confused in what I was doing. </br>
 
 
 ## CONCLUSION

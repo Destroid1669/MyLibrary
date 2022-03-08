@@ -2,26 +2,24 @@ r"""This is Re-write of python existing string methods as functions on the basis
 of method's execution output, I only wrote this to improve my programming skills
 its is written to Imitate those methods, not intended to be used in programs.
 
--->  No Unicode Implementation  <--
-
+>| No Unicode Implementation |<
 Please note: No Unicode Implementation was done
-within this module - means using this module for
-checking unicode characters is meaningless.
+within this module which means using this module
+for checking unicode characters is meaningless.
 
 Date: 25-Jan-2022 ; Tuesday
 
-# |--> Author: Destroid <--|
+|--> Author: Destroid <--|
 
 """
-
 # List of all string methods written within this module.
 __all__ = ["isupper", "islower", "isalpha", "isdecimal", "isalnum", "isspace", "istitle",
-           "isprintable", "startswith", "endswith", "upper", "lower", "swapcase", "title",
-           "capitalize", "zfill", "ljust", "rjust", "center", "expandtabs", "partition",
-           "rpartition", "splitlines", "find", "rfind", "index", "rindex", "count", "join",
-           "replace", "strip", "lstrip", "rstrip", "split", "rsplit"]
+           "isprintable", "startswith", "endswith", "removeprefix", "removesuffix", "upper",
+           "lower", "swapcase", "title", "capitalize", "zfill", "ljust", "rjust", "center",
+           "expandtabs", "partition", "rpartition", "splitlines", "find", "rfind", "index",
+           "rindex", "count", "join", "replace", "strip", "lstrip", "rstrip", "split", "rsplit"]
 
-"""/*A collection of string constants.
+"""A collection of string constants.
 
 Public module variables:
 
@@ -35,7 +33,7 @@ octdigits -- a string containing all ASCII octal digits
 punctuation -- a string containing all ASCII punctuation characters
 printable -- a string containing all ASCII characters considered printable
 
-*/"""
+"""
 
 whitespace = ' \t\n\r\v\f'
 ascii_lowercase = 'abcdefghijklmnopqrstuvwxyz'
@@ -62,12 +60,13 @@ def getkey(dct, value):
             return key[0]
     return ''
 
-def errorhandler(*args):
+def errorhandler(*args, error = None):
     "Raises Type Error based on the arguments passed to it."
 
+    if not error: error = "expected {} found {}"
     for value, datatype in args:
         if not isinstance(value, datatype):
-            raise TypeError("expected {} found {}".format(datatype.__name__, type(value).__name__))
+            raise TypeError(error.format(datatype.__name__, type(value).__name__))
 
 def isupper(self):
     """Returns True if the string is an uppercase string, False otherwise.
@@ -81,7 +80,7 @@ def isupper(self):
         if letters in ascii_letters:
             if letters in ascii_lowercase:
                 return False
-            else:
+            if not IsTrue:
                 IsTrue = True
 
     return True if IsTrue else False
@@ -98,7 +97,7 @@ def islower(self):
         if letters in ascii_letters:
             if letters in ascii_uppercase:
                 return False
-            else:
+            if not IsTrue:
                 IsTrue = True
 
     return True if IsTrue else False
@@ -200,8 +199,7 @@ def startswith(self, prefix, start = 0, end = None):
     Prefix can also be a tuple of strings to try."""
 
     errorhandler([self, str], [start, int])
-    if end is not None and not isinstance(end, int):
-        errorhandler([end, int])
+    if end is not None: errorhandler([end, int])
     if not isinstance(prefix, str):
         if isinstance(prefix, tuple):
             for _p in prefix:
@@ -231,8 +229,7 @@ def endswith(self, suffix, start = 0, end = None):
     suffix can also be a tuple of strings to try."""
 
     errorhandler([self, str], [start, int])
-    if end is not None and not isinstance(end, int):
-        errorhandler([end, int])
+    if end is not None: errorhandler([end, int])
     if not isinstance(suffix, str):
         if isinstance(suffix, tuple):
             for _s in suffix:
@@ -254,7 +251,44 @@ def endswith(self, suffix, start = 0, end = None):
             if s in iterable:
                 return True
         return False
+
+def removeprefix(self, prefix):
+    """Returns a str with the given prefix string removed if present.
+
+    If the string starts with the prefix string, return string[len(prefix):].
+    Otherwise, return a copy of the original string."""
+
+    errorhandler([self, str], [prefix, str], error =  "removeprefix() argument must be str, not {1}")
+
+    if prefix not in self:
+        return self
+
+    sep = tuple(prefix)
+    i, s_len = 0, len(self)
+    while i < s_len and startswith(self[i], sep):
+        i += 1
+
+    return self[i: s_len]
+
+def removesuffix(self, suffix):
+    """Returns a str with the given suffix string removed if present.
+
+    If the string ends with the suffix string and that suffix is not empty,
+    return string[:-len(suffix)]. Otherwise, return a copy of the original
+    string."""
+
+    errorhandler([self, str], [suffix, str], error =  "removesuffix() argument must be str, not {1}")
+    
+    if suffix not in self:
+        return self
+
+    sep = tuple(suffix)
+    j = len(self)-1
+    while 1 < j and startswith(self[j], sep):
+        j -= 1
         
+    return self[0: j+1]
+
 def upper(self):
     "Returns a copy of the string converted to uppercase."
 
@@ -464,8 +498,7 @@ def find(self, sub, start = 0, end = None):
     Returns -1 on failure."""
 
     errorhandler([self, str], [sub, str], [start, int])
-    if end is not None and not isinstance(end, int):
-        errorhandler([end, int])
+    if end is not None: errorhandler([end, int])
     if sub == "":
         return 0
 
@@ -483,8 +516,7 @@ def rfind(self, sub, start = 0, end = None):
     as in slice notation. Returns -1 on failure."""
 
     errorhandler([self, str], [sub, str], [start, int])
-    if end is not None and not isinstance(end, int):
-        errorhandler([end, int])
+    if end is not None: errorhandler([end, int])
     if sub == "" and self == "":
         return 0
 
@@ -502,8 +534,7 @@ def index(self, sub, start = 0, end = None):
     Raises ValueError when the substring is not found."""
 
     errorhandler([start, int])
-    if end is not None and not isinstance(end, int):
-        errorhandler([end, int])
+    if end is not None: errorhandler([end, int])
     if sub == "":
         return 0
     iter(self) # Raises error for non iterables
@@ -529,8 +560,7 @@ def rindex(self, sub, start = 0, end = None):
     Raises ValueError when the substring is not found."""
 
     errorhandler([self, str], [sub, str], [start, int])
-    if end is not None and not isinstance(end, int):
-        errorhandler([end, int])
+    if end is not None: errorhandler([end, int])
     if sub == "" and self == "":
         return 0
     
@@ -548,8 +578,7 @@ def count(self, sub, start = 0, end = None):
     Optional arguments start and end are interpreted as in slice notation."""
 
     errorhandler([start, int])
-    if end is not None and not isinstance(end, int):
-        errorhandler([end, int])
+    if end is not None: errorhandler([end, int])
     iter(self) # Raises error for non iterables
     
     iterable = self[start: end]
@@ -620,7 +649,7 @@ def do_strip(self, striptype):
         while i < len(self) and isspace(self[i]):
             i += 1
 
-    j = len(self) - 1
+    j = len(self)-1
     if striptype != LEFTSTRIP:
         while (1 < j and isspace(self[j])):
             j -= 1
@@ -634,7 +663,7 @@ def do_argstrip(self, striptype, chars):
         while i < len(self) and startswith(self[i], sep):
             i += 1
 
-    j = len(self) -1
+    j = len(self)-1
     if striptype != LEFTSTRIP:
         while 1 < j and startswith(self[j], sep):
             j -= 1
@@ -647,8 +676,7 @@ def strip(self, chars = None):
     If chars is given and not None, remove characters in chars instead."""
 
     errorhandler([self, str])
-    if chars is not None and not isinstance(chars, str):
-        errorhandler([chars, str])
+    if chars is not None: errorhandler([chars, str])
 
     if chars is None:
         return do_strip(self, BOTHSTRIP)
@@ -661,8 +689,7 @@ def lstrip(self, chars = None):
     If chars is given and not None, remove characters in chars instead."""
 
     errorhandler([self, str])
-    if chars is not None and not isinstance(chars, str):
-        errorhandler([chars, str])
+    if chars is not None: errorhandler([chars, str])
 
     if chars is None:
         return do_strip(self, LEFTSTRIP)
@@ -675,8 +702,7 @@ def rstrip(self, chars = None):
     If chars is given and not None, remove characters in chars instead."""
 
     errorhandler([self, str])
-    if chars is not None and not isinstance(chars, str):
-        errorhandler([chars, str])
+    if chars is not None: errorhandler([chars, str])
 
     if chars is None:
         return do_strip(self, RIGHSTRIP)
@@ -715,7 +741,7 @@ def do_split(self, split_type, maxsplit = -1):
             # Emptying the `string` variable 
             # to clear pervious stored strings
             string = ""
-        else: 
+        else:
             string += self[I]
         I += 1
     output.append(string)
@@ -755,7 +781,7 @@ def do_argsplit(self, split_type, sep, maxsplit =-1):
             # Emptying the `string` variable 
             # to clear pervious stored strings
             I += sep_len-1
-        else: 
+        else:
             string += self[I]
         I += 1
     output.append(string)
@@ -774,8 +800,7 @@ def split(self, sep = None, maxsplit = -1):
 
     # Checking for valid arguments and raising error if not valid
     errorhandler([self, str], [maxsplit, int])
-    if sep is not None and not isinstance(sep, str):
-        errorhandler([sep, str])
+    if sep is not None: errorhandler([sep, str])
     if sep == "":
         raise ValueError("empty separator")
 
@@ -797,8 +822,7 @@ def rsplit(self, sep = None, maxsplit = -1):
 
     # Checking for valid arguments and raising error if not valid
     errorhandler([self, str], [maxsplit, int])
-    if sep is not None and not isinstance(sep, str):
-        errorhandler([sep, str])
+    if sep is not None: errorhandler([sep, str])
     if sep == "":
         raise ValueError("empty separator")
     

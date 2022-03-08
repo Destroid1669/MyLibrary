@@ -24,11 +24,9 @@ I'm currently in 1st semester at my university at the time of releasing this lib
 
 
 ## Reason behind writing this library
-Initially as intermediate, I didn't care much about remembering and utilizing
-these built-it ones were provided to use in the program when I could simply write
-my own functions to do the same operation. While writing this library, I realized
-the importance and benefits of these libraries when I compared their execution
-time and well-written code efficiency to mine, and also the reason behind their weirdness.
+Initially as intermediate, I didn't care much about remembering and utilizing these built-it ones were provided to use in the program </br>
+when I could simply write my own functions to do the same operation. While writing this library, I realized the importance and benefits </br>
+of these libraries when I compared their execution time and well-written code efficiency to mine, and also the reason behind their weirdness.
 
 ## My experience while writing this library
 It was a bit difficult as I anticipated things didn't go as planned somedays felt like

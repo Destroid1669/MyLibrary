@@ -32,7 +32,7 @@ efficiency to mine, and also the reason behind their weirdness.
 ## My experience while writing this library
 It was a bit difficult as I anticipated things didn't go as planned somedays felt like there were no progress </br>
 which paid of next day, I anticipated this to take max one month but it took me more than that. I had to make </br>
-re-corrections fixes, improvements to code whenever I found some code-breaking bugs or learned some new concepts </br>
+re-corrections fixes, improvements to code whenever I found some code-breaking bugs or learned some new concepts</br>
 I intended to make this library as much perfect as possible so I couldn't let any imperfection left unattended </br>
 resulting in exceeding my expected time limit, I did this all by myself without anyone's external help that </br>
 sometimes made me feel lost and confused in what I was doing.

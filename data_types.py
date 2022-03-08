@@ -3,7 +3,7 @@ r"""This is documentation of python data types
 python data types are also functions which can
 parse other appropriate data types to it's own.
 
-Date: 8-Mar-2022 ; Thursday
+Date: 8-Mar-2022 ; Tuesday
 
 |--> Author: Destroid <--|
 

@@ -103,7 +103,7 @@ it is constrained by the amount of memory your system has, as are all things, bu
 that an integer can be as long as you need it to be:
 """
 
-def Int(x, base = 10) -> int:
+def Int(x = None, base = 10) -> int:
     """
     Convert a number or string to an integer, or return 0 if no arguments
     are given.  If x is a number, return x.__int__().  For floating point
@@ -155,7 +155,7 @@ the character e or E followed by a positive or negative integer
 may be appended to specify scientific notation:
 """
 
-def Float(x) -> float:
+def Float(x = None) -> float:
     "Converts a string or number to a floating point number, if possible."
     
     # fractional zero is returned for empty argument.

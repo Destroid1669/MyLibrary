@@ -622,7 +622,7 @@ def replace(self, old, new, count = -1):
 
     If the optional argument count is given, only the first count occurrences are replaced."""
 
-    # Checking for invalid arguments and raising error if not valid
+    # Checks for valid arguments and raises error if not valid
     errorhandler([self, str], [old, str], [new, str], [count, int])
 
     IsTrue = True if count <= -1 else False
@@ -798,7 +798,7 @@ def split(self, sep = None, maxsplit = -1):
         -1 (the default value) means no limit.
     """
 
-    # Checking for valid arguments and raising error if not valid
+    # Checks for valid arguments and raises error if not valid
     errorhandler([self, str], [maxsplit, int])
     if sep is not None: errorhandler([sep, str])
     if sep == "":
@@ -820,7 +820,7 @@ def rsplit(self, sep = None, maxsplit = -1):
         -1 (the default value) means no limit.
     """
 
-    # Checking for valid arguments and raising error if not valid
+    # Checks for valid arguments and raises error if not valid
     errorhandler([self, str], [maxsplit, int])
     if sep is not None: errorhandler([sep, str])
     if sep == "":

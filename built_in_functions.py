@@ -10,9 +10,12 @@ Date: 31-Jan-2022 ; Monday
 
 # List of all built_in functions written within this module
 # Functions name have been capitalized to prevent conflict.
-__all__ = ["Any", "All", "Bool", "Chr", "Ord", "Bin",
-           "Divmod", "Min", "Max", "Sum", "Len", "Map",
-           "Range", "Enumerate", "Reversed", "Sorted"]
+__all__ = ["Any", "All", "Bool", "Chr", "Ord", "Bin", "Divmod",
+           "Min", "Max", "Sum", "Len", "Map", "Filter", "Range",
+           "Enumerate", "Reversed", "Sorted"]
+
+# variable for checking missing arguments
+missing_value = object()
 
 def Merge(self, *args):
     for i in args:
@@ -154,52 +157,36 @@ def Bin(number: int):
 def Len(obj):
     "Returns the number of items in a container."
 
-    iter(obj) # Raises error for non iterables
+    iterable = iter(obj) # Raises error for non iterables
     count = 0
-    for _ in obj:
+    for _ in iterable:
         count += 1
     return count
-
-def Map(self, *args):
-    """Makes an iterator that computes the function using arguments from
-    each of the iterables. Stops when the shortest iterable is exhausted."""
-    
-    """/* Note: In python map returns a iterable object not a tuple sequence,
-            this function is simpler pythonic implementation of that function.
-    */"""
-
-    tuplatoon = ()
-    for i in args:
-        tuplatoon += (self(i),)
-    return tuplatoon
 
 def Divmod(x, y):
     "Returns the tuple (x//y, x%y).  Invariant: div*y + mod == x."
 
     return (x//y, x%y)
 
-def Min(*iterable, default = object, key = None):
+def Min(*iterable, default = missing_value, key = None):
     """With a single iterable argument, return its smallest item. The
     default keyword-only argument specifies an object to return if
     the provided iterable is empty.
     With two or more arguments, return the smallest argument."""
-    
-    if len(iterable) == 0:
-        raise TypeError("Max expected at least 1 argument, got 0")
-    
-    if len(iterable) == 1:
-        values = iterable[0]
-    else:
-        values = iterable
 
-    iter(values) # Raises error for non iterables
-    if len(values) == 0:
-        if default is not object:
+    it = iter(iterable)
+    try:
+        values = next(it)
+    except StopIteration:
+        raise TypeError("Min expected at least 1 argument, got 0")
+
+    try:
+        small = next(iter(values))
+    except StopIteration:
+        if default is not missing_value:
             return default
         raise ValueError("Min() arg is an empty sequence")
     
-    for small in values:
-        break
     if key is None:
         for i in values:
             if i < small:
@@ -210,28 +197,25 @@ def Min(*iterable, default = object, key = None):
                 small = i
     return small
 
-def Max(*iterable, default = object, key = None):
+def Max(*iterable, default = missing_value, key = None):
     """With a single iterable argument, return its biggest item. The
     default keyword-only argument specifies an object to return if
     the provided iterable is empty.
     With two or more arguments, return the largest argument."""
     
-    if len(iterable) == 0:
+    it = iter(iterable)
+    try:
+        values = next(it)
+    except StopIteration:
         raise TypeError("Max expected at least 1 argument, got 0")
-    
-    if len(iterable) == 1:
-        values = iterable[0]
-    else:
-        values = iterable
 
-    iter(values) # Raises error for non iterables
-    if len(values) == 0:
-        if default is not object:
+    try:
+        big = next(iter(values))
+    except StopIteration:
+        if default is not missing_value:
             return default
         raise ValueError("Max() arg is an empty sequence")
-    
-    for big in values:
-        break
+
     if key is None:
         for i in values:
             if i > big:
@@ -248,12 +232,12 @@ def Sum(iterable, start = 0):
     This function is intended specifically for use with numeric values and may
     reject non-numeric types."""
 
-    iter(iterable) # Raises error for non iterables
-    if isinstance(iterable, str):
+    it = iter(iterable) # Raises error for non iterables
+    if isinstance(start, str):
         raise TypeError("Sum() can't sum strings [use ''.join(seq) instead]")
     
     _sum = 0
-    for element in iterable:
+    for element in it:
         _sum += element
     return _sum + start
 
@@ -307,7 +291,7 @@ def Enumerate(iterable, start = 0):
         (0, seq[0]), (1, seq[1]), (2, seq[2]), ..."""
 
     """Note:
-        In python enumerate returns a iterable object not a tuple sequence,
+        In python enumerate returns a enumerate object not a tuple sequence,
         this function is simpler pythonic implementation of that function. 
     """
 
@@ -325,15 +309,15 @@ def Reversed(sequence):
     "Return a reverse iterator over the values of the given sequence."
     
     """Note:
-        In python reversed returns a iterable object not a tuple sequence,
+        In python reversed returns a reversed object not a tuple sequence,
         this function is simpler pythonic implementation of that function. 
     """
 
     iter(sequence) # raises error for non iterables 
     if isinstance(sequence, set):
         raise TypeError("'set' object is not reversible")
-    if not isinstance(sequence, list):
-        sequence = list(sequence)
+    sequence = sequence.copy() if isinstance(
+    sequence, list) else list(sequence)
 
     length = len(sequence)
     for i in range(int(length / 2)):
@@ -421,16 +405,17 @@ def Sorted(iterable, *, key = None, reverse = False):
 
     iter(iterable) # Raises error for non iterables
     
-    Array = iterable.copy() if isinstance(iterable, list) else list(iterable)
+    Array = iterable.copy() if isinstance(
+    iterable, list) else list(iterable)
     array = Array if not reverse else Reversed(Array)
     import sys; sys.setrecursionlimit(len(array))
     
     if key is None:
         sorted_array = timsort(array)
     else:
-        # getting sorted key elements for the array
+        # sorting array elements using key
         key_sorted = timsort([key(k) for k in array])
-        # getting sorted array using key elements
+        # sorting array using sorted key elements
         sorted_array = []
         for k_elem in key_sorted:
             for elem in array:
@@ -439,6 +424,78 @@ def Sorted(iterable, *, key = None, reverse = False):
                     array.remove(elem)
 
     return sorted_array if not reverse else Reversed(sorted_array)
+
+def Map(function, *args):
+    """Makes an iterator that computes the function using arguments from
+    each of the iterables. Stops when the shortest iterable is exhausted."""
+    
+    """Note:
+        In python map returns a map object not a tuple sequence,
+        this function is simpler pythonic implementation of that function.
+    """
+
+    it = iter(args)
+    try:
+        initial = next(it)
+    except StopIteration:
+        raise TypeError("Map() must have at least two arguments.")
+
+    iter(initial) # raises error for non iterables.
+    #! issue: doesn't support multi *args.
+    tuplatoon = ()
+    for element in initial:
+        tuplatoon += (function(element),)
+    return tuplatoon
+
+def Filter(function, iterable):
+    """filter(function or None, iterable) --> filter object
+ 
+   Return an iterator yielding those items of iterable for which function(item)
+   is true. If function is None, return the items that are true."""
+    
+    """Note:
+        In python filter returns a filter object not a tuple sequence,
+        this function is simpler pythonic implementation of that function.
+    """
+
+    it = iter(iterable)
+    tuplatoon = ()
+    if function is None:
+        return tuple(iterable)
+    
+    for element in it:
+        if function(element):
+            tuplatoon += (element,)
+    return tuplatoon
+
+__all__.extend(["Reduce"])
+#* Note: `reduce` is functools library function not a python built-in function.
+def Reduce(function, sequence, initial = missing_value):
+    """
+    reduce(function, iterable[, initial]) -> value
+
+    Apply a function of two arguments cumulatively to the items of a sequence
+    or iterable, from left to right, so as to reduce the iterable to a single
+    value.  For example, reduce(lambda x, y: x+y, [1, 2, 3, 4, 5]) calculates
+    ((((1+2)+3)+4)+5).  If initial is present, it is placed before the items
+    of the iterable in the calculation, and serves as a default when the
+    iterable is empty.
+    """
+
+    it = iter(sequence)
+    if initial is missing_value:
+        try:
+            value = next(it)
+        except StopIteration:
+            raise TypeError(
+                "reduce() of empty iterable with no initial value") from None
+    else:
+        value = initial
+    
+    for element in it:
+        value = function(value, element)
+
+    return value
 
 
 __all__.extend(["IS"])

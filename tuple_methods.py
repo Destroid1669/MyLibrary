@@ -27,7 +27,7 @@ def count(self, sub, start = 0, end = None):
     Optional arguments start and end are interpreted as in slice notation."""
 
     errorhandler([start, int])
-    if end is not None and not isinstance(end, int):
+    if end is not None:
         errorhandler([end, int])
     iter(self) # Raises error for non iterables
     
@@ -55,7 +55,7 @@ def index(self, sub, start = 0, end = None):
     Raises ValueError when the substring is not found."""
 
     errorhandler([start, int])
-    if end is not None and not isinstance(end, int):
+    if end is not None:
         errorhandler([end, int])
     if sub == "":
         return 0

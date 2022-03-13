@@ -16,6 +16,8 @@ __all__ = ["Str", "Int", "Float", "Complex", "List",
            "Bool", "Bytes", "Bytearray", "Memoryview"]
 
 from math import floor
+# for checking missing arguments
+MISSING = object()
 
 def errorhandler(message, *args):
     "Raises Type error based on arguments passed to it."
@@ -270,7 +272,7 @@ If step is positive, the last element is the largest start + i * step less than 
 the last element is the smallest start + i * step greater than stop. step must not be zero (or else ValueError is raised).
 """
 
-def Range(start = 0, stop = 0, step = 1) -> range:
+def Range(start: int = 0, stop: int = 0, step: int = 1):
     """Returns a tuple that produces a sequence of integers from start (inclusive)
     to stop (exclusive) by step.  
     
@@ -288,24 +290,21 @@ def Range(start = 0, stop = 0, step = 1) -> range:
         raise ValueError("Range() arg 3 must not be zero")
     
     """Note:
-        In python range returns a range object not a tuple sequence,
+        In python range returns a range object not a generator object,
         this function is simpler pythonic implementation of that function.
     """
 
     if start != 0 and stop == 0:
         start, stop = stop, start
 
-    tuplatoon = ()
     if step > 0:
         while start < stop:
-            tuplatoon += (start,)
+            yield start
             start += step
     else:
         while start > stop:
-            tuplatoon += (start,)
+            yield start
             start += step
-
-    return tuplatoon
 
 r"""dict -> (Mapping type)
 Hash table for storing unordered key-value pairs. Mutable.
@@ -329,7 +328,7 @@ def Dict(iterable = None, **kwargs) -> dict:
         try:
             for k, v in iterable:
                 d[k] = v
-        except:
+        except TypeError:
             raise TypeError("cannot convert dictionary update sequence element #0 to a sequence")
     
     for k, v in kwargs.items():
@@ -385,7 +384,7 @@ values 0 and 1, respectively, in almost all contexts, the exception being that w
 converted to a string, the strings "False" or "True" are returned, respectively.
 """
 
-def Bool(value):
+def Bool(value) -> bool:
     "Returns True when the argument is true, False otherwise."
 
     if value is True:
@@ -393,16 +392,16 @@ def Bool(value):
     elif value is False or value is None:
         return False
 
+    if isinstance(value, int
+    ) or isinstance(value, float
+    ) or isinstance(value, complex):
+        if value != 0:
+            return True
     try:
-        iter(value)
         for _ in value:
             return True
-    except:
-        if isinstance(value, str):
-            value = eval(value)
-
-        if abs(value) > 0:
-            return True
+    except TypeError:
+        pass # considering non iterables to be False
     return False
 
 r"""bytes -> (Binary type)
@@ -410,7 +409,7 @@ Python byte() function converts an object to an
 immutable byte-represented object of given size and data.
 """
 
-def Bytes(obj = 0, encoding = object, errors = None) -> bytes:
+def Bytes(obj = 0, encoding = MISSING, errors = None) -> bytes:
     """bytes(bytes_or_buffer) -> immutable copy of bytes_or_buffer
     bytes(int) -> bytes object of size given by the parameter initialized with null bytes
     bytes() -> empty bytes object
@@ -425,14 +424,14 @@ def Bytes(obj = 0, encoding = object, errors = None) -> bytes:
 
     if errors is not None:
         errorhandler("bytes() argument 'errors' must be str, not %s", [errors, str])
-    if encoding is not object:
+    if encoding is not MISSING:
         errorhandler("bytes() argument 'encoding' must be str, not %s", [encoding, str])
     if errors is not None:
         if not isinstance(errors, str) and not isinstance(obj, str):
             raise TypeError("errors without a string argument")
 
     if isinstance(obj, str):
-        if encoding is object:
+        if encoding is MISSING:
             raise TypeError("string argument without an encoding")
         
         if errors is None:
@@ -450,7 +449,7 @@ It provides developers the usual methods Python affords to both mutable and byte
 Python's bytearray() built-in allows for high-efficiency manipulation of data in several common situations.
 """
 
-def Bytearray(obj = 0, encoding = object, errors = None) -> bytearray:
+def Bytearray(obj = 0, encoding = MISSING, errors = None) -> bytearray:
     """bytearray(bytes_or_buffer) -> mutable copy of bytes_or_buffer
     bytearray(int) -> bytes array of size given by the parameter initialized with null bytes
     bytearray() -> empty bytes array
@@ -466,14 +465,14 @@ def Bytearray(obj = 0, encoding = object, errors = None) -> bytearray:
 
     if errors is not None:
         errorhandler("bytearray() argument 'errors' must be str, not %s", [errors, str])
-    if encoding is not object:
+    if encoding is not MISSING:
         errorhandler("bytearray() argument 'encoding' must be str, not %s", [encoding, str])
     if errors is not None:
         if not isinstance(errors, str) and not isinstance(obj, str):
             raise TypeError("errors without a string argument")
 
     if isinstance(obj, str):
-        if encoding is object:
+        if encoding is MISSING:
             raise TypeError("encoding without a string argument")
         
         if errors is None:

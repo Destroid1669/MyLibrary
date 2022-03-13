@@ -58,7 +58,7 @@ def getkey(dct, value):
     for key in dct:
         if dct[key] == value:
             return key[0]
-    return ''
+    raise ValueError("Key not found for ascii value !")
 
 def errorhandler(*args, error = None):
     "Raises Type Error based on the arguments passed to it."

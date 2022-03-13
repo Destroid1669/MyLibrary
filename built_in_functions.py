@@ -14,8 +14,9 @@ __all__ = ["Any", "All", "Bool", "Chr", "Ord", "Bin", "Divmod",
            "Min", "Max", "Sum", "Len", "Map", "Filter", "Range",
            "Enumerate", "Reversed", "Sorted"]
 
-# variable for checking missing arguments
-missing_value = object()
+from sys import setrecursionlimit
+# for checking missing arguments
+MISSING = object()
 
 def Merge(self, *args):
     for i in args:
@@ -28,7 +29,7 @@ def getkey(dct, value):
     for key in dct:
         if dct[key] == value:
             return key[0]
-    raise ValueError("Key not found for Ascii value !")
+    raise ValueError("Key not found for ascii value !")
 
 def errorhandler(message, *args):
     "Raises Type error based on arguments passed to it."
@@ -71,14 +72,14 @@ digits = {48: '0', 49: '1', 50: '2', 51: '3', 52: '4', 53: '5', 54: '6', 55: '7'
 # These are not all unicode characters within python, these are some general used ones for demonstration only!
 all_ascii_characters = Merge(ascii_lowercase, ascii_uppercase, whitespace, digits, punctuation)
 
-def Chr(number):
+def Chr(number: int) -> str:
     "Returns a Unicode string of one character"
 
     errorhandler("%s object cannot be interpreted as an integer", [number, int])
     
     return all_ascii_characters.get(number)
 
-def Ord(value):
+def Ord(value: str) -> int:
     "Returns the Unicode code point for a one-character string."
 
     errorhandler("Ord() expected string of length 1, but %s found", [value, str])
@@ -87,50 +88,58 @@ def Ord(value):
     
     return getkey(all_ascii_characters, value)
  
-def Any(iterable = None):
-    """Returns True if any element of the iterable is true.
-    If the iterable is empty, returns False."""
-    
-    try:
-        for _ in iterable:
-            return True
-    except:
-        return False
-    return False
-
-def Bool(value):
+def Bool(value) -> bool:
     "Returns True when the argument is true, False otherwise."
 
     if value is True:
         return True
-    elif value is False or value is None:
+    if value is False or value is None:
         return False
 
+    if isinstance(value, int
+    ) or isinstance(value, float
+    ) or isinstance(value, complex):
+        if value != 0:
+            return True
     try:
-        iter(value)
         for _ in value:
             return True
-    except:
-        if isinstance(value, str):
-            value = eval(value)
-
-        if abs(value) > 0:
-            return True
+    except TypeError:
+        pass # considering non iterables to be False
     return False
 
-def All(iterable):
+def Any(iterable) -> bool:
+    """Returns True if any element of the iterable is true.
+    If the iterable is empty, returns False."""
+    
+    try:
+        for elem in iterable:
+            if Bool(elem):
+                return True
+        return False
+    except TypeError:
+        TypeError("%s object is not iterable" % type(iterable).__name__)
+
+def All(iterable) -> bool:
     """Returns True if Bool(x) is True for all values x in the iterable.
 
     If the iterable is empty, returns True."""
 
-    for x in iterable:
-        if iter(x):
-            continue
-        if not Bool(x):
-            return False
-    return True
+    try:
+        for x in iterable:
+            try:
+                for _ in x:
+                    continue
+            except TypeError:
+                pass
 
-def Bin(number: int):
+            if not Bool(x):
+                return False
+        return True
+    except TypeError:
+        raise TypeError("%s object is not iterable" % type(iterable).__name__)
+
+def Bin(number: int) -> str:
   """Returns the binary representation of an integer.
 
   >>> bin(2796202)
@@ -154,7 +163,7 @@ def Bin(number: int):
   else:
     return f"-0b{binary[::-1]}"
 
-def Len(obj):
+def Len(obj) -> int:
     "Returns the number of items in a container."
 
     iterable = iter(obj) # Raises error for non iterables
@@ -163,12 +172,12 @@ def Len(obj):
         count += 1
     return count
 
-def Divmod(x, y):
+def Divmod(x, y) -> tuple:
     "Returns the tuple (x//y, x%y).  Invariant: div*y + mod == x."
 
     return (x//y, x%y)
 
-def Min(*iterable, default = missing_value, key = None):
+def Min(*iterable, default = MISSING, key = None):
     """With a single iterable argument, return its smallest item. The
     default keyword-only argument specifies an object to return if
     the provided iterable is empty.
@@ -183,7 +192,7 @@ def Min(*iterable, default = missing_value, key = None):
     try:
         small = next(iter(values))
     except StopIteration:
-        if default is not missing_value:
+        if default is not MISSING:
             return default
         raise ValueError("Min() arg is an empty sequence")
     
@@ -197,7 +206,7 @@ def Min(*iterable, default = missing_value, key = None):
                 small = i
     return small
 
-def Max(*iterable, default = missing_value, key = None):
+def Max(*iterable, default = MISSING, key = None):
     """With a single iterable argument, return its biggest item. The
     default keyword-only argument specifies an object to return if
     the provided iterable is empty.
@@ -212,7 +221,7 @@ def Max(*iterable, default = missing_value, key = None):
     try:
         big = next(iter(values))
     except StopIteration:
-        if default is not missing_value:
+        if default is not MISSING:
             return default
         raise ValueError("Max() arg is an empty sequence")
 
@@ -241,7 +250,7 @@ def Sum(iterable, start = 0):
         _sum += element
     return _sum + start
 
-def Range(start = 0, stop = 0, step = 1):
+def Range(start: int = 0, stop: int = 0, step: int = 1):
     """Returns a tuple that produces a sequence of integers from start (inclusive)
     to stop (exclusive) by step.  
     
@@ -259,26 +268,23 @@ def Range(start = 0, stop = 0, step = 1):
         raise ValueError("Range() arg 3 must not be zero")
     
     """Note:
-        In python range returns a range object not a tuple sequence,
+        In python range returns a range object not a generator object,
         this function is simpler pythonic implementation of that function.
     """
 
     if start != 0 and stop == 0:
         start, stop = stop, start
 
-    tuplatoon = ()
     if step > 0:
         while start < stop:
-            tuplatoon += (start,)
+            yield start
             start += step
     else:
         while start > stop:
-            tuplatoon += (start,)
+            yield start
             start += step
 
-    return tuplatoon
-
-def Enumerate(iterable, start = 0):
+def Enumerate(iterable, start: int = 0):
     """Returns a tuple sequence.
   
     iterable
@@ -291,7 +297,7 @@ def Enumerate(iterable, start = 0):
         (0, seq[0]), (1, seq[1]), (2, seq[2]), ..."""
 
     """Note:
-        In python enumerate returns a enumerate object not a tuple sequence,
+        In python enumerate returns a enumerate object not a generator object,
         this function is simpler pythonic implementation of that function. 
     """
 
@@ -299,11 +305,9 @@ def Enumerate(iterable, start = 0):
     iter(iterable) # Raises error for non iterables
 
     n = 0 + start
-    tuplatoon = ()
-    for i in iterable:
-        tuplatoon += ((n, i),)
+    for e in iterable:
+        yield (n, e)
         n += 1
-    return tuplatoon
 
 def Reversed(sequence):
     "Return a reverse iterator over the values of the given sequence."
@@ -316,17 +320,10 @@ def Reversed(sequence):
     iter(sequence) # raises error for non iterables 
     if isinstance(sequence, set):
         raise TypeError("'set' object is not reversible")
-    sequence = sequence.copy() if isinstance(
-    sequence, list) else list(sequence)
 
-    length = len(sequence)
-    for i in range(int(length / 2)):
-        temp = sequence[i]
-        sequence[i] = sequence[length-i-1]
-        sequence[length-i-1] = temp
+    for i in range(len(sequence)-1, -1, -1):
+        yield sequence[i]
     
-    return sequence
-
 def binary_search(array, item, start, end):
     if start == end:
         if array[start] > item:
@@ -363,6 +360,7 @@ def merge(left, right):
         return [left[0]] + merge(left[1:], right)
     return [right[0]] + merge(left, right[1:])
 
+#* Note: This is pythonic implementation of timsort algorithm
 def timsort(array):
     runs, sorted_runs = [], []
     length = len(array)
@@ -399,16 +397,14 @@ def Sorted(iterable, *, key = None, reverse = False):
     A custom key function can be supplied to customize the sort order, and the
     reverse flag can be set to request the result in descending order.
     
-    /* Note: This is pythonic implementation of timsort algorithm */
-    
     """
 
     iter(iterable) # Raises error for non iterables
     
     Array = iterable.copy() if isinstance(
     iterable, list) else list(iterable)
-    array = Array if not reverse else Reversed(Array)
-    import sys; sys.setrecursionlimit(len(array))
+    array = Array if not reverse else list(Reversed(Array))
+    if len(array) > 100: setrecursionlimit(len(array))
     
     if key is None:
         sorted_array = timsort(array)
@@ -423,14 +419,14 @@ def Sorted(iterable, *, key = None, reverse = False):
                     sorted_array.append(elem)
                     array.remove(elem)
 
-    return sorted_array if not reverse else Reversed(sorted_array)
+    return sorted_array if not reverse else list(Reversed(sorted_array))
 
 def Map(function, *args):
     """Makes an iterator that computes the function using arguments from
     each of the iterables. Stops when the shortest iterable is exhausted."""
     
     """Note:
-        In python map returns a map object not a tuple sequence,
+        In python map returns a map object not a generator object,
         this function is simpler pythonic implementation of that function.
     """
 
@@ -442,10 +438,8 @@ def Map(function, *args):
 
     iter(initial) # raises error for non iterables.
     #! issue: doesn't support multi *args.
-    tuplatoon = ()
     for element in initial:
-        tuplatoon += (function(element),)
-    return tuplatoon
+        yield function(element)
 
 def Filter(function, iterable):
     """filter(function or None, iterable) --> filter object
@@ -454,23 +448,22 @@ def Filter(function, iterable):
    is true. If function is None, return the items that are true."""
     
     """Note:
-        In python filter returns a filter object not a tuple sequence,
+        In python filter returns a filter object not a generator object,
         this function is simpler pythonic implementation of that function.
     """
 
     it = iter(iterable)
-    tuplatoon = ()
     if function is None:
-        return tuple(iterable)
+        for element in it:
+            yield element
     
     for element in it:
         if function(element):
-            tuplatoon += (element,)
-    return tuplatoon
+            yield element
 
 __all__.extend(["Reduce"])
 #* Note: `reduce` is functools library function not a python built-in function.
-def Reduce(function, sequence, initial = missing_value):
+def Reduce(function, sequence, initial = MISSING):
     """
     reduce(function, iterable[, initial]) -> value
 
@@ -483,7 +476,7 @@ def Reduce(function, sequence, initial = missing_value):
     """
 
     it = iter(sequence)
-    if initial is missing_value:
+    if initial is MISSING:
         try:
             value = next(it)
         except StopIteration:
@@ -504,7 +497,7 @@ __all__.extend(["IS"])
 def IS(self, iterable) -> bool:
     "Performs same operation as `in` operator"
 
-    iter(iterable) # Raises error for non-iterable object
+    iter(iterable) # Raises error for non-iterable objects
     i, length = 0, len(iterable)
     if isinstance(iterable, str):
         if not isinstance(self, str):

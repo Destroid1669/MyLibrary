@@ -251,7 +251,7 @@ def Sum(iterable, start = 0):
     return _sum + start
 
 def Range(start: int = 0, stop: int = 0, step: int = 1):
-    """Returns a tuple that produces a sequence of integers from start (inclusive)
+    """Returns a generator that produces a sequence of integers from start (inclusive)
     to stop (exclusive) by step.  
     
     range(i, j) produces i, i+1, i+2, ..., j-1
@@ -285,7 +285,7 @@ def Range(start: int = 0, stop: int = 0, step: int = 1):
             start += step
 
 def Enumerate(iterable, start: int = 0):
-    """Returns a tuple sequence.
+    """Returns a generator object.
   
     iterable
         an object supporting iteration

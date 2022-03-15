@@ -273,7 +273,7 @@ the last element is the smallest start + i * step greater than stop. step must n
 """
 
 def Range(start: int = 0, stop: int = 0, step: int = 1):
-    """Returns a tuple that produces a sequence of integers from start (inclusive)
+    """Returns a generator that produces a sequence of integers from start (inclusive)
     to stop (exclusive) by step.  
     
     range(i, j) produces i, i+1, i+2, ..., j-1

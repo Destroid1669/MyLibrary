@@ -190,11 +190,16 @@ def Min(*iterable, default = MISSING, key = None):
         raise TypeError("Min expected at least 1 argument, got 0")
 
     try:
-        small = next(iter(values))
-    except StopIteration:
-        if default is not MISSING:
-            return default
-        raise ValueError("Min() arg is an empty sequence")
+        small = values
+        iterable[1]
+    except IndexError:
+        try:
+            it = values
+            small = next(iter(values))
+        except StopIteration:
+            if default is not MISSING:
+                return default
+            raise ValueError("Min() arg is an empty sequence")
     
     if key is None:
         for i in values:
@@ -219,18 +224,23 @@ def Max(*iterable, default = MISSING, key = None):
         raise TypeError("Max expected at least 1 argument, got 0")
 
     try:
-        big = next(iter(values))
-    except StopIteration:
-        if default is not MISSING:
-            return default
-        raise ValueError("Max() arg is an empty sequence")
-
+        big = values
+        iterable[1]
+    except IndexError:
+        try:
+            it = values
+            big = next(iter(values))
+        except StopIteration:
+            if default is not MISSING:
+                return default
+            raise ValueError("Max() arg is an empty sequence")
+    
     if key is None:
-        for i in values:
+        for i in it:
             if i > big:
                 big = i
     else:
-        for i in values:
+        for i in it:
             if key(i) > key(big):
                 big = i
     return big

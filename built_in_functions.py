@@ -202,11 +202,11 @@ def Min(*iterable, default = MISSING, key = None):
             raise ValueError("Min() arg is an empty sequence")
     
     if key is None:
-        for i in values:
+        for i in it:
             if i < small:
                 small = i
     else:
-        for i in values:
+        for i in it:
             if key(i) < key(small):
                 small = i
     return small

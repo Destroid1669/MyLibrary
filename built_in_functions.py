@@ -16,7 +16,7 @@ __all__ = ["Any", "All", "Bool", "Chr", "Ord", "Bin", "Divmod",
 
 from sys import setrecursionlimit
 # for checking missing arguments
-MISSING = object()
+MISSING = lambda: None
 
 def Merge(self, *args):
     for i in args:
@@ -140,28 +140,28 @@ def All(iterable) -> bool:
         raise TypeError("%s object is not iterable" % type(iterable).__name__)
 
 def Bin(number: int) -> str:
-  """Returns the binary representation of an integer.
+    """Returns the binary representation of an integer.
 
-  >>> bin(2796202)
-  '0b1010101010101010101010'
+    >>> bin(2796202)
+    '0b1010101010101010101010'
   
-  """
+    """
 
-  errorhandler("%s object cannot be interpreted as an integer", [number, int])
-  
-  if number == 0:
-    return "0b0"
-  num = abs(number)
+    errorhandler("%s object cannot be interpreted as an integer", [number, int])
 
-  binary = ''
-  while num != 0:
-    num, remainder = Divmod(num, 2)
-    binary += str(remainder)
-
-  if number > -1:
-    return f"0b{binary[::-1]}"
-  else:
-    return f"-0b{binary[::-1]}"
+    if number == 0:
+        return "0b0"
+    num = abs(number)   
+    
+    binary = ''
+    while num != 0:
+      num, remainder = Divmod(num, 2)
+      binary += str(remainder)  
+    
+    if number > -1:
+        return f"0b{binary[::-1]}"
+    else:
+        return f"-0b{binary[::-1]}"
 
 def Len(obj) -> int:
     "Returns the number of items in a container."
@@ -188,7 +188,7 @@ def Min(*iterable, default = MISSING, key = None):
         values = next(it)
     except StopIteration:
         raise TypeError("Min expected at least 1 argument, got 0")
-
+    IsEmpty = False
     try:
         small = values
         iterable[1]
@@ -199,7 +199,9 @@ def Min(*iterable, default = MISSING, key = None):
         except StopIteration:
             if default is not MISSING:
                 return default
-            raise ValueError("Min() arg is an empty sequence")
+            IsEmpty = True
+    if IsEmpty:
+        raise ValueError("Min() arg is an empty sequence")
     
     if key is None:
         for i in it:
@@ -222,7 +224,7 @@ def Max(*iterable, default = MISSING, key = None):
         values = next(it)
     except StopIteration:
         raise TypeError("Max expected at least 1 argument, got 0")
-
+    IsEmpty = False
     try:
         big = values
         iterable[1]
@@ -233,7 +235,9 @@ def Max(*iterable, default = MISSING, key = None):
         except StopIteration:
             if default is not MISSING:
                 return default
-            raise ValueError("Max() arg is an empty sequence")
+            IsEmpty = True
+    if IsEmpty:
+        raise ValueError("Max() arg is an empty sequence")
     
     if key is None:
         for i in it:
@@ -261,7 +265,7 @@ def Sum(iterable, start = 0):
     return _sum + start
 
 def Range(start: int = 0, stop: int = 0, step: int = 1):
-    """Returns a generator that produces a sequence of integers from start (inclusive)
+    """Returns a tuple that produces a sequence of integers from start (inclusive)
     to stop (exclusive) by step.  
     
     range(i, j) produces i, i+1, i+2, ..., j-1
@@ -285,14 +289,17 @@ def Range(start: int = 0, stop: int = 0, step: int = 1):
     if start != 0 and stop == 0:
         start, stop = stop, start
 
+    tuplatoon = ()
     if step > 0:
         while start < stop:
-            yield start
+            tuplatoon += (start,)
             start += step
     else:
         while start > stop:
-            yield start
+            tuplatoon += (start,)
             start += step
+
+    return tuplatoon
 
 def Enumerate(iterable, start: int = 0):
     """Returns a generator object.
@@ -320,7 +327,7 @@ def Enumerate(iterable, start: int = 0):
         n += 1
 
 def Reversed(sequence):
-    "Return a reverse iterator over the values of the given sequence."
+    "Returns a reverse iterator over the values of the given sequence."
     
     """Note:
         In python reversed returns a reversed object not a tuple sequence,

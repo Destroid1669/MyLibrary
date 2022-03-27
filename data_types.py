@@ -273,7 +273,7 @@ the last element is the smallest start + i * step greater than stop. step must n
 """
 
 def Range(start: int = 0, stop: int = 0, step: int = 1):
-    """Returns a generator that produces a sequence of integers from start (inclusive)
+    """Returns a tuple that produces a sequence of integers from start (inclusive)
     to stop (exclusive) by step.  
     
     range(i, j) produces i, i+1, i+2, ..., j-1
@@ -297,14 +297,17 @@ def Range(start: int = 0, stop: int = 0, step: int = 1):
     if start != 0 and stop == 0:
         start, stop = stop, start
 
+    tuplatoon = ()
     if step > 0:
         while start < stop:
-            yield start
+            tuplatoon += (start,)
             start += step
     else:
         while start > stop:
-            yield start
+            tuplatoon += (start,)
             start += step
+
+    return tuplatoon
 
 r"""dict -> (Mapping type)
 Hash table for storing unordered key-value pairs. Mutable.

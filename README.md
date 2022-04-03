@@ -1,5 +1,5 @@
-<img src="https://sloc.xyz/github/Destroid1669/Python_functions_and_methods" alt="LOC"/> <a href="https://github.com/Destroid1669/Python_functions_and_methods"><img src="https://img.shields.io/github/stars/Destroid1669/Python_functions_and_methods" alt="Stars Badge"/></a> 
-<a href="https://github.com/Destroid1669/Python_functions_and_methods"><img src="https://img.shields.io/github/forks/Destroid1669/Python_functions_and_methods" alt="Forks Badge"/></a>
+<img src="https://sloc.xyz/github/Destroid1669/Python_functions_and_methods" alt="LOC"/> <a href="https://github.com/Destroid1669/Python_functions_and_methods/stargazers"><img src="https://img.shields.io/github/stars/Destroid1669/Python_functions_and_methods" alt="Stars Badge"/></a> 
+<a href="https://github.com/Destroid1669/Python_functions_and_methods/network/members"><img src="https://img.shields.io/github/forks/Destroid1669/Python_functions_and_methods" alt="Forks Badge"/></a>
 ![Language](https://img.shields.io/badge/language-Python-blue)&nbsp;
 ![Visitors](https://visitor-badge.laobi.icu/badge?page_id=Destroid1669.Python_functions_and_methods)
 

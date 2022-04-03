@@ -418,14 +418,14 @@ def Sorted(iterable, *, key = None, reverse = False):
 
     iter(iterable) # Raises error for non iterables
     
-    Array = iterable.copy() if isinstance(
+    array = iterable.copy() if isinstance(
     iterable, list) else list(iterable)
-    array = Array if not reverse else list(Reversed(Array))
     if len(array) > 100: setrecursionlimit(len(array))
     
     if key is None:
         sorted_array = timsort(array)
     else:
+        array = array[::-1] if reverse else array
         # sorting array elements using key
         key_sorted = timsort([key(k) for k in array])
         # sorting array using sorted key elements
@@ -436,7 +436,7 @@ def Sorted(iterable, *, key = None, reverse = False):
                     sorted_array.append(elem)
                     array.remove(elem)
 
-    return sorted_array if not reverse else list(Reversed(sorted_array))
+    return sorted_array[::-1] if reverse else sorted_array
 
 def Map(function, *args):
     """Makes an iterator that computes the function using arguments from

@@ -1,4 +1,4 @@
-<img src="https://sloc.xyz/github/Destroid1669/Python_functions_and_methods" alt="LOC"/>
+<img src="https://sloc.xyz/github/Destroid1669/Python_functions_and_methods" alt="LOC"/></a>
 ![Language](https://img.shields.io/badge/language-Python-blue)&nbsp;
 ![Version](https://img.shields.io/badge/version-3.10-orange)&nbsp;
 [![HitCount](http://hits.dwyl.com/Destroid1669/Python_functions_and_methods.svg)](http://hits.dwyl.com/Destroid1669/Python_functions_and_methods)

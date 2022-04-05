@@ -184,11 +184,13 @@ def Min(*iterable, default = MISSING, key = None):
     With two or more arguments, return the smallest argument."""
 
     it = iter(iterable)
+    IsEmpty = False
     try:
         values = next(it)
     except StopIteration:
+        IsEmpty = True
+    if IsEmpty:
         raise TypeError("Min expected at least 1 argument, got 0")
-    IsEmpty = False
     try:
         small = values
         iterable[1]
@@ -220,11 +222,13 @@ def Max(*iterable, default = MISSING, key = None):
     With two or more arguments, return the largest argument."""
     
     it = iter(iterable)
+    IsEmpty = False
     try:
         values = next(it)
     except StopIteration:
+        IsEmpty = True
+    if IsEmpty:
         raise TypeError("Max expected at least 1 argument, got 0")
-    IsEmpty = False
     try:
         big = values
         iterable[1]
@@ -438,7 +442,7 @@ def Sorted(iterable, *, key = None, reverse = False):
 
     return sorted_array[::-1] if reverse else sorted_array
 
-def Map(function, *args):
+def Map(func, *iterable):
     """Makes an iterator that computes the function using arguments from
     each of the iterables. Stops when the shortest iterable is exhausted."""
     
@@ -447,16 +451,24 @@ def Map(function, *args):
         this function is simpler pythonic implementation of that function.
     """
 
-    it = iter(args)
+    # checking for non iterables
+    [iter(x) for x in iterable]
     try:
-        initial = next(it)
-    except StopIteration:
-        raise TypeError("Map() must have at least two arguments.")
+        it = iterable; args = ()
+        length = min(it, key=lambda x: len(x))
+        for i in range(len(length)):
+            values = ()
+            for e in it:
+                values += (e[i],)
+            args += (values,)
 
-    iter(initial) # raises error for non iterables.
-    #! issue: doesn't support multi *args.
-    for element in initial:
-        yield function(element)
+        for v in args:
+            yield func(*v)
+
+    except IndexError:
+        it = iterable[0]
+        for element in it:
+            yield func(element)
 
 def Filter(function, iterable):
     """filter(function or None, iterable) --> filter object

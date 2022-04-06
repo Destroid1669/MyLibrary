@@ -18,20 +18,21 @@ from sys import setrecursionlimit
 # for checking missing arguments
 MISSING = lambda: None
 
-def Merge(self, *args):
+def merge_dict(*args: dict) -> dict:
+    new = {}
     for i in args:
-        self.update(i)
-    return self
+        new.update(i)
+    return new
 
-def getkey(dct, value):
-    "Returns `dict` value for the key passed to it"
+def getkey(dct: dict, value: type) -> type:
+    "Returns `dict` value for the key passed to it."
 
     for key in dct:
         if dct[key] == value:
             return key[0]
-    raise ValueError("Key not found for ascii value !")
+    raise ValueError("value not found for the key !")
 
-def errorhandler(message, *args):
+def errorhandler(message: str, *args: list) -> None:
     "Raises Type error based on arguments passed to it."
 
     for value, datatype in args:
@@ -70,7 +71,7 @@ punctuation = {33: '!', 34: '"', 35: '#', 36: '$', 37: '%', 38: '&', 39: "'", 40
 
 digits = {48: '0', 49: '1', 50: '2', 51: '3', 52: '4', 53: '5', 54: '6', 55: '7', 56: '8', 57: '9'}
 # These are not all unicode characters within python, these are some general used ones for demonstration only!
-all_ascii_characters = Merge(ascii_lowercase, ascii_uppercase, whitespace, digits, punctuation)
+all_ascii_characters = merge_dict(ascii_lowercase, ascii_uppercase, whitespace, digits, punctuation)
 
 def Chr(number: int) -> str:
     "Returns a Unicode string of one character"
@@ -118,7 +119,7 @@ def Any(iterable) -> bool:
                 return True
         return False
     except TypeError:
-        TypeError("%s object is not iterable" % type(iterable).__name__)
+        raise TypeError("%s object is not iterable" % type(iterable).__name__) from None
 
 def All(iterable) -> bool:
     """Returns True if Bool(x) is True for all values x in the iterable.
@@ -137,7 +138,7 @@ def All(iterable) -> bool:
                 return False
         return True
     except TypeError:
-        raise TypeError("%s object is not iterable" % type(iterable).__name__)
+        raise TypeError("%s object is not iterable" % type(iterable).__name__) from None
 
 def Bin(number: int) -> str:
     """Returns the binary representation of an integer.
@@ -151,12 +152,12 @@ def Bin(number: int) -> str:
 
     if number == 0:
         return "0b0"
-    num = abs(number)   
+    num = abs(number)
     
     binary = ''
     while num != 0:
-      num, remainder = Divmod(num, 2)
-      binary += str(remainder)  
+        num, remainder = divmod(num, 2)
+        binary += f"{remainder}"
     
     if number > -1:
         return f"0b{binary[::-1]}"
@@ -166,9 +167,9 @@ def Bin(number: int) -> str:
 def Len(obj) -> int:
     "Returns the number of items in a container."
 
-    iterable = iter(obj) # Raises error for non iterables
+    it = iter(obj) # Raises error for non iterables
     count = 0
-    for _ in iterable:
+    for _ in it:
         count += 1
     return count
 
@@ -184,13 +185,10 @@ def Min(*iterable, default = MISSING, key = None):
     With two or more arguments, return the smallest argument."""
 
     it = iter(iterable)
-    IsEmpty = False
     try:
         values = next(it)
     except StopIteration:
-        IsEmpty = True
-    if IsEmpty:
-        raise TypeError("Min expected at least 1 argument, got 0")
+        raise TypeError("Min expected at least 1 argument, got 0") from None
     try:
         small = values
         iterable[1]
@@ -201,9 +199,7 @@ def Min(*iterable, default = MISSING, key = None):
         except StopIteration:
             if default is not MISSING:
                 return default
-            IsEmpty = True
-    if IsEmpty:
-        raise ValueError("Min() arg is an empty sequence")
+            raise ValueError("Min() arg is an empty sequence") from None
     
     if key is None:
         for i in it:
@@ -222,13 +218,10 @@ def Max(*iterable, default = MISSING, key = None):
     With two or more arguments, return the largest argument."""
     
     it = iter(iterable)
-    IsEmpty = False
     try:
         values = next(it)
     except StopIteration:
-        IsEmpty = True
-    if IsEmpty:
-        raise TypeError("Max expected at least 1 argument, got 0")
+        raise TypeError("Max expected at least 1 argument, got 0") from None
     try:
         big = values
         iterable[1]
@@ -239,9 +232,7 @@ def Max(*iterable, default = MISSING, key = None):
         except StopIteration:
             if default is not MISSING:
                 return default
-            IsEmpty = True
-    if IsEmpty:
-        raise ValueError("Max() arg is an empty sequence")
+            raise ValueError("Max() arg is an empty sequence") from None
     
     if key is None:
         for i in it:
@@ -442,7 +433,7 @@ def Sorted(iterable, *, key = None, reverse = False):
 
     return sorted_array[::-1] if reverse else sorted_array
 
-def Map(func, *iterable):
+def Map(func, *iterables):
     """Makes an iterator that computes the function using arguments from
     each of the iterables. Stops when the shortest iterable is exhausted."""
     
@@ -451,24 +442,21 @@ def Map(func, *iterable):
         this function is simpler pythonic implementation of that function.
     """
 
-    # checking for non iterables
-    [iter(x) for x in iterable]
-    try:
-        it = iterable; args = ()
-        length = min(it, key=lambda x: len(x))
-        for i in range(len(length)):
-            values = ()
-            for e in it:
-                values += (e[i],)
-            args += (values,)
+    # checking each element
+    # for non iterables
+    for x in iterables:
+        iter(x)
 
-        for v in args:
-            yield func(*v)
+    args = ()
+    length = min(iterables, key=lambda x: len(x))
+    for i in range(len(length)):
+        values = ()
+        for e in iterables:
+            values += (e[i],)
+        args += (values,)
 
-    except IndexError:
-        it = iterable[0]
-        for element in it:
-            yield func(element)
+    for v in args:
+        yield func(*v)
 
 def Filter(function, iterable):
     """filter(function or None, iterable) --> filter object
@@ -527,7 +515,7 @@ def IS(self, iterable) -> bool:
     "Performs same operation as `in` operator"
 
     iter(iterable) # Raises error for non-iterable objects
-    i, length = 0, len(iterable)
+    i = 0; length = len(iterable)
     if isinstance(iterable, str):
         if not isinstance(self, str):
             raise TypeError("'IS <string>' requires string as left operand, not %s" % type(self).__name__)

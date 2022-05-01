@@ -1,10 +1,10 @@
-<img src="https://sloc.xyz/github/Destroid1669/python_built_ins" alt="LOC"/></a>
+<img src="https://sloc.xyz/github/Destroid1669/python_builtins" alt="LOC"/></a>
 ![Language](https://img.shields.io/badge/language-Python-blue)&nbsp;
 ![Version](https://img.shields.io/badge/version-3.10-orange)&nbsp;
-![Visitors](https://visitor-badge.laobi.icu/badge?page_id=Destroid1669.python_built_ins)
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=Destroid1669.python_builtins)
 ![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)
 
-# 🐍 Python built-ins
+# 🐍 Python builtins
 This library is re-write of python existing built-in ones
 I wrote this library to improve my programming skills,
 it isn't meant to be used as a replacement for the current

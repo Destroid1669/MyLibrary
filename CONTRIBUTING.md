@@ -1,4 +1,4 @@
-# Contributing to python_built-ins
+# Contributing to python builtins
 
 Welcome!  python_built-ins is a library that aims to closely
 resemble python built-in ones behavior and execution output.

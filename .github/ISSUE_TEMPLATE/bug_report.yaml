@@ -10,7 +10,7 @@ body:
       value: |
         Thanks for taking the time to fill out this bug report!
         
-        IS THIS A FEATURE REQUEST OR IDEA? SUBMIT A DISCUSSION POST INSTEAD HERE: https://github.com/Destroid1669/python_built_ins/discussions
+        IS THIS A FEATURE REQUEST OR IDEA? SUBMIT A DISCUSSION POST INSTEAD HERE: https://github.com/Destroid1669/python_builtins/discussions
   - type: checkboxes
     id: no-issues-relating-to-this
     attributes:
@@ -46,7 +46,7 @@ body:
     id: logs
     attributes:
       label: Relevant log output
-      description: Copy and paste from tracebacks, aka any error output which doesn't resemble built-in behavior.
+      description: Copy and paste from tracebacks, aka any output which doesn't resemble built-in behavior.
       render: shell
   - type: textarea
     id: screenshots

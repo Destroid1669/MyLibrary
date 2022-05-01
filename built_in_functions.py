@@ -1,43 +1,15 @@
-r"""This is Re-write of python existing built_in functions on the basis of
-functions execution output, I only wrote this to improve my programming skills.
-It is written to imitate those functions, not intended to be used in the programs.
-
-Date: 31-Jan-2022 ; Monday
-
-|--> Author: Destroid <--|
+r"""This Module is re-implementation of python existing built_in
+functions on the basis of their execution output, It's written to
+imitate those functions, not intended to be used in the programs.
 
 """
 
 # List of all built_in functions written within this module
 # Functions name have been capitalized to prevent conflict.
-__all__ = ["Any", "All", "Bool", "Chr", "Ord", "Bin", "Divmod",
-           "Min", "Max", "Sum", "Len", "Map", "Filter", "Range",
-           "Enumerate", "Reversed", "Sorted"]
+__all__ = ["Any", "All", "Chr", "Ord", "Bin",
+           "Divmod", "Len", "Min", "Max", "Sum", "Sorted",
+           "Map", "Zip", "Filter", "Enumerate", "Reversed"]
 
-from sys import setrecursionlimit
-# for checking missing arguments
-MISSING = lambda: None
-
-def merge_dict(*args: dict) -> dict:
-    new = {}
-    for i in args:
-        new.update(i)
-    return new
-
-def getkey(dct: dict, value: type) -> type:
-    "Returns `dict` value for the key passed to it."
-
-    for key in dct:
-        if dct[key] == value:
-            return key[0]
-    raise ValueError("value not found for the key !")
-
-def errorhandler(message: str, *args: list) -> None:
-    "Raises Type error based on arguments passed to it."
-
-    for value, datatype in args:
-        if not isinstance(value, datatype):
-            raise TypeError(f"{message}" % type(value).__name__)
 
 """A collection of unicode constants.
 
@@ -70,82 +42,102 @@ punctuation = {33: '!', 34: '"', 35: '#', 36: '$', 37: '%', 38: '&', 39: "'", 40
                96: '`', 123: '{', 124: '|', 125: '}', 126: '~'}
 
 digits = {48: '0', 49: '1', 50: '2', 51: '3', 52: '4', 53: '5', 54: '6', 55: '7', 56: '8', 57: '9'}
-# These are not all unicode characters within python, these are some general used ones for demonstration only!
-all_ascii_characters = merge_dict(ascii_lowercase, ascii_uppercase, whitespace, digits, punctuation)
 
-def Chr(number: int) -> str:
-    "Returns a Unicode string of one character"
+# These aren't all unicode characters within python, these are some common ones for demonstration only!
+all_ascii_characters = ascii_lowercase | ascii_uppercase | whitespace | digits | punctuation
 
-    errorhandler("%s object cannot be interpreted as an integer", [number, int])
-    
-    return all_ascii_characters.get(number)
 
-def Ord(value: str) -> int:
-    "Returns the Unicode code point for a one-character string."
+from sys import setrecursionlimit
+# for checking missing arguments
+MISSING = object()
 
-    errorhandler("Ord() expected string of length 1, but %s found", [value, str])
-    if len(value) > 1:
-        raise TypeError("Ord() expected a character, but string of length %s found" % len(value))
-    
-    return getkey(all_ascii_characters, value)
- 
-def Bool(value) -> bool:
-    "Returns True when the argument is true, False otherwise."
+def is_iter(value, /) -> bool:
+    "Return True if iterable else False"
 
-    if value is True:
+    try:
+        iter(value)
         return True
-    if value is False or value is None:
+    except TypeError:
         return False
 
-    if isinstance(value, int
-    ) or isinstance(value, float
-    ) or isinstance(value, complex):
-        if value != 0:
+
+def getkey(dct: dict, value: str) -> int:
+    "Return key for the value."
+
+    for key, item in dct.items():
+        if value == item:
+            return key
+    raise KeyError(f"key not found for '{value}'")
+
+
+def errorhandler(message: str, *args: list) -> None:
+    "Raise Type error based on arguments passed to it."
+
+    for value, datatype in args:
+        if not isinstance(value, datatype):
+            raise TypeError(f"{message}" % type(value).__name__)
+
+
+def Chr(i: int, /) -> str:
+    "Return a Unicode string of one character"
+
+    errorhandler("%s object cannot be interpreted as an integer", [i, int])
+
+    return all_ascii_characters[i]
+
+
+def Ord(c: str, /) -> int:
+    "Return the Unicode code point for a one-character string."
+
+    errorhandler("Ord() expected string of length 1, but %s found", [c, str])
+    if len(c) > 1:
+        raise TypeError(
+            f"Ord() expected a character, but string of length {len(c)} found")
+
+    return getkey(all_ascii_characters, c)
+
+
+def Any(iterable, /) -> bool:
+    """Return True if any element of the iterable is true.
+    If the iterable is empty, returns False."""
+
+    if not is_iter(iterable):
+        raise TypeError(
+            f"'{type(iterable).__name__}' object is not iterable")
+
+    for elem in iterable:
+        if elem:
             return True
-    try:
-        for _ in value:
-            return True
-    except TypeError:
-        pass # considering non iterables to be False
     return False
 
-def Any(iterable) -> bool:
-    """Returns True if any element of the iterable is true.
-    If the iterable is empty, returns False."""
-    
-    try:
-        for elem in iterable:
-            if Bool(elem):
-                return True
-        return False
-    except TypeError:
-        raise TypeError("%s object is not iterable" % type(iterable).__name__) from None
 
-def All(iterable) -> bool:
-    """Returns True if Bool(x) is True for all values x in the iterable.
+def All(iterable, /) -> bool:
+    """Return True if Bool(x) is True for all values x in the iterable.
 
     If the iterable is empty, returns True."""
 
-    try:
-        for x in iterable:
-            try:
-                for _ in x:
-                    continue
-            except TypeError:
-                pass
+    if not is_iter(iterable):
+        raise TypeError(
+            f"'{type(iterable).__name__}' object is not iterable")
 
-            if not Bool(x):
-                return False
-        return True
-    except TypeError:
-        raise TypeError("%s object is not iterable" % type(iterable).__name__) from None
+    for x in iterable:
+        try:
+            for _ in x:
+                continue
+        except TypeError:
+            pass
 
-def Bin(number: int) -> str:
-    """Returns the binary representation of an integer.
+        if not x:
+            return False
+    return True
+
+
+def Bin(number: int, /) -> str:
+    """Return the binary representation of an integer.
 
     >>> bin(2796202)
     '0b1010101010101010101010'
-  
+
     """
 
     errorhandler("%s object cannot be interpreted as an integer", [number, int])
@@ -153,32 +145,38 @@ def Bin(number: int) -> str:
     if number == 0:
         return "0b0"
     num = abs(number)
-    
+
     binary = ''
     while num != 0:
         num, remainder = divmod(num, 2)
         binary += f"{remainder}"
-    
+
     if number > -1:
         return f"0b{binary[::-1]}"
     else:
         return f"-0b{binary[::-1]}"
 
-def Len(obj) -> int:
-    "Returns the number of items in a container."
 
-    it = iter(obj) # Raises error for non iterables
+def Divmod(x, y, /) -> tuple:
+    "Return the tuple (x//y, x%y).  Invariant: div*y + mod == x."
+
+    return (x // y, x % y)
+
+
+def Len(obj, /) -> int:
+    "Return the number of items in a container."
+
+    if not is_iter(obj):
+        raise TypeError(
+            f"object of type '{type(obj).__name__}' has no Len()")
+
     count = 0
-    for _ in it:
+    for _ in obj:
         count += 1
     return count
 
-def Divmod(x, y) -> tuple:
-    "Returns the tuple (x//y, x%y).  Invariant: div*y + mod == x."
 
-    return (x//y, x%y)
-
-def Min(*iterable, default = MISSING, key = None):
+def Min(*iterable, default=MISSING, key=None):
     """With a single iterable argument, return its smallest item. The
     default keyword-only argument specifies an object to return if
     the provided iterable is empty.
@@ -192,6 +190,9 @@ def Min(*iterable, default = MISSING, key = None):
     try:
         small = values
         iterable[1]
+    except TypeError:
+        raise TypeError(
+            f"'{type(values).__name__}' object is not iterable") from None
     except IndexError:
         try:
             it = values
@@ -200,7 +201,7 @@ def Min(*iterable, default = MISSING, key = None):
             if default is not MISSING:
                 return default
             raise ValueError("Min() arg is an empty sequence") from None
-    
+
     if key is None:
         for i in it:
             if i < small:
@@ -211,12 +212,13 @@ def Min(*iterable, default = MISSING, key = None):
                 small = i
     return small
 
-def Max(*iterable, default = MISSING, key = None):
+
+def Max(*iterable, default=MISSING, key=None):
     """With a single iterable argument, return its biggest item. The
     default keyword-only argument specifies an object to return if
     the provided iterable is empty.
     With two or more arguments, return the largest argument."""
-    
+
     it = iter(iterable)
     try:
         values = next(it)
@@ -229,11 +231,14 @@ def Max(*iterable, default = MISSING, key = None):
         try:
             it = values
             big = next(iter(values))
+        except TypeError:
+            raise TypeError(
+                f"'{type(values).__name__}' object is not iterable") from None
         except StopIteration:
             if default is not MISSING:
                 return default
             raise ValueError("Max() arg is an empty sequence") from None
-    
+
     if key is None:
         for i in it:
             if i > big:
@@ -244,98 +249,23 @@ def Max(*iterable, default = MISSING, key = None):
                 big = i
     return big
 
-def Sum(iterable, start = 0):
-    """Returns the sum of a 'start' value (default: 0) plus an iterable of numbers
+
+def Sum(iterable, /, start=0):
+    """Return the sum of a 'start' value (default: 0) plus an iterable of numbers
     When the iterable is empty, return the start value.
     This function is intended specifically for use with numeric values and may
     reject non-numeric types."""
 
-    it = iter(iterable) # Raises error for non iterables
+    it = iter(iterable)  # Raises error for non iterables
     if isinstance(start, str):
         raise TypeError("Sum() can't sum strings [use ''.join(seq) instead]")
-    
+
     _sum = 0
     for element in it:
         _sum += element
     return _sum + start
 
-def Range(start: int = 0, stop: int = 0, step: int = 1):
-    """Returns a tuple that produces a sequence of integers from start (inclusive)
-    to stop (exclusive) by step.  
-    
-    range(i, j) produces i, i+1, i+2, ..., j-1
-    
-    start defaults to 0, and stop is omitted!  
-    
-    range(4) produces 0, 1, 2, 3
-    
-    These are exactly the valid indices for a list of 4 elements.
-    When step is given, it specifies the increment (or decrement)."""
 
-    errorhandler("%s object cannot be interpreted as an integer", [start, int], [stop, int], [step, int])
-    if step == 0:
-        raise ValueError("Range() arg 3 must not be zero")
-    
-    """Note:
-        In python range returns a range object not a generator object,
-        this function is simpler pythonic implementation of that function.
-    """
-
-    if start != 0 and stop == 0:
-        start, stop = stop, start
-
-    tuplatoon = ()
-    if step > 0:
-        while start < stop:
-            tuplatoon += (start,)
-            start += step
-    else:
-        while start > stop:
-            tuplatoon += (start,)
-            start += step
-
-    return tuplatoon
-
-def Enumerate(iterable, start: int = 0):
-    """Returns a generator object.
-  
-    iterable
-        an object supporting iteration
-  
-    The enumerate function yields pairs containing a count (from start, which
-    defaults to zero) and a value yielded by the iterable argument.
-  
-    enumerate is useful for obtaining an indexed list:
-        (0, seq[0]), (1, seq[1]), (2, seq[2]), ..."""
-
-    """Note:
-        In python enumerate returns a enumerate object not a generator object,
-        this function is simpler pythonic implementation of that function. 
-    """
-
-    errorhandler("%s object cannot be interpreted as an integer", [start, int])
-    iter(iterable) # Raises error for non iterables
-
-    n = 0 + start
-    for e in iterable:
-        yield (n, e)
-        n += 1
-
-def Reversed(sequence):
-    "Returns a reverse iterator over the values of the given sequence."
-    
-    """Note:
-        In python reversed returns a reversed object not a tuple sequence,
-        this function is simpler pythonic implementation of that function. 
-    """
-
-    iter(sequence) # raises error for non iterables 
-    if isinstance(sequence, set):
-        raise TypeError("'set' object is not reversible")
-
-    for i in range(len(sequence)-1, -1, -1):
-        yield sequence[i]
-    
 def binary_search(array, item, start, end):
     if start == end:
         if array[start] > item:
@@ -345,7 +275,7 @@ def binary_search(array, item, start, end):
     if start > end:
         return start
 
-    mid = round((start + end)/ 2)
+    mid = round((start + end) / 2)
 
     if array[mid] < item:
         return binary_search(array, item, mid + 1, end)
@@ -354,7 +284,7 @@ def binary_search(array, item, start, end):
     else:
         return mid
 
-#* Insertion sort is used by timsort for small array or small runs.
+# * Insertion sort is used by timsort for small array or small runs.
 def insertion_sort(array):
     for index in range(1, len(array)):
         value = array[index]
@@ -362,7 +292,7 @@ def insertion_sort(array):
         array = array[:pos] + [value] + array[pos:index] + array[index+1:]
     return array
 
-#* Returns a single sorted array from two sorted array
+# * Returns a single sorted array from two sorted array
 def merge(left, right):
     if not left:
         return right
@@ -372,7 +302,7 @@ def merge(left, right):
         return [left[0]] + merge(left[1:], right)
     return [right[0]] + merge(left, right[1:])
 
-#* Note: This is pythonic implementation of timsort algorithm
+# * Note: This is pythonic implementation of timsort algorithm
 def timsort(array):
     runs, sorted_runs = [], []
     length = len(array)
@@ -403,20 +333,21 @@ def timsort(array):
         sorted_array = merge(sorted_array, run)
     return sorted_array
 
-def Sorted(iterable, *, key = None, reverse = False):
+
+def Sorted(iterable, /, *, key=None, reverse=False):
     """Return a new list containing all items from the iterable in ascending order.
 
     A custom key function can be supplied to customize the sort order, and the
     reverse flag can be set to request the result in descending order.
-    
+
     """
 
-    iter(iterable) # Raises error for non iterables
-    
+    iter(iterable)  # Raises error for non iterables
     array = iterable.copy() if isinstance(
-    iterable, list) else list(iterable)
-    if len(array) > 100: setrecursionlimit(len(array))
-    
+        iterable, list) else list(iterable)
+    if len(array) > 100:
+        setrecursionlimit(len(array))
+
     if key is None:
         sorted_array = timsort(array)
     else:
@@ -433,56 +364,248 @@ def Sorted(iterable, *, key = None, reverse = False):
 
     return sorted_array[::-1] if reverse else sorted_array
 
-def Map(func, *iterables):
-    """Makes an iterator that computes the function using arguments from
-    each of the iterables. Stops when the shortest iterable is exhausted."""
-    
-    """Note:
-        In python map returns a map object not a generator object,
-        this function is simpler pythonic implementation of that function.
-    """
 
-    # checking each element
-    # for non iterables
-    for x in iterables:
-        iter(x)
+class Enumerate:
+    """Return an enumerate object.
 
-    args = ()
-    length = min(iterables, key=lambda x: len(x))
-    for i in range(len(length)):
-        values = ()
-        for e in iterables:
-            values += (e[i],)
-        args += (values,)
+    iterable
+        an object supporting iteration
 
-    for v in args:
-        yield func(*v)
+    The enumerate function yields pairs containing a count (from start, which
+    defaults to zero) and a value yielded by the iterable argument.
 
-def Filter(function, iterable):
-    """filter(function or None, iterable) --> filter object
- 
+    enumerate is useful for obtaining an indexed list:
+        (0, seq[0]), (1, seq[1]), (2, seq[2]), ..."""
+
+    def __init__(self, /, iterable, start=0):
+        self.__start = start
+        self.__index = -1
+        self.__iters = iter(iterable)
+        errorhandler("%s object cannot be interpreted as an integer", [start, int])
+
+    def __iter__(self, /):
+        return self
+
+    def __next__(self, /):
+        self.__index += 1
+        return (self.__index + self.__start, next(self.__iters))
+
+    def __repr__(self, /):
+        return "<%s object at %s>" % (self.__class__.__name__,
+            str(hex(id(self))).replace('x', 'x00000').upper())
+
+    def __getstate__(self, /):
+        "Return state information for pickling."
+
+        # Copy the object's state from self.__dict__ which contains
+        # all our instance attributes. Always use the dict.copy()
+        # method to avoid modifying the original state.
+        return self.__dict__.copy()
+
+    def __setstate__(self, state, /):
+        "Set state information for unpickling."
+
+        # Restore instance attributes (i.e., filename and lineno).
+        self.__dict__.update(state)
+
+
+class Reversed:
+    "Return a reverse iterator over the values of the given sequence."
+
+    def __init__(self, sequence, /):
+        if hasattr(sequence, 'keys'):
+            self.__data = sequence.keys()
+        elif hasattr(sequence, '__getitem__'):
+            self.__data = sequence
+        else:
+            raise TypeError(
+                f"'{type(sequence).__name__}' object is not reversible")
+        self.__index = len(sequence)
+
+    def __iter__(self, /):
+        return self
+
+    def __next__(self, /):
+        if self.__index == 0:
+            raise StopIteration
+        self.__index -= 1
+        return self.__data[self.__index]
+
+    def __repr__(self, /):
+        return "<%s_reverseiterator object at %s>" % (
+            type(self.__data).__name__, str(hex(id(self))).replace('x', 'x00000').upper())
+
+    def __length_hint__(self, /):
+        "Private method returning an estimate of len(list(it))."
+
+        return len(self.__data)
+
+    def __getstate__(self, /):
+        "Return state information for pickling."
+
+        # Copy the object's state from self.__dict__ which contains
+        # all our instance attributes. Always use the dict.copy()
+        # method to avoid modifying the original state.
+        return self.__dict__.copy()
+
+    def __setstate__(self, state, /):
+        "Set state information for unpickling."
+
+        # Restore instance attributes (i.e., filename and lineno).
+        self.__dict__.update(state)
+
+
+class Map:
+    """make an iterator that computes the function using arguments from
+
+    each of the iterables. stops when the shortest iterable is exhausted."""
+
+    def __init__(self, /, func, *iterables):
+        if not iterables:
+            raise TypeError(
+                f"{self.__class__.__name__}() must have at least two arguments.")
+
+        self.__func = func
+        self.__iters = [iter(i) for i in iterables]
+
+    def __iter__(self, /):
+        return self
+
+    def __next__(self, /):
+        args = [next(i) for i in self.__iters]
+        return self.__func(*args)
+
+    def __repr__(self, /):
+        return "<%s object at %s>" % (self.__class__.__name__,
+            str(hex(id(self))).replace('x', 'x00000').upper())
+
+    def __getstate__(self, /):
+        "Return state information for pickling."
+
+        # Copy the object's state from self.__dict__ which contains
+        # all our instance attributes. Always use the dict.copy()
+        # method to avoid modifying the original state.
+        return self.__dict__.copy()
+
+    def __setstate__(self, state, /):
+        "Set state information for unpickling."
+
+        # Restore instance attributes (i.e., filename and lineno).
+        self.__dict__.update(state)
+
+
+class Zip:
+    """Zip(*iterables, strict=False) --> Yield tuples until an input is exhausted.
+
+      >>> list(zip('abcdefg', range(3), range(4)))
+      [('a', 0, 0), ('b', 1, 1), ('c', 2, 2)]
+
+    The zip object yields n-length tuples, where n is the number of iterables
+    passed as positional arguments to zip().  The i-th element in every tuple
+    comes from the i-th iterable argument to zip().  This continues until the
+    shortest argument is exhausted.
+
+    If strict is true and one of the arguments is exhausted before the others,
+    raise a ValueError."""
+
+    def __init__(self, /, *iterables, strict=False):
+        self.__strict = strict
+        self.__pargs = iterables
+        self.__iters = [iter(i) for i in iterables]
+
+    def __iter__(self, /):
+        self.__check_eq()
+        return self
+
+    def __next__(self, /):
+        if not self.__iters:
+            raise StopIteration
+
+        args = ()
+        for i in self.__iters:
+            args += (next(i),)
+        return args
+
+    def __repr__(self, /):
+        return "<%s object at %s>" % (self.__class__.__name__,
+            str(hex(id(self))).replace('x', 'x00000').upper())
+
+    def __getstate__(self, /):
+        "Return state information for pickling."
+
+        # Copy the object's state from self.__dict__ which contains
+        # all our instance attributes. Always use the dict.copy()
+        # method to avoid modifying the original state.
+        return self.__dict__.copy()
+
+    def __setstate__(self, state, /):
+        "Set state information for unpickling."
+
+        # Restore instance attributes (i.e., filename and lineno).
+        self.__dict__.update(state)
+
+    def __check_eq(self, /):
+        if self.__strict and self.__pargs:
+            initial = self.__pargs[0]
+            name = self.__class__.__name__
+            for pos, value in enumerate(self.__pargs, start=1):
+                if len(value) > len(initial):
+                    raise ValueError(
+                        f"{name}() argument {pos} is longer than argument 1{1-pos if pos != 2 else ''}")
+                if len(value) < len(initial):
+                    raise ValueError(
+                        f"{name}() argument {pos} is shorter than arguments 1{1-pos if pos != 2 else ''}")
+
+
+class Filter:
+    """Filter(function or None, iterable) --> Filter object
+
    Return an iterator yielding those items of iterable for which function(item)
    is true. If function is None, return the items that are true."""
-    
-    """Note:
-        In python filter returns a filter object not a generator object,
-        this function is simpler pythonic implementation of that function.
-    """
 
-    it = iter(iterable)
-    if function is None:
-        for element in it:
-            yield element
-    
-    for element in it:
-        if function(element):
-            yield element
+    def __init__(self, /, function, iterable):
+        sequence = ()
+        if function is None:
+            for item in iterable:
+                if item:
+                    sequence += (item,)
+        else:
+            for item in iterable:
+                if function(item):
+                    sequence += (item,)
+
+        self.__iters = iter(sequence)
+
+    def __iter__(self, /):
+        return self
+
+    def __next__(self, /):
+        return next(self.__iters)
+
+    def __repr__(self, /):
+        return "<%s object at %s>" % (self.__class__.__name__,
+            str(hex(id(self))).replace('x', 'x00000').upper())
+
+    def __getstate__(self, /):
+        "Return state information for pickling."
+
+        # Copy the object's state from self.__dict__ which contains
+        # all our instance attributes. Always use the dict.copy()
+        # method to avoid modifying the original state.
+        return self.__dict__.copy()
+
+    def __setstate__(self, state, /):
+        "Set state information for unpickling."
+
+        # Restore instance attributes (i.e., filename and lineno).
+        self.__dict__.update(state)
+
 
 __all__.extend(["Reduce"])
-#* Note: `reduce` is functools library function not a python built-in function.
-def Reduce(function, sequence, initial = MISSING):
+# * Note: `reduce` is functools library function not a python built-in function.
+def Reduce(function, sequence, initial=MISSING):
     """
-    reduce(function, iterable[, initial]) -> value
+    Reduce(function, iterable[, initial]) -> value
 
     Apply a function of two arguments cumulatively to the items of a sequence
     or iterable, from left to right, so as to reduce the iterable to a single
@@ -501,7 +624,7 @@ def Reduce(function, sequence, initial = MISSING):
                 "reduce() of empty iterable with no initial value") from None
     else:
         value = initial
-    
+
     for element in it:
         value = function(value, element)
 
@@ -511,23 +634,124 @@ def Reduce(function, sequence, initial = MISSING):
 __all__.extend(["IS"])
 # Note: python `in` is an operator not a function and `IS` isn't any python
 # function rather this is `in` implementation of python operator as function.
-def IS(self, iterable) -> bool:
-    "Performs same operation as `in` operator"
+def IS(value, iterable, /) -> bool:
+    "Perform same operation as `in` operator"
 
-    iter(iterable) # Raises error for non-iterable objects
+    iter(iterable)  # Raises error for non-iterable objects
     i = 0; length = len(iterable)
     if isinstance(iterable, str):
-        if not isinstance(self, str):
-            raise TypeError("'IS <string>' requires string as left operand, not %s" % type(self).__name__)
+        if not isinstance(value, str):
+            raise TypeError(
+                f"'IS <string>' requires string as left operand, not '{type(value).__name__}'")
 
-        s_len = len(self)
+        v_len = len(value)
         while i < length:
-            if self == iterable[i: i+s_len]:
+            if value == iterable[i: i+v_len]:
                 return True
             i += 1
     else:
         while i < length:
-            if self == iterable[i]:
+            if value == iterable[i]:
                 return True
             i += 1
     return False
+
+
+# --------------------------------------------------------------------#
+#   HELPER FUNCTION DECORATOR FOR [tupleobject, listobject, etc...]   #
+# --------------------------------------------------------------------#
+
+def verifier(func, /):
+    "Raise error for invalid instances."
+
+    def wrapper(self, value, /):
+        errorcode = 0
+        match func.__name__:
+            case '__eq__':
+                symbol = '=='
+
+            case '__ne__':
+                symbol = '!='
+
+            case '__lt__':
+                symbol = '<'
+
+            case '__le__':
+                symbol = '<='
+
+            case '__gt__':
+                symbol = '>'
+
+            case '__ge__':
+                symbol = '>='
+
+            case '__sub__':
+                symbol = '-'
+
+            case '__xor__':
+                symbol = '^'
+
+            case '__rxor__':
+                symbol = '^'
+
+            case '__ixor__':
+                symbol = '^='
+
+            case '__and__':
+                symbol = '&'
+
+            case '__rand__':
+                symbol = '&'
+
+            case '__iand__':
+                symbol = '&='
+
+            case '__or__':
+                symbol = '|'
+
+            case '__ror__':
+                symbol = '|'
+
+            case '__ior__':
+                symbol = '|='
+
+            case '__add__':
+                errorcode = 1
+
+            case '__radd__':
+                errorcode = 1
+
+            case '__iadd__':
+                errorcode = 1
+
+            case '__mul__':
+                errorcode = 2
+
+            case '__rmul__':
+                errorcode = 2
+
+            case '__imul__':
+                errorcode = 2
+
+            case default:
+                raise ValueError(
+                    f"Invalid function: {default} for verifier")
+
+        if errorcode == 0:
+            if not isinstance(value, self.__class__):
+                raise TypeError(
+                    "unsupported operand type(s) for %s: '%s' and '%s'" % (
+                        symbol, self.__class__.__name__, type(value).__name__))
+
+        elif errorcode == 1:
+            if not isinstance(value, self.__class__):
+                name = self.__class__.__name__
+                raise TypeError(
+                    f'can only concatenate {name} (not "{type(value).__name__}") to {name}')
+        else:
+            if not isinstance(value, int):
+                raise TypeError(
+                    f"can't multiply sequence by non-int of type '{type(value).__name__}'")
+
+        return func(self, value)
+    return wrapper

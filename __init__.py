@@ -1,4 +1,13 @@
-from Python_functions_and_methods.data_types import *
-del Bool; del Range # removing duplicate functions
-from Python_functions_and_methods.string_methods import *
-from Python_functions_and_methods.built_in_functions import *
+from sys import path
+from os.path import dirname
+path.insert(0 , dirname( __file__ ))
+
+from .boolobject import Bool
+from .stringobject import Str
+from .tupleobject import Tuple
+from .listobject import List
+from .setobject import Set
+from .frozensetobject import Frozenset
+from .dictobject import Dict
+from .rangeobject import Range
+from .built_in_functions import *

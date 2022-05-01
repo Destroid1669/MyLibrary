@@ -42,4 +42,4 @@ Original | Updated
 :----------------------:|:-----------:
 ** original screenshot  | ** updated screenshot **
 
-[CONTRIBUTING.md]: https://github.com/Destroid1669/test_repo/blob/main/CONTRIBUTING.md
+[CONTRIBUTING.md]: https://github.com/Destroid1669/python_built_ins/blob/main/CONTRIBUTING.md

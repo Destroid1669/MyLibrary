@@ -18,7 +18,7 @@ class Str:
         is_true = encoding == getdefaultencoding() and errors == 'strict'
         if isinstance(obj, str) and is_true:
             self.__data = obj
-        elif isinstance(obj, Str) and is_true:
+        elif isinstance(obj, self.__class__) and is_true:
             self.__data = obj.__data[:]
         elif is_true:
             self.__data = str(obj)

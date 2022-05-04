@@ -703,12 +703,12 @@ BOTHSTRIP = 2
 
 
 def do_strip(text, striptype):
-    i = 0
+    i = 0; length = len(text)
     if striptype != RIGHSTRIP:
-        while i < len(text) and isspace(text[i]):
+        while i < length and isspace(text[i]):
             i += 1
 
-    j = len(text)-1
+    j = length-1
     if striptype != LEFTSTRIP:
         while (1 < j and isspace(text[j])):
             j -= 1
@@ -718,12 +718,12 @@ def do_strip(text, striptype):
 
 def do_argstrip(text, striptype, chars):
     sep = tuple(chars)
-    i = 0
+    i = 0; length = len(text)
     if striptype != RIGHSTRIP:
-        while i < len(text) and startswith(text[i], sep):
+        while i < length and startswith(text[i], sep):
             i += 1
 
-    j = len(text)-1
+    j = length-1
     if striptype != LEFTSTRIP:
         while 1 < j and startswith(text[j], sep):
             j -= 1
@@ -780,11 +780,11 @@ def do_split(text, split_type, maxsplit=-1):
     is_true = True if maxsplit <= -1 else False
     string, indexes, output = "", (), []
 
-    i = 0
+    i = 0; length = len(text)
     if split_type == LEFTSTRIP:
         text = lstrip(text)
-        j = len(text)-1
-        while i < len(text):
+        j = length-1
+        while i < length:
             if isspace(text[i]):
                 if 0 < maxsplit or is_true:
                     indexes += (i,)
@@ -793,7 +793,7 @@ def do_split(text, split_type, maxsplit=-1):
             i += 1
     else:
         text = rstrip(text)
-        j = len(text)-1
+        j = length-1
         while j > -1:
             if isspace(text[j]):
                 if 0 < maxsplit or is_true:
@@ -802,7 +802,7 @@ def do_split(text, split_type, maxsplit=-1):
                         maxsplit -= 1
             j -= 1
     idx = 0
-    while idx < len(text):
+    while idx < length:
         if idx in indexes:
             output.append(string)
             # Emptying the `string` variable
@@ -824,11 +824,11 @@ def do_split(text, split_type, maxsplit=-1):
 def do_argsplit(text, split_type, sep, maxsplit=-1):
     is_true = True if maxsplit <= -1 else False
     string, indexes, output = "", (), []
-    sep_len = len(sep)
+    length = len(text); sep_len = len(sep)
 
-    i, j = 0, len(text)-1
+    i, j = 0, -1
     if split_type == LEFTSTRIP:
-        while i < len(text):
+        while i < length:
             if sep == text[i: i+sep_len]:
                 if 0 < maxsplit or is_true:
                     indexes += (i,)
@@ -842,7 +842,7 @@ def do_argsplit(text, split_type, sep, maxsplit=-1):
                     maxsplit -= 1
             j -= 1
     idx = 0
-    while idx < len(text):
+    while idx < length:
         if idx in indexes:
             output.append(string)
             string = ""

@@ -81,10 +81,10 @@ class Range:
         return key in self._Range__data
 
     def __getitem__(self, key, /):
-        try:
+        if key in self._Range__data:
             return self._Range__data[key]
-        except IndexError:
-            raise IndexError("Range object index out of range") from None
+
+        raise IndexError("Range object index out of range")
 
     def __len__(self, /):
         return (self.stop - self.start) // self.step
@@ -94,24 +94,30 @@ class Range:
             return id(Range)
         return hash((len(self), self.start, self[-1]))
 
-    def __reduce__(self, /):
-        return self.__data.__reduce__()
+    def __getstate__(self, /):
+        "Return state information for pickling."
+
+        # Copy the object's state from self.__dict__ which contains
+        # all our instance attributes. Always use the dict.copy()
+        # method to avoid modifying the original state.
+        return self.__dict__.copy()
+
+    def __setstate__(self, state, /):
+        "Set state information for unpickling."
+
+        # Restore instance attributes (i.e., filename and lineno).
+        self.__dict__.update(state)
 
     def __iter__(self, /):
-        class iterator(object):
-            def __init__(self, value, /):
-                self.__data = value
-                self.__index = -1
+        class iterator:
+            def __init__(self, sequence, /):
+                self.__iters = iter(sequence)
 
             def __iter__(self, /):
                 return self
 
             def __next__(self, /):
-                if self.__index >= len(self.__data)-1:
-                    raise StopIteration
-
-                self.__index += 1
-                return self.__data[self.__index]
+                return next(self.__iters)
 
             def __repr__(self, /):
                 return "<Range_iterator object at %s>" % str(
@@ -137,7 +143,8 @@ class Range:
         "rangeobject.count(value) -> integer -- return number of occurrences of value"
 
         i, _count = 0, 0
-        while i < len(self):
+        length = len(self)
+        while i < length:
             if value == self._Range__data[i]:
                 _count += 1
             i += 1
@@ -146,8 +153,8 @@ class Range:
     def index(self, value, /):
         "rangeobject.index(value) -> integer -- return index of value."
 
-        i = 0
-        while i < len(self):
+        i = 0; length = len(self)
+        while i < length:
             if value == self._Range__data[i]:
                 return i
             i += 1

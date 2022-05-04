@@ -688,49 +688,28 @@ def verifier(func, /):
             case '__sub__':
                 symbol = '-'
 
-            case '__xor__':
-                symbol = '^'
-
-            case '__rxor__':
+            case '__xor__' | '__rxor__':
                 symbol = '^'
 
             case '__ixor__':
                 symbol = '^='
 
-            case '__and__':
-                symbol = '&'
-
-            case '__rand__':
+            case '__and__' | '__rand__':
                 symbol = '&'
 
             case '__iand__':
                 symbol = '&='
 
-            case '__or__':
-                symbol = '|'
-
-            case '__ror__':
+            case '__or__' | '__ror__':
                 symbol = '|'
 
             case '__ior__':
                 symbol = '|='
 
-            case '__add__':
+            case '__add__' | '__radd__' | '__iadd__':
                 errorcode = 1
 
-            case '__radd__':
-                errorcode = 1
-
-            case '__iadd__':
-                errorcode = 1
-
-            case '__mul__':
-                errorcode = 2
-
-            case '__rmul__':
-                errorcode = 2
-
-            case '__imul__':
+            case '__mul__' | '__rmul__' | '__imul__':
                 errorcode = 2
 
             case default:

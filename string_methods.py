@@ -43,7 +43,7 @@ ascii_letters_pairs = dict(zip(ascii_lowercase, ascii_uppercase))
 
 
 def getkey(dct: dict, value: str) -> str:
-    "Returns key for the value."
+    "Return key for the value."
 
     for key, item in dct.items():
         if value == item:
@@ -52,7 +52,7 @@ def getkey(dct: dict, value: str) -> str:
 
 
 def errorhandler(*args, message=None) -> None:
-    "Raises Type Error based on the arguments passed to it."
+    "Raise Type Error based on the arguments passed to it."
 
     if not message:
         message = "expected {} found {}"
@@ -63,7 +63,7 @@ def errorhandler(*args, message=None) -> None:
 
 
 def islower(text):
-    """Returns True if the string is a lowercase string, False otherwise.
+    """Return True if the string is a lowercase string, False otherwise.
 
     A string is lowercase if all cased characters in the string are lowercase and there is at least one cased character in the string."""
 
@@ -81,7 +81,7 @@ def islower(text):
 
 
 def isupper(text):
-    """Returns True if the string is an uppercase string, False otherwise.
+    """Return True if the string is an uppercase string, False otherwise.
 
     A string is uppercase if all cased characters in the string are uppercase and there is at least one cased character in the string."""
 
@@ -99,7 +99,7 @@ def isupper(text):
 
 
 def isalpha(text):
-    """Returns True if the string is an alphabetic string, False otherwise.
+    """Return True if the string is an alphabetic string, False otherwise.
 
     A string is alphabetic if all characters in the string are alphabetic and there is at least one character in the string."""
 
@@ -131,7 +131,7 @@ def isdecimal(text):
 
 
 def isalnum(text):
-    """Returns True if the string is an alphanumeric string, False otherwise.
+    """Return True if the string is an alphanumeric string, False otherwise.
 
     A string is alphanumeric if all characters in the string are alphanumeric and there is at least one character in the string."""
 
@@ -148,7 +148,7 @@ def isalnum(text):
 
 
 def istitle(text):
-    """Returns a version of the string where each word is titlecased.
+    """Return a version of the string where each word is titlecased.
 
     More specifically, words start with uppercased characters and all remaining cased characters have lower case."""
 
@@ -173,7 +173,7 @@ def istitle(text):
 
 
 def isspace(text):
-    """Returns True if the string is a whitespace string, False otherwise.
+    """Return True if the string is a whitespace string, False otherwise.
 
     A string is whitespace if all characters in the string are whitespace and there is at least one character in the string."""
 
@@ -189,7 +189,7 @@ def isspace(text):
 
 
 def isprintable(text):
-    """Returns True if the string is printable, False otherwise.
+    """Return True if the string is printable, False otherwise.
 
     A string is printable if all of its characters are considered printable in repr() or if it is empty."""
 
@@ -202,7 +202,7 @@ def isprintable(text):
 
 
 def lower(text):
-    "Returns a copy of the string converted to lowercase."
+    "Return a copy of the string converted to lowercase."
 
     errorhandler([text, str])
 
@@ -219,7 +219,7 @@ def lower(text):
 
 
 def upper(text):
-    "Returns a copy of the string converted to uppercase."
+    "Return a copy of the string converted to uppercase."
 
     errorhandler([text, str])
 
@@ -236,7 +236,7 @@ def upper(text):
 
 
 def swapcase(text):
-    "Converts uppercase characters to lowercase and lowercase characters to uppercase."
+    "Convert uppercase characters to lowercase and lowercase characters to uppercase."
 
     errorhandler([text, str])
 
@@ -253,7 +253,7 @@ def swapcase(text):
 
 
 def capitalize(text):
-    """Returns a capitalized version of the string.
+    """Return a capitalized version of the string.
 
     More specifically, make the first character have upper case and the rest lower case."""
 
@@ -266,7 +266,7 @@ def capitalize(text):
 
 
 def title(text):
-    """Returns a version of the string where each word is titlecased.
+    """Return a version of the string where each word is titlecased.
 
     More specifically, words start with uppercased characters and all remaining cased characters have lower case."""
 
@@ -290,7 +290,7 @@ def title(text):
 
 
 def ljust(text, width, fillchar=" "):
-    """Returns a left-justified string of length width.
+    """Return a left-justified string of length width.
 
     Padding is done using the specified fill character (default is a space)."""
 
@@ -301,7 +301,7 @@ def ljust(text, width, fillchar=" "):
 
 
 def rjust(text, width, fillchar=" "):
-    """Returns a right-justified string of length width.
+    """Return a right-justified string of length width.
 
     Padding is done using the specified fill character (default is a space)."""
 
@@ -312,7 +312,7 @@ def rjust(text, width, fillchar=" "):
 
 
 def center(text, width, fillchar=" "):
-    """Returns a centered string of length width.
+    """Return a centered string of length width.
 
     Padding is done using the specified fill character (default is a space)."""
 
@@ -341,7 +341,7 @@ def zfill(text, width):
 
 
 def expandtabs(text, tabsize=8):
-    """Returns a copy where all tab characters are expanded using spaces.
+    """Return a copy where all tab characters are expanded using spaces.
 
     If tabsize is not given, a tab size of 8 characters is assumed."""
 
@@ -391,7 +391,7 @@ def rpartition(text, sep):
 
 
 def splitlines(text, keepends=False):
-    """Returns a list of the lines in the string, breaking at line boundaries.
+    """Return a list of the lines in the string, breaking at line boundaries.
 
     Line breaks are not included in the resulting list unless keepends is given and true."""
 
@@ -417,7 +417,7 @@ def splitlines(text, keepends=False):
 
 
 def removeprefix(text, prefix):
-    """Returns a str with the given prefix string removed if present.
+    """Return a str with the given prefix string removed if present.
 
     If the string starts with the prefix string, return string[len(prefix):].
     Otherwise, return a copy of the original string."""
@@ -437,7 +437,7 @@ def removeprefix(text, prefix):
 
 
 def removesuffix(text, suffix):
-    """Returns a str with the given suffix string removed if present.
+    """Return a str with the given suffix string removed if present.
 
     If the string ends with the suffix string and that suffix is not empty,
     return string[:-len(suffix)]. Otherwise, return a copy of the original string."""
@@ -457,7 +457,7 @@ def removesuffix(text, suffix):
 
 
 def startswith(text, prefix, start=0, end=None):
-    """Returns True if text starts with the specified prefix, False otherwise.
+    """Return True if text starts with the specified prefix, False otherwise.
 
     With optional start, test text beginning at that position.
     With optional end, stop comparing text at that position.
@@ -491,7 +491,7 @@ def startswith(text, prefix, start=0, end=None):
 
 
 def endswith(text, suffix, start=0, end=None):
-    """Returns True if text ends with the specified suffix, False otherwise.
+    """Return True if text ends with the specified suffix, False otherwise.
     With optional start, test text beginning at that position.
     With optional end, stop comparing text at that position.
     suffix can also be a tuple of strings to try."""
@@ -528,7 +528,7 @@ def endswith(text, suffix, start=0, end=None):
 
 
 def find(text, sub, start=0, end=None):
-    """Returns the lowest index in text where substring sub is found,
+    """Return the lowest index in text where substring sub is found,
     such that sub is contained within text[start:end].
     Optional arguments start and end are interpreted as in slice notation.
     Returns -1 on failure."""
@@ -549,7 +549,7 @@ def find(text, sub, start=0, end=None):
 
 
 def rfind(text, sub, start=0, end=None):
-    """Returns the highest index in text where substring sub is found,
+    """Return the highest index in text where substring sub is found,
     such that sub is contained within text[start:end].
     Optional arguments start and end are interpreted
     as in slice notation. Returns -1 on failure."""
@@ -571,7 +571,7 @@ def rfind(text, sub, start=0, end=None):
 
 
 def index(text, sub, start=0, end=None):
-    """Returns the lowest index in text where substring sub is found,
+    """Return the lowest index in text where substring sub is found,
     such that sub is contained within text[start:end].
     Optional arguments start and end are interpreted as in slice notation.
     Raises ValueError when the substring is not found."""
@@ -603,7 +603,7 @@ def index(text, sub, start=0, end=None):
 
 
 def rindex(text, sub, start=0, end=None):
-    """Returns the highest index in text where substring sub is found,
+    """Return the highest index in text where substring sub is found,
     such that sub is contained within text[start:end].
     Optional arguments start and end are interpreted as in slice notation.
     Raises ValueError when the substring is not found."""
@@ -626,7 +626,7 @@ def rindex(text, sub, start=0, end=None):
 
 
 def count(text, sub, start=0, end=None):
-    """Returns the number of non-overlapping occurrences of substring sub in string text[start:end].
+    """Return the number of non-overlapping occurrences of substring sub in string text[start:end].
 
     Optional arguments start and end are interpreted as in slice notation."""
 
@@ -672,7 +672,7 @@ def join(text, iterable):
 
 
 def replace(text, old, new, count=-1):
-    """Returns a copy with all occurrences of substring old replaced by new.
+    """Return a copy with all occurrences of substring old replaced by new.
     count
        Maximum number of occurrences to replace.
        -1 (the default value) means replace all occurrences.
@@ -688,7 +688,6 @@ def replace(text, old, new, count=-1):
         if old == text[idx: idx+old_len]:
             if 0 < count or is_true:
                 string += new
-                idx += old_len-1
                 count -= 1
             else:
                 string += item
@@ -732,7 +731,7 @@ def do_argstrip(text, striptype, chars):
 
 
 def strip(text, chars=None):
-    """Returns a copy of the string S with leading and trailing whitespace removed.
+    """Return a copy of the string S with leading and trailing whitespace removed.
 
     If chars is given and not None, remove characters in chars instead."""
 
@@ -747,7 +746,7 @@ def strip(text, chars=None):
 
 
 def lstrip(text, chars=None):
-    """Returns a copy of the string text with leading whitespace removed.
+    """Return a copy of the string text with leading whitespace removed.
 
     If chars is given and not None, remove characters in chars instead."""
 
@@ -762,7 +761,7 @@ def lstrip(text, chars=None):
 
 
 def rstrip(text, chars=None):
-    """Returns a copy of the string text with trailing whitespace removed.
+    """Return a copy of the string text with trailing whitespace removed.
 
     If chars is given and not None, remove characters in chars instead."""
 
@@ -805,8 +804,8 @@ def do_split(text, split_type, maxsplit=-1):
     while idx < length:
         if idx in indexes:
             output.append(string)
-            # Emptying the `string` variable
-            # to clear pervious stored strings
+            # re-assigning to clear 
+            # pervious stored strings
             string = ""
         else:
             string += text[idx]
@@ -845,9 +844,9 @@ def do_argsplit(text, split_type, sep, maxsplit=-1):
     while idx < length:
         if idx in indexes:
             output.append(string)
+            # re-assigning to clear
+            # pervious stored strings
             string = ""
-            # Emptying the `string` variable
-            # to clear pervious stored strings
             idx += sep_len-1
         else:
             string += text[idx]
@@ -857,7 +856,7 @@ def do_argsplit(text, split_type, sep, maxsplit=-1):
 
 
 def split(text, sep=None, maxsplit=-1):
-    """Returns a list of the words in the string, using sep as the delimiter string.
+    """Return a list of the words in the string, using sep as the delimiter string.
     sep
         The delimiter according which to split the string.
         None (the default value) means split according to any whitespace,
@@ -880,7 +879,7 @@ def split(text, sep=None, maxsplit=-1):
 
 
 def rsplit(text, sep=None, maxsplit=-1):
-    """Returns a list of the words in the string, using sep as the delimiter string.
+    """Return a list of the words in the string, using sep as the delimiter string.
     sep
         The delimiter according which to split the string.
         None (the default value) means split according to any whitespace,

@@ -166,14 +166,11 @@ def Divmod(x, y, /) -> tuple:
 def Len(obj, /) -> int:
     "Return the number of items in a container."
 
-    if not is_iter(obj):
-        raise TypeError(
-            f"object of type '{type(obj).__name__}' has no Len()")
+    if hasattr(obj, '__len__'):
+        return obj.__len__()
 
-    count = 0
-    for _ in obj:
-        count += 1
-    return count
+    raise TypeError(
+        f"object of type '{type(obj).__name__}' has no Len()")
 
 
 def Min(*iterable, default=MISSING, key=None):
@@ -182,34 +179,35 @@ def Min(*iterable, default=MISSING, key=None):
     the provided iterable is empty.
     With two or more arguments, return the smallest argument."""
 
-    it = iter(iterable)
-    try:
-        values = next(it)
-    except StopIteration:
-        raise TypeError("Min expected at least 1 argument, got 0") from None
-    try:
-        small = values
-        iterable[1]
-    except TypeError:
-        raise TypeError(
-            f"'{type(values).__name__}' object is not iterable") from None
-    except IndexError:
-        try:
-            it = values
-            small = next(iter(values))
-        except StopIteration:
+    if not iterable:
+        raise TypeError("Min expected at least 1 argument, got 0")
+
+    if len(iterable) == 1:
+        val = iterable[0]
+        if not is_iter(val):
+            raise TypeError(
+                f"'{type(val).__name__}' object is not iterable")
+
+        if not val: # checking for empty sequence
             if default is not MISSING:
                 return default
-            raise ValueError("Min() arg is an empty sequence") from None
+            raise ValueError("Min() arg is an empty sequence")
+
+        it = iter(val)
+    else:
+        it = iter(iterable)
 
     if key is None:
-        for i in it:
-            if i < small:
-                small = i
-    else:
-        for i in it:
-            if key(i) < key(small):
-                small = i
+        key = lambda x: x
+
+    small = next(it)
+    small_key = key(small)
+
+    for item in it:
+        i = key(item)
+        if i < small_key:
+            small = item
+            small_key = i
     return small
 
 
@@ -219,34 +217,35 @@ def Max(*iterable, default=MISSING, key=None):
     the provided iterable is empty.
     With two or more arguments, return the largest argument."""
 
-    it = iter(iterable)
-    try:
-        values = next(it)
-    except StopIteration:
-        raise TypeError("Max expected at least 1 argument, got 0") from None
-    try:
-        big = values
-        iterable[1]
-    except IndexError:
-        try:
-            it = values
-            big = next(iter(values))
-        except TypeError:
+    if not iterable:
+        raise TypeError("Max expected at least 1 argument, got 0")
+
+    if len(iterable) == 1:
+        val = iterable[0]
+        if not is_iter(val):
             raise TypeError(
-                f"'{type(values).__name__}' object is not iterable") from None
-        except StopIteration:
+                f"'{type(val).__name__}' object is not iterable")
+
+        if not val: # checking for empty sequence
             if default is not MISSING:
                 return default
-            raise ValueError("Max() arg is an empty sequence") from None
+            raise ValueError("Max() arg is an empty sequence")
+
+        it = iter(val)
+    else:
+        it = iter(iterable)
 
     if key is None:
-        for i in it:
-            if i > big:
-                big = i
-    else:
-        for i in it:
-            if key(i) > key(big):
-                big = i
+        key = lambda x: x
+
+    big = next(it)
+    big_key = key(big)
+
+    for item in it:
+        i = key(item)
+        if i > big_key:
+            big = item
+            big_key = i
     return big
 
 
@@ -564,15 +563,13 @@ class Filter:
    is true. If function is None, return the items that are true."""
 
     def __init__(self, /, function, iterable):
-        sequence = ()
         if function is None:
-            for item in iterable:
-                if item:
-                    sequence += (item,)
-        else:
-            for item in iterable:
-                if function(item):
-                    sequence += (item,)
+            function = lambda x: x
+
+        sequence = ()
+        for item in iterable:
+            if function(item):
+                sequence += (item,)
 
         self.__iters = iter(sequence)
 
@@ -635,25 +632,26 @@ __all__.extend(["IS"])
 # Note: python `in` is an operator not a function and `IS` isn't any python
 # function rather this is `in` implementation of python operator as function.
 def IS(value, iterable, /) -> bool:
-    "Perform same operation as `in` operator"
+    "Perform same operation as 'in' operator"
 
-    iter(iterable)  # Raises error for non-iterable objects
-    i = 0; length = len(iterable)
     if isinstance(iterable, str):
         if not isinstance(value, str):
             raise TypeError(
                 f"'IS <string>' requires string as left operand, not '{type(value).__name__}'")
 
         v_len = len(value)
-        while i < length:
+        for i in range(len(iterable)):
             if value == iterable[i: i+v_len]:
                 return True
-            i += 1
-    else:
-        while i < length:
-            if value == iterable[i]:
-                return True
-            i += 1
+        return False
+
+    if not is_iter(iterable):
+        raise TypeError(
+            f"argument of type '{type(iterable).__name__}' is not iterable")
+
+    for item in iterable:
+        if value == item:
+            return True
     return False
 
 

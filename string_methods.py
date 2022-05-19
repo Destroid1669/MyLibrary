@@ -405,8 +405,8 @@ def splitlines(text, keepends=False):
                 output.append(string+s)
             else:
                 output.append(string)
-            # emptying the `string` variable
-            # to clear previous stored strings
+            # re-assigning empty string
+            # to clear previous strings
             string = ""
         else:
             string += s
@@ -466,14 +466,14 @@ def startswith(text, prefix, start=0, end=None):
     errorhandler([text, str], [start, int])
     if end is not None: errorhandler([end, int])
     if not isinstance(prefix, str):
-        if isinstance(prefix, tuple):
-            for _p in prefix:
-                if not isinstance(_p, str):
-                    raise TypeError(
-                        f"tuple for startswith must only contain str, not {type(_p).__name__}")
-        else:
+        if not isinstance(prefix, tuple):
             raise TypeError(
                 f"startswith second arg must be str or a tuple of str, not {type(prefix).__name__}")
+
+        for _p in prefix:
+            if not isinstance(_p, str):
+                raise TypeError(
+                    f"tuple for startswith must only contain str, not {type(_p).__name__}")
 
     if end is None: end = len(text)
     if isinstance(prefix, str):
@@ -499,14 +499,14 @@ def endswith(text, suffix, start=0, end=None):
     errorhandler([text, str], [start, int])
     if end is not None: errorhandler([end, int])
     if not isinstance(suffix, str):
-        if isinstance(suffix, tuple):
-            for _s in suffix:
-                if not isinstance(_s, str):
-                    raise TypeError(
-                        f"tuple for endswith must only contain str, not {type(_s).__name__}")
-        else:
+        if not isinstance(suffix, tuple):
             raise TypeError(
                 f"endswith second arg must be str or a tuple of str, not {type(suffix).__name__}")
+
+        for _s in suffix:
+            if not isinstance(_s, str):
+                raise TypeError(
+                    f"tuple for endswith must only contain str, not {type(_s).__name__}")
 
     if end is None: end = len(text)
     if isinstance(suffix, str):
@@ -590,16 +590,16 @@ def index(text, sub, start=0, end=None):
                 return i
 
         raise ValueError("substring not found")
-    else:
-        if not hasattr(text, '__getitem__'):
-            raise TypeError(
-                f"'{type(text).__name__}' object is not subscriptable")
 
-        for i in range(start, end):
-            if sub == text[i]:
-                return i
+    if not hasattr(text, '__getitem__'):
+        raise TypeError(
+            f"'{type(text).__name__}' object is not subscriptable")
 
-        raise ValueError(f"'{sub}' is not in {type(text).__name__}")
+    for i in range(start, end):
+        if sub == text[i]:
+            return i
+
+    raise ValueError(f"'{sub}' is not in {type(text).__name__}")
 
 
 def rindex(text, sub, start=0, end=None):
@@ -616,7 +616,7 @@ def rindex(text, sub, start=0, end=None):
     if end is None:
         end = len(text)
     len_sub = len(sub)
-    for i in reversed(range(start, end)):
+    for i in reversed(range(start, end+1)):
         if sub == text[i: i+len_sub]:
             if len(sub) != 0:
                 return i
@@ -632,7 +632,6 @@ def count(text, sub, start=0, end=None):
 
     errorhandler([start, int])
     if end is not None: errorhandler([end, int])
-    iter(text)  # Raises error for non iterables
 
     if end is None: end = len(text)
     _count = 0 # holds substring occurrences
@@ -644,14 +643,15 @@ def count(text, sub, start=0, end=None):
             if sub == text[i: i+s_len]:
                 _count += 1
 
-        if len(sub) != 0:
-            return _count
-        return _count + 1
-    else:
-        for i in range(start, end):
-            if sub == text[i]:
-                _count += 1
+        if s_len == 0:
+            return _count + 1
         return _count
+
+    iter(text)  # Raises error for non iterables
+    for i in range(start, end):
+        if sub == text[i]:
+            _count += 1
+    return _count
 
 
 def join(text, iterable):
@@ -672,27 +672,29 @@ def join(text, iterable):
 
 
 def replace(text, old, new, count=-1):
-    """Return a copy with all occurrences of substring old replaced by new.
+    """Returns a copy with all occurrences of substring old replaced by new.
     count
        Maximum number of occurrences to replace.
        -1 (the default value) means replace all occurrences.
-
     If the optional argument count is given, only the first count occurrences are replaced."""
 
     # Checks for valid arguments and raises error if not valid
     errorhandler([text, str], [old, str], [new, str], [count, int])
 
-    is_true = True if count <= -1 else False
+    c = float('-inf') if count < 0 else 0
     string, old_len = "", len(old)
-    for idx, item in enumerate(text):
-        if old == text[idx: idx+old_len]:
-            if 0 < count or is_true:
+    i = 0; length = len(text)
+    while i < length:
+        if old == text[i: i+old_len]:
+            if c < count:
                 string += new
+                i += old_len-1
                 count -= 1
             else:
-                string += item
+                string += text[i]
         else:
-            string += item
+            string += text[i]
+        i += 1
     return string
 
 
@@ -776,26 +778,25 @@ def rstrip(text, chars=None):
 
 
 def do_split(text, split_type, maxsplit=-1):
-    is_true = True if maxsplit <= -1 else False
+    c = float('-inf') if maxsplit < 0 else 0
     string, indexes, output = "", (), []
 
-    i = 0; length = len(text)
+    length = len(text)
+    j = length-1
     if split_type == LEFTSTRIP:
-        text = lstrip(text)
-        j = length-1
+        i = 0; text = lstrip(text)
         while i < length:
             if isspace(text[i]):
-                if 0 < maxsplit or is_true:
+                if c < maxsplit:
                     indexes += (i,)
                     if i < j and not isspace(text[i+1]):
                         maxsplit -= 1
             i += 1
     else:
         text = rstrip(text)
-        j = length-1
         while j > -1:
             if isspace(text[j]):
-                if 0 < maxsplit or is_true:
+                if c < maxsplit:
                     indexes += (j,)
                     if j > 0 and not isspace(text[j-1]):
                         maxsplit -= 1
@@ -804,7 +805,7 @@ def do_split(text, split_type, maxsplit=-1):
     while idx < length:
         if idx in indexes:
             output.append(string)
-            # re-assigning to clear 
+            # re-assigning to clear
             # pervious stored strings
             string = ""
         else:
@@ -821,22 +822,24 @@ def do_split(text, split_type, maxsplit=-1):
 
 
 def do_argsplit(text, split_type, sep, maxsplit=-1):
-    is_true = True if maxsplit <= -1 else False
+    c = float('-inf') if maxsplit < 0 else 0
     string, indexes, output = "", (), []
-    length = len(text); sep_len = len(sep)
 
-    i, j = 0, -1
+    sep_len = len(sep)
+    length = len(text)
     if split_type == LEFTSTRIP:
+        i = 0
         while i < length:
             if sep == text[i: i+sep_len]:
-                if 0 < maxsplit or is_true:
+                if c < maxsplit:
                     indexes += (i,)
                     maxsplit -= 1
             i += 1
     else:
+        j = length-1
         while j > -1:
             if sep == text[j-(sep_len-1): j+1]:
-                if 0 < maxsplit or is_true:
+                if c < maxsplit:
                     indexes += (j-(sep_len-1),)
                     maxsplit -= 1
             j -= 1
@@ -844,9 +847,9 @@ def do_argsplit(text, split_type, sep, maxsplit=-1):
     while idx < length:
         if idx in indexes:
             output.append(string)
+            string = ""
             # re-assigning to clear
             # pervious stored strings
-            string = ""
             idx += sep_len-1
         else:
             string += text[idx]

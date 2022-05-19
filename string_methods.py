@@ -847,9 +847,9 @@ def do_argsplit(text, split_type, sep, maxsplit=-1):
     while idx < length:
         if idx in indexes:
             output.append(string)
+            # re-assigning empty string
+            # to clear previous strings
             string = ""
-            # re-assigning to clear
-            # pervious stored strings
             idx += sep_len-1
         else:
             string += text[idx]

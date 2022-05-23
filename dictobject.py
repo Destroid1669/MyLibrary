@@ -157,7 +157,7 @@ class Dict:
                     raise TypeError
             except TypeError:
                 raise TypeError(
-                    f"'{type(value).__name__}' object is not iterable") from None
+                    f"{type(value).__name__!r} object is not iterable") from None
             except ValueError:
                 raise ValueError(
                     "dictionary update sequence element #0 has length 1; 2 is required") from None
@@ -291,7 +291,7 @@ class Dict:
             def __or__(self, value, /):
                 res = set(self.__data)
                 for x in value:
-                    if not x in res:
+                    if x not in res:
                         res.add(x)
                 return res
 

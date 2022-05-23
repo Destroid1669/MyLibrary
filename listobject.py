@@ -165,9 +165,9 @@ class List:
 
         Raises ValueError if the value is not present."""
 
-        for index in range(len(self.__data)):
-            if value == self[index]:
-                self.__data = self.__data[:index] + self.__data[index+1:]
+        for i in range(len(self.__data)):
+            if value == self[i]:
+                self.__data = self.__data[:i] + self.__data[i+1:]
                 return None
 
         name = self.__class__.__name__
@@ -188,8 +188,8 @@ class List:
         "Return number of occurrences of value."
 
         _count = 0
-        for elem in self.__data:
-            if elem == value:
+        for item in self.__data:
+            if item == value:
                 _count += 1
         return _count
 
@@ -207,7 +207,7 @@ class List:
                 return i
 
         raise ValueError(
-            f"'{value}' is not in {self.__class__.__name__}")
+            f"{value} is not in {self.__class__.__name__}")
 
     def reverse(self, /):
         "Reverse *IN PLACE*."

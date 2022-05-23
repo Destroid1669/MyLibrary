@@ -54,7 +54,7 @@ def getkey(dct: dict, value: str) -> str:
 def errorhandler(*args, message=None) -> None:
     "Raise Type Error based on the arguments passed to it."
 
-    if not message:
+    if message is None:
         message = "expected {} found {}"
     for value, datatype in args:
         if not isinstance(value, datatype):
@@ -70,9 +70,9 @@ def islower(text):
     errorhandler([text, str])
 
     is_true = False
-    for letters in text:
-        if letters in ascii_letters:
-            if letters in ascii_uppercase:
+    for char in text:
+        if char in ascii_letters:
+            if char in ascii_uppercase:
                 return False
             if not is_true:
                 is_true = True
@@ -88,9 +88,9 @@ def isupper(text):
     errorhandler([text, str])
 
     is_true = False
-    for letters in text:
-        if letters in ascii_letters:
-            if letters in ascii_lowercase:
+    for char in text:
+        if char in ascii_letters:
+            if char in ascii_lowercase:
                 return False
             if not is_true:
                 is_true = True
@@ -108,8 +108,8 @@ def isalpha(text):
     if len(text) == 0:
         return False
 
-    for i in text:
-        if not i in ascii_letters:
+    for char in text:
+        if char not in ascii_letters:
             return False
     return True
 
@@ -124,8 +124,8 @@ def isdecimal(text):
     if len(text) == 0:
         return False
 
-    for i in text:
-        if i not in digits:
+    for char in text:
+        if char not in digits:
             return False
     return True
 
@@ -141,8 +141,8 @@ def isalnum(text):
         return False
 
     ascii_alphanumeric = ascii_letters + digits
-    for i in text:
-        if i not in ascii_alphanumeric:
+    for char in text:
+        if char not in ascii_alphanumeric:
             return False
     return True
 
@@ -156,14 +156,14 @@ def istitle(text):
 
     is_true = True
     is_title = False
-    for i in text:
-        if i in ascii_letters:
+    for char in text:
+        if char in ascii_letters:
             if is_true:
-                if i in ascii_lowercase:
+                if char in ascii_lowercase:
                     return False
                 if not is_title:
                     is_title = True
-            elif not i in ascii_lowercase:
+            elif char not in ascii_lowercase:
                 return False
             is_true = False
         else:
@@ -182,8 +182,8 @@ def isspace(text):
     if len(text) == 0:
         return False
 
-    for i in text:
-        if i not in whitespace:
+    for char in text:
+        if char not in whitespace:
             return False
     return True
 
@@ -195,8 +195,8 @@ def isprintable(text):
 
     errorhandler([text, str])
 
-    for i in text:
-        if i not in printable:
+    for char in text:
+        if char not in printable:
             return False
     return True
 
@@ -206,16 +206,16 @@ def lower(text):
 
     errorhandler([text, str])
 
-    string = ""
-    for i in text:
-        if i in ascii_letters:
-            if i in ascii_lowercase:
-                string += i
+    letters = ""
+    for char in text:
+        if char in ascii_letters:
+            if char in ascii_lowercase:
+                letters += char
             else:
-                string += getkey(ascii_letters_pairs, i)
+                letters += getkey(ascii_letters_pairs, char)
         else:
-            string += i
-    return string
+            letters += char
+    return letters
 
 
 def upper(text):
@@ -223,16 +223,16 @@ def upper(text):
 
     errorhandler([text, str])
 
-    string = ""
-    for i in text:
-        if i in ascii_letters:
-            if i in ascii_uppercase:
-                string += i
+    letters = ""
+    for char in text:
+        if char in ascii_letters:
+            if char in ascii_uppercase:
+                letters += char
             else:
-                string += ascii_letters_pairs[i]
+                letters += ascii_letters_pairs[char]
         else:
-            string += i
-    return string
+            letters += char
+    return letters
 
 
 def swapcase(text):
@@ -240,16 +240,16 @@ def swapcase(text):
 
     errorhandler([text, str])
 
-    string = ""
-    for i in text:
-        if i in ascii_letters:
-            if i in ascii_lowercase:
-                string += ascii_letters_pairs[i]
+    letters = ""
+    for char in text:
+        if char in ascii_letters:
+            if char in ascii_lowercase:
+                letters += ascii_letters_pairs[char]
             else:
-                string += getkey(ascii_letters_pairs, i)
+                letters += getkey(ascii_letters_pairs, char)
         else:
-            string += i
-    return string
+            letters += char
+    return letters
 
 
 def capitalize(text):
@@ -259,10 +259,10 @@ def capitalize(text):
 
     errorhandler([text, str])
 
-    string = upper(text[0])
-    for i in text[1:]:
-        string += lower(i)
-    return string
+    letters = upper(text[0])
+    for char in text[1:]:
+        letters += lower(char)
+    return letters
 
 
 def title(text):
@@ -272,21 +272,21 @@ def title(text):
 
     errorhandler([text, str])
 
-    string, is_true = "", True
-    for i in text:
-        if i in ascii_letters:
+    letters, is_true = "", True
+    for char in text:
+        if char in ascii_letters:
             if is_true:
-                if i in ascii_lowercase:
-                    string += upper(i)
+                if char in ascii_lowercase:
+                    letters += upper(char)
                 else:
-                    string += i
+                    letters += char
             else:
-                string += lower(i)
+                letters += lower(char)
             is_true = False
         else:
             is_true = True
-            string += i
-    return string
+            letters += char
+    return letters
 
 
 def ljust(text, width, fillchar=" "):
@@ -347,13 +347,13 @@ def expandtabs(text, tabsize=8):
 
     errorhandler([text, str], [tabsize, int])
 
-    string = ""
-    for s in text:
-        if s == "\t":
-            string += " " * tabsize
+    letters = ""
+    for char in text:
+        if char == "\t":
+            letters += " " * tabsize
         else:
-            string += s
-    return string
+            letters += char
+    return letters
 
 
 def partition(text, sep):
@@ -398,21 +398,21 @@ def splitlines(text, keepends=False):
     errorhandler([text, str], [keepends, bool])
 
     line_breaks = "\n\r\v\f"
-    string, output = "", []
-    for s in text:
-        if s in line_breaks:
+    letters, output = "", []
+    for char in text:
+        if char in line_breaks:
             if keepends:
-                output.append(string+s)
+                output.append(letters+char)
             else:
-                output.append(string)
+                output.append(letters)
             # re-assigning empty string
             # to clear previous strings
-            string = ""
+            letters = ""
         else:
-            string += s
+            letters += char
 
-    if text and s not in line_breaks:
-        output.append(string)
+    if text and char not in line_breaks:
+        output.append(letters)
     return output
 
 
@@ -429,11 +429,11 @@ def removeprefix(text, prefix):
         return text
 
     sep = tuple(prefix)
-    i, s_len = 0, len(text)
-    while i < s_len and startswith(text[i], sep):
+    i, length = 0, len(text)
+    while i < length and startswith(text[i], sep):
         i += 1
 
-    return text[i: s_len]
+    return text[i: length]
 
 
 def removesuffix(text, suffix):
@@ -450,7 +450,7 @@ def removesuffix(text, suffix):
 
     sep = tuple(suffix)
     j = len(text)-1
-    while 1 < j and startswith(text[j], sep):
+    while j > 1 and startswith(text[j], sep):
         j -= 1
 
     return text[0: j+1]
@@ -465,29 +465,34 @@ def startswith(text, prefix, start=0, end=None):
 
     errorhandler([text, str], [start, int])
     if end is not None: errorhandler([end, int])
-    if not isinstance(prefix, str):
-        if not isinstance(prefix, tuple):
-            raise TypeError(
-                f"startswith second arg must be str or a tuple of str, not {type(prefix).__name__}")
-
-        for _p in prefix:
-            if not isinstance(_p, str):
-                raise TypeError(
-                    f"tuple for startswith must only contain str, not {type(_p).__name__}")
 
     if end is None: end = len(text)
     if isinstance(prefix, str):
+        # special case for empty strings
+        if len(text) == len(prefix) == 0:
+            return True
+
         p_len = len(prefix)
         for i in range(start, end):
             if prefix == text[i: i+p_len]:
                 return True
             else:
                 return False
-    else:
-        for p in prefix:
-            if p in text[start: end]:
-                return True
         return False
+
+    if not isinstance(prefix, tuple):
+        raise TypeError(
+            f"startswith second arg must be str or a tuple of str, not {type(prefix).__name__}")
+
+    for p in prefix:
+        if not isinstance(p, str):
+            raise TypeError(
+                f"tuple for startswith must only contain str, not {type(p).__name__}")
+
+    for char in prefix:
+        if char in text[start: end]:
+            return True
+    return False
 
 
 def endswith(text, suffix, start=0, end=None):
@@ -498,33 +503,38 @@ def endswith(text, suffix, start=0, end=None):
 
     errorhandler([text, str], [start, int])
     if end is not None: errorhandler([end, int])
-    if not isinstance(suffix, str):
-        if not isinstance(suffix, tuple):
-            raise TypeError(
-                f"endswith second arg must be str or a tuple of str, not {type(suffix).__name__}")
-
-        for _s in suffix:
-            if not isinstance(_s, str):
-                raise TypeError(
-                    f"tuple for endswith must only contain str, not {type(_s).__name__}")
 
     if end is None: end = len(text)
     if isinstance(suffix, str):
+        # special case for empty strings
+        if len(text) == len(suffix) == 0:
+            return True
+
         s_len = len(suffix)
         for i in reversed(range(start, end+1)):
             if suffix == text[i-s_len: i]:
                 return True
             else:
                 return False
-    else:
-        is_true = False
-        for s in suffix:
-            if s in text[start: end]:
-                if not is_true:
-                    is_true = True
-            else:
-                return False
-        return is_true
+        return False
+
+    if not isinstance(suffix, tuple):
+        raise TypeError(
+            f"endswith second arg must be str or a tuple of str, not {type(suffix).__name__}")
+
+    for s in suffix:
+        if not isinstance(s, str):
+            raise TypeError(
+                f"tuple for endswith must only contain str, not {type(s).__name__}")
+
+    is_true = False
+    for char in suffix:
+        if char in text[start: end]:
+            if not is_true:
+                is_true = True
+        else:
+            return False
+    return is_true
 
 
 def find(text, sub, start=0, end=None):
@@ -556,17 +566,17 @@ def rfind(text, sub, start=0, end=None):
 
     errorhandler([text, str], [sub, str], [start, int])
     if end is not None: errorhandler([end, int])
-    if sub == "" and text == "":
+    # special case for empty strings
+    if len(sub) == len(text) == 0:
         return 0
 
-    if end is None:
-        end = len(text)
     s_len = len(sub)
+    if end is None: end = len(text)
     for i in reversed(range(start, end+1)):
         if sub == text[i: i+s_len]:
             if len(sub) != 0:
                 return i
-            return i + 1
+            return i+1
     return -1
 
 
@@ -593,13 +603,13 @@ def index(text, sub, start=0, end=None):
 
     if not hasattr(text, '__getitem__'):
         raise TypeError(
-            f"'{type(text).__name__}' object is not subscriptable")
+            f"{type(text).__name__!r} object is not subscriptable")
 
     for i in range(start, end):
         if sub == text[i]:
             return i
 
-    raise ValueError(f"'{sub}' is not in {type(text).__name__}")
+    raise ValueError(f"{sub!r} is not in {type(text).__name__}")
 
 
 def rindex(text, sub, start=0, end=None):
@@ -610,17 +620,16 @@ def rindex(text, sub, start=0, end=None):
 
     errorhandler([text, str], [sub, str], [start, int])
     if end is not None: errorhandler([end, int])
-    if sub == "" and text == "":
+    if len(sub) == len(text) == 0:
         return 0
 
-    if end is None:
-        end = len(text)
     len_sub = len(sub)
+    if end is None: end = len(text)
     for i in reversed(range(start, end+1)):
         if sub == text[i: i+len_sub]:
             if len(sub) != 0:
                 return i
-            return i + 1
+            return i+1
 
     raise ValueError("substring not found")
 
@@ -634,20 +643,23 @@ def count(text, sub, start=0, end=None):
     if end is not None: errorhandler([end, int])
 
     if end is None: end = len(text)
-    _count = 0 # holds substring occurrences
+    _count = 0  # holds substring occurrences
     if isinstance(text, str):
-        #! issue with counting empty string
-        #! returns wrong result for this case
+        # !issue with counting empty string
+        # !returns wrong result for this case
         s_len = len(sub)
         for i in range(start, end):
             if sub == text[i: i+s_len]:
                 _count += 1
 
         if s_len == 0:
-            return _count + 1
+            return _count+1
         return _count
 
-    iter(text)  # Raises error for non iterables
+    if not hasattr(text, '__getitem__'):
+        raise TypeError(
+            f"{type(text).__name__!r} object is not subscriptable")
+
     for i in range(start, end):
         if sub == text[i]:
             _count += 1
@@ -663,12 +675,18 @@ def join(text, iterable):
     Example: join('.', ['ab', 'pq', 'rs']) -> 'ab.pq.rs'"""
 
     errorhandler([text, str])
-    it = iter(iterable)  # Raises error for non iterables
+    try:
+        it = iter(iterable)
+    except TypeError:
+        raise TypeError("can only join an iterable") from None
 
-    output = ""
-    for s in it:
-        output += s + text
-    return output
+    letters = ""
+    for idx, char in enumerate(it):
+        if not isinstance(char, str):
+            raise TypeError(
+                f"sequence item {idx}: expected str instance, {type(char).__name__} found")
+        letters += char + text
+    return letters
 
 
 def replace(text, old, new, count=-1):
@@ -682,20 +700,20 @@ def replace(text, old, new, count=-1):
     errorhandler([text, str], [old, str], [new, str], [count, int])
 
     c = float('-inf') if count < 0 else 0
-    string, old_len = "", len(old)
+    letters, old_len = "", len(old)
     i = 0; length = len(text)
     while i < length:
         if old == text[i: i+old_len]:
             if c < count:
-                string += new
+                letters += new
                 i += old_len-1
                 count -= 1
             else:
-                string += text[i]
+                letters += text[i]
         else:
-            string += text[i]
+            letters += text[i]
         i += 1
-    return string
+    return letters
 
 
 LEFTSTRIP = 0
@@ -779,7 +797,7 @@ def rstrip(text, chars=None):
 
 def do_split(text, split_type, maxsplit=-1):
     c = float('-inf') if maxsplit < 0 else 0
-    string, indexes, output = "", (), []
+    letters, indexes, output = "", (), []
 
     length = len(text)
     j = length-1
@@ -804,14 +822,14 @@ def do_split(text, split_type, maxsplit=-1):
     idx = 0
     while idx < length:
         if idx in indexes:
-            output.append(string)
+            output.append(letters)
             # re-assigning to clear
             # pervious stored strings
-            string = ""
+            letters = ""
         else:
-            string += text[idx]
+            letters += text[idx]
         idx += 1
-    output.append(string)
+    output.append(letters)
     # removing all whitespace elements
     out = [x for x in output if x != ""]
     # removing extra whitespaces of the elements
@@ -823,7 +841,7 @@ def do_split(text, split_type, maxsplit=-1):
 
 def do_argsplit(text, split_type, sep, maxsplit=-1):
     c = float('-inf') if maxsplit < 0 else 0
-    string, indexes, output = "", (), []
+    letters, indexes, output = "", (), []
 
     sep_len = len(sep)
     length = len(text)
@@ -846,15 +864,15 @@ def do_argsplit(text, split_type, sep, maxsplit=-1):
     idx = 0
     while idx < length:
         if idx in indexes:
-            output.append(string)
+            output.append(letters)
             # re-assigning empty string
             # to clear previous strings
-            string = ""
+            letters = ""
             idx += sep_len-1
         else:
-            string += text[idx]
+            letters += text[idx]
         idx += 1
-    output.append(string)
+    output.append(letters)
     return output
 
 
@@ -872,7 +890,7 @@ def split(text, sep=None, maxsplit=-1):
     # Checks for valid arguments and raises error if not valid
     errorhandler([text, str], [maxsplit, int])
     if sep is not None: errorhandler([sep, str])
-    if sep == "":
+    if len(sep) == 0:
         raise ValueError("empty separator")
 
     if sep is None:
@@ -895,7 +913,7 @@ def rsplit(text, sep=None, maxsplit=-1):
     # Checks for valid arguments and raises error if not valid
     errorhandler([text, str], [maxsplit, int])
     if sep is not None: errorhandler([sep, str])
-    if sep == "":
+    if len(sep) == 0:
         raise ValueError("empty separator")
 
     if sep is None:

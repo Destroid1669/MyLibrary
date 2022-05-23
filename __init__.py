@@ -1,6 +1,6 @@
 from sys import path
 from os.path import dirname
-path.insert(0 , dirname( __file__ ))
+path.insert(0, dirname(__file__))
 
 from .boolobject import Bool
 from .stringobject import Str

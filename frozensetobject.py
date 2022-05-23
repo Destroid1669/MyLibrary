@@ -102,7 +102,7 @@ class Frozenset:
 
         new = set()
         for x in value:
-            if not x in self:
+            if x not in self:
                 new.add(x)
         return self.__class__(new)
 
@@ -153,7 +153,7 @@ class Frozenset:
         "Report whether another set contains this set."
 
         for x in self:
-            if not x in value:
+            if x not in value:
                 return False
         return True
 
@@ -161,6 +161,6 @@ class Frozenset:
         "Report whether this set contains another set."
 
         for x in value:
-            if not x in self:
+            if x not in self:
                 return False
         return True

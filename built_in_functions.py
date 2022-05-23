@@ -81,7 +81,7 @@ def errorhandler(message: str, *args: list) -> None:
 def Chr(i: int, /) -> str:
     "Return a Unicode string of one character"
 
-    errorhandler("%s object cannot be interpreted as an integer", [i, int])
+    errorhandler("'%s' object cannot be interpreted as an integer", [i, int])
 
     return all_ascii_characters[i]
 
@@ -103,10 +103,10 @@ def Any(iterable, /) -> bool:
 
     if not is_iter(iterable):
         raise TypeError(
-            f"'{type(iterable).__name__}' object is not iterable")
+            f"{type(iterable).__name__!r} object is not iterable")
 
-    for elem in iterable:
-        if elem:
+    for item in iterable:
+        if item:
             return True
     return False
 
@@ -118,7 +118,7 @@ def All(iterable, /) -> bool:
 
     if not is_iter(iterable):
         raise TypeError(
-            f"'{type(iterable).__name__}' object is not iterable")
+            f"{type(iterable).__name__!r} object is not iterable")
 
     for x in iterable:
         try:
@@ -126,7 +126,6 @@ def All(iterable, /) -> bool:
                 continue
         except TypeError:
             pass
-
         if not x:
             return False
     return True
@@ -140,7 +139,7 @@ def Bin(number: int, /) -> str:
 
     """
 
-    errorhandler("%s object cannot be interpreted as an integer", [number, int])
+    errorhandler("'%s' object cannot be interpreted as an integer", [number, int])
 
     if number == 0:
         return "0b0"
@@ -170,7 +169,7 @@ def Len(obj, /) -> int:
         return obj.__len__()
 
     raise TypeError(
-        f"object of type '{type(obj).__name__}' has no Len()")
+        f"object of type {type(obj).__name__!r} has no Len()")
 
 
 def Min(*iterable, default=MISSING, key=None):
@@ -186,9 +185,9 @@ def Min(*iterable, default=MISSING, key=None):
         val = iterable[0]
         if not is_iter(val):
             raise TypeError(
-                f"'{type(val).__name__}' object is not iterable")
+                f"{type(val).__name__!r} object is not iterable")
 
-        if not val: # checking for empty sequence
+        if not val:  # checking for empty sequence
             if default is not MISSING:
                 return default
             raise ValueError("Min() arg is an empty sequence")
@@ -224,9 +223,9 @@ def Max(*iterable, default=MISSING, key=None):
         val = iterable[0]
         if not is_iter(val):
             raise TypeError(
-                f"'{type(val).__name__}' object is not iterable")
+                f"{type(val).__name__!r} object is not iterable")
 
-        if not val: # checking for empty sequence
+        if not val:  # checking for empty sequence
             if default is not MISSING:
                 return default
             raise ValueError("Max() arg is an empty sequence")
@@ -255,14 +254,17 @@ def Sum(iterable, /, start=0):
     This function is intended specifically for use with numeric values and may
     reject non-numeric types."""
 
-    it = iter(iterable)  # Raises error for non iterables
+    if not is_iter(iterable):
+        raise TypeError(
+            f"{type(iterable).__name__!r} object is not iterable")
     if isinstance(start, str):
-        raise TypeError("Sum() can't sum strings [use ''.join(seq) instead]")
+        raise TypeError(
+            "Sum() can't sum strings [use ''.join(seq) instead]")
 
-    _sum = 0
-    for element in it:
-        _sum += element
-    return _sum + start
+    output = 0
+    for item in iterable:
+        output += item
+    return output + start
 
 
 def binary_search(array, item, start, end):
@@ -365,7 +367,7 @@ def Sorted(iterable, /, *, key=None, reverse=False):
 
 
 class Enumerate:
-    """Return an enumerate object.
+    """Return an Enumerate object.
 
     iterable
         an object supporting iteration
@@ -377,17 +379,19 @@ class Enumerate:
         (0, seq[0]), (1, seq[1]), (2, seq[2]), ..."""
 
     def __init__(self, /, iterable, start=0):
-        self.__start = start
-        self.__index = -1
+        if not isinstance(start, int):
+            raise TypeError(
+                f"{type(start).__name__!r} object cannot be interpreted as an integer")
+
+        self.__index = -1 + start
         self.__iters = iter(iterable)
-        errorhandler("%s object cannot be interpreted as an integer", [start, int])
 
     def __iter__(self, /):
         return self
 
     def __next__(self, /):
         self.__index += 1
-        return (self.__index + self.__start, next(self.__iters))
+        return (self.__index, next(self.__iters))
 
     def __repr__(self, /):
         return "<%s object at %s>" % (self.__class__.__name__,
@@ -412,13 +416,13 @@ class Reversed:
     "Return a reverse iterator over the values of the given sequence."
 
     def __init__(self, sequence, /):
-        if hasattr(sequence, 'keys'):
-            self.__data = sequence.keys()
-        elif hasattr(sequence, '__getitem__'):
+        if hasattr(sequence, '__getitem__'):
             self.__data = sequence
+        elif hasattr(sequence, 'keys'):
+            self.__data = sequence.keys()
         else:
             raise TypeError(
-                f"'{type(sequence).__name__}' object is not reversible")
+                f"{type(sequence).__name__!r} object is not reversible")
         self.__index = len(sequence)
 
     def __iter__(self, /):
@@ -520,10 +524,10 @@ class Zip:
         if not self.__iters:
             raise StopIteration
 
-        args = ()
+        sequence = ()
         for i in self.__iters:
-            args += (next(i),)
-        return args
+            sequence += (next(i),)
+        return sequence
 
     def __repr__(self, /):
         return "<%s object at %s>" % (self.__class__.__name__,
@@ -566,12 +570,7 @@ class Filter:
         if function is None:
             function = lambda x: x
 
-        sequence = ()
-        for item in iterable:
-            if function(item):
-                sequence += (item,)
-
-        self.__iters = iter(sequence)
+        self.__iters = iter([i for i in iterable if function(i)])
 
     def __iter__(self, /):
         return self
@@ -629,8 +628,8 @@ def Reduce(function, sequence, initial=MISSING):
 
 
 __all__.extend(["IS"])
-# Note: python `in` is an operator not a function and `IS` isn't any python
-# function rather this is `in` implementation of python operator as function.
+# Note: python 'in' is an operator not a function and 'IS' isn't any python
+# function rather this is 'in' implementation of python operator as function.
 def IS(value, iterable, /) -> bool:
     "Perform same operation as 'in' operator"
 

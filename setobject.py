@@ -168,7 +168,7 @@ class Set:
 
         res = self.copy()
         for x in value:
-            if not x in res:
+            if x not in res:
                 res.add(x)
         return res
 
@@ -245,7 +245,7 @@ class Set:
         "Report whether another set contains this set."
 
         for x in self:
-            if not x in value:
+            if x not in value:
                 return False
         return True
 
@@ -253,6 +253,6 @@ class Set:
         "Report whether this set contains another set."
 
         for x in value:
-            if not x in self:
+            if x not in self:
                 return False
         return True

@@ -21,7 +21,7 @@ It was solely written based on the python built-in ones
 execution output and in an attempt to closely resemble them.
 
 * Note: it might not result same result in some rare cases.
-* Note: this library doesn't contain all python built-in ones.
+* Note: this library only contains few python built-in ones.
 
 ### THIS IS MY FIRST LIBRARY on GitHub
 * Release Date: 22-Feb-2022 ; Tuesday

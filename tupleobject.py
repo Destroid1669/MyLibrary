@@ -96,8 +96,8 @@ class Tuple:
         "Return number of occurrences of value."
 
         _count = 0
-        for elem in self.__data:
-            if elem == value:
+        for item in self.__data:
+            if item == value:
                 _count += 1
         return _count
 

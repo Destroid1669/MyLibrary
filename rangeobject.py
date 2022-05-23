@@ -49,7 +49,7 @@ class Range:
         raise AttributeError("read only attribute")
 
     def __bool__(self, /):
-        return bool(self._Range__data)
+        return True if self._Range__data else False
 
     def __eq__(self, value, /):
         if not isinstance(value, self.__class__):

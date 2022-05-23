@@ -484,12 +484,11 @@ def startswith(text, prefix, start=0, end=None):
         raise TypeError(
             f"startswith second arg must be str or a tuple of str, not {type(prefix).__name__}")
 
-    for p in prefix:
-        if not isinstance(p, str):
-            raise TypeError(
-                f"tuple for startswith must only contain str, not {type(p).__name__}")
-
     for char in prefix:
+        if not isinstance(char, str):
+            raise TypeError(
+                f"tuple for startswith must only contain str, not {type(char).__name__}")
+
         if char in text[start: end]:
             return True
     return False
@@ -522,14 +521,13 @@ def endswith(text, suffix, start=0, end=None):
         raise TypeError(
             f"endswith second arg must be str or a tuple of str, not {type(suffix).__name__}")
 
-    for s in suffix:
-        if not isinstance(s, str):
-            raise TypeError(
-                f"tuple for endswith must only contain str, not {type(s).__name__}")
-
     is_true = False
     for char in suffix:
         if char in text[start: end]:
+            if not isinstance(char, str):
+                raise TypeError(
+                    f"tuple for endswith must only contain str, not {type(char).__name__}")
+
             if not is_true:
                 is_true = True
         else:

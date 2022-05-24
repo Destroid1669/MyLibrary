@@ -43,11 +43,9 @@ punctuation = {33: '!', 34: '"', 35: '#', 36: '$', 37: '%', 38: '&', 39: "'", 40
 
 digits = {48: '0', 49: '1', 50: '2', 51: '3', 52: '4', 53: '5', 54: '6', 55: '7', 56: '8', 57: '9'}
 
-# These aren't all unicode characters within python, these are some common ones for demonstration only!
+# These aren't all ascii characters of python, these are some common ones for demonstration only!
 all_ascii_characters = ascii_lowercase | ascii_uppercase | whitespace | digits | punctuation
 
-
-from sys import setrecursionlimit
 # for checking missing arguments
 MISSING = object()
 
@@ -120,13 +118,13 @@ def All(iterable, /) -> bool:
         raise TypeError(
             f"{type(iterable).__name__!r} object is not iterable")
 
-    for x in iterable:
+    for item in iterable:
         try:
-            for _ in x:
+            for _ in item:
                 continue
         except TypeError:
             pass
-        if not x:
+        if not item:
             return False
     return True
 
@@ -305,10 +303,13 @@ def merge(left, right):
 
 # * Note: This is pythonic implementation of timsort algorithm
 def timsort(array):
-    runs, sorted_runs = [], []
     length = len(array)
-    new_run = [array[0]]
+    if length > 1000:
+        from sys import setrecursionlimit
+        setrecursionlimit(length)
 
+    runs, sorted_runs = [], []
+    new_run = [array[0]]
     for i in range(1, length):
         # if i is at the last index
         if i == length-1:
@@ -343,27 +344,25 @@ def Sorted(iterable, /, *, key=None, reverse=False):
 
     """
 
-    iter(iterable)  # Raises error for non iterables
     array = iterable.copy() if isinstance(
         iterable, list) else list(iterable)
-    if len(array) > 100:
-        setrecursionlimit(len(array))
 
     if key is None:
         sorted_array = timsort(array)
     else:
-        array = array[::-1] if reverse else array
+        if reverse: array.reverse()
         # sorting array elements using key
         key_sorted = timsort([key(k) for k in array])
         # sorting array using sorted key elements
         sorted_array = []
-        for k_elem in key_sorted:
-            for elem in array:
-                if k_elem == key(elem):
-                    sorted_array.append(elem)
-                    array.remove(elem)
-
-    return sorted_array[::-1] if reverse else sorted_array
+        for k_item in key_sorted:
+            for item in array:
+                if k_item == key(item):
+                    sorted_array.append(item)
+                    array.remove(item)
+    if reverse:
+        sorted_array.reverse()
+    return sorted_array
 
 
 class Enumerate:
@@ -525,8 +524,8 @@ class Zip:
             raise StopIteration
 
         sequence = ()
-        for i in self.__iters:
-            sequence += (next(i),)
+        for item in self.__iters:
+            sequence += (next(item),)
         return sequence
 
     def __repr__(self, /):

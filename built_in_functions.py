@@ -11,16 +11,16 @@ __all__ = ["Any", "All", "Chr", "Ord", "Bin",
            "Map", "Zip", "Filter", "Enumerate", "Reversed"]
 
 
-"""A collection of unicode constants.
+"""A collection of dict constants.
 
 Public module variables:
 
-whitespace -- a dict containing all unicode whitespace
-ascii_lowercase -- a dict containing all unicode lowercase letters
-ascii_uppercase -- a dict containing all unicode uppercase letters
-ascii_letters -- a dict containing all unicode letters
-digits -- a dict containing all unicode decimal digits
-punctuation -- a dict containing all unicode punctuation characters
+whitespace -- a dict containing all ascii whitespace
+ascii_lowercase -- a dict containing all ascii lowercase letters
+ascii_uppercase -- a dict containing all ascii uppercase letters
+ascii_letters -- a dict containing all ascii letters
+digits -- a dict containing all ascii decimal digits
+punctuation -- a dict containing all ascii punctuation characters
 
 """
 
@@ -43,7 +43,7 @@ punctuation = {33: '!', 34: '"', 35: '#', 36: '$', 37: '%', 38: '&', 39: "'", 40
 
 digits = {48: '0', 49: '1', 50: '2', 51: '3', 52: '4', 53: '5', 54: '6', 55: '7', 56: '8', 57: '9'}
 
-# These aren't all ascii characters of python, these are some common ones for demonstration only!
+# These are some ascii characters of python representing themselves in dict{key: value} pairs.
 all_ascii_characters = ascii_lowercase | ascii_uppercase | whitespace | digits | punctuation
 
 # for checking missing arguments
@@ -283,7 +283,7 @@ def binary_search(array, item, start, end):
     else:
         return mid
 
-# * Insertion sort is used by timsort for small array or small runs.
+#* Insertion sort is used by timsort for small array or small runs.
 def insertion_sort(array):
     for index in range(1, len(array)):
         value = array[index]
@@ -291,7 +291,7 @@ def insertion_sort(array):
         array = array[:pos] + [value] + array[pos:index] + array[index+1:]
     return array
 
-# * Returns a single sorted array from two sorted array
+#* Returns a single sorted array from two sorted array
 def merge(left, right):
     if not left:
         return right
@@ -301,7 +301,7 @@ def merge(left, right):
         return [left[0]] + merge(left[1:], right)
     return [right[0]] + merge(left, right[1:])
 
-# * Note: This is pythonic implementation of timsort algorithm
+#* Note: This is pythonic implementation of timsort algorithm
 def timsort(array):
     length = len(array)
     if length > 1000:
@@ -597,7 +597,7 @@ class Filter:
 
 
 __all__.extend(["Reduce"])
-# * Note: `reduce` is functools library function not a python built-in function.
+#* Note: `reduce` is functools library function not a python built-in function.
 def Reduce(function, sequence, initial=MISSING):
     """
     Reduce(function, iterable[, initial]) -> value

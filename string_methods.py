@@ -383,7 +383,7 @@ def rpartition(text, sep):
     errorhandler([text, str], [sep, str])
 
     len_sep = len(sep)
-    for i in reversed(range(len(text))):
+    for i in range(len(text)-1, -1, -1):
         if sep == text[i: i+len_sep]:
             return (text[0: i], text[i: i+len_sep], text[i+len_sep:])
 
@@ -467,31 +467,21 @@ def startswith(text, prefix, start=0, end=None):
     if end is not None: errorhandler([end, int])
 
     if end is None: end = len(text)
+    text = text[start: end]
     if isinstance(prefix, str):
-        # special case for empty strings
-        if len(text) == len(prefix) == 0:
-            return True
-
-        p_len = len(prefix)
-        for i in range(start, end):
-            if prefix == text[i: i+p_len]:
-                return True
-            else:
-                return False
-        return False
+        return prefix == text[:len(prefix)]
 
     if not isinstance(prefix, tuple):
         raise TypeError(
             f"startswith second arg must be str or a tuple of str, not {type(prefix).__name__}")
-
-    for char in prefix:
-        if not isinstance(char, str):
-            raise TypeError(
-                f"tuple for startswith must only contain str, not {type(char).__name__}")
-
-        if char in text[start: end]:
-            return True
-    return False
+    try:
+        for char in prefix:
+            if char in text:
+                return True
+        return False
+    except TypeError:
+        raise TypeError(
+            f"tuple for startswith must only contain str, not {type(char).__name__}") from None
 
 
 def endswith(text, suffix, start=0, end=None):
@@ -504,35 +494,26 @@ def endswith(text, suffix, start=0, end=None):
     if end is not None: errorhandler([end, int])
 
     if end is None: end = len(text)
+    text = text[start: end]
     if isinstance(suffix, str):
-        # special case for empty strings
-        if len(text) == len(suffix) == 0:
-            return True
-
-        s_len = len(suffix)
-        for i in reversed(range(start, end+1)):
-            if suffix == text[i-s_len: i]:
-                return True
-            else:
-                return False
-        return False
+        length = len(text)
+        return suffix == text[length-len(suffix): length]
 
     if not isinstance(suffix, tuple):
         raise TypeError(
             f"endswith second arg must be str or a tuple of str, not {type(suffix).__name__}")
-
-    is_true = False
-    for char in suffix:
-        if char in text[start: end]:
-            if not isinstance(char, str):
-                raise TypeError(
-                    f"tuple for endswith must only contain str, not {type(char).__name__}")
-
-            if not is_true:
-                is_true = True
-        else:
-            return False
-    return is_true
+    try:
+        is_true = False
+        for char in suffix:
+            if char in text:
+                if not is_true:
+                    is_true = True
+            else:
+                return False
+        return is_true
+    except TypeError:
+        raise TypeError(
+            f"tuple for endswith must only contain str, not {type(char).__name__}") from None
 
 
 def find(text, sub, start=0, end=None):
@@ -543,13 +524,13 @@ def find(text, sub, start=0, end=None):
 
     errorhandler([text, str], [sub, str], [start, int])
     if end is not None: errorhandler([end, int])
+    # special case for empty strings
+    if sub == '':
+        return 0
 
     if end is None:
         end = len(text)
     s_len = len(sub)
-    if s_len == 0:
-        return 0
-
     for i in range(start, end):
         if sub == text[i: i+s_len]:
             return i
@@ -564,17 +545,21 @@ def rfind(text, sub, start=0, end=None):
 
     errorhandler([text, str], [sub, str], [start, int])
     if end is not None: errorhandler([end, int])
+    if end is None: end = len(text)
     # special case for empty strings
-    if len(sub) == len(text) == 0:
+    if sub == text == '':
         return 0
 
+    if sub == '' and text != '':
+        if start == end:
+            return end
+
     s_len = len(sub)
-    if end is None: end = len(text)
-    for i in reversed(range(start, end+1)):
+    for i in range(end-1, start-1, -1):
         if sub == text[i: i+s_len]:
-            if len(sub) != 0:
-                return i
-            return i+1
+            if sub == '':
+                return i + 1
+            return i
     return -1
 
 
@@ -589,10 +574,11 @@ def index(text, sub, start=0, end=None):
 
     if end is None: end = len(text)
     if isinstance(text, str):
-        s_len = len(sub)
-        if s_len == 0:
+        # special case for empty strings
+        if sub == '':
             return 0
 
+        s_len = len(sub)
         for i in range(start, end):
             if sub == text[i: i+s_len]:
                 return i
@@ -618,16 +604,21 @@ def rindex(text, sub, start=0, end=None):
 
     errorhandler([text, str], [sub, str], [start, int])
     if end is not None: errorhandler([end, int])
-    if len(sub) == len(text) == 0:
+    # special case for empty strings
+    if sub == text == '':
         return 0
+
+    if sub == '' and text != '':
+        if start == end:
+            return end
 
     len_sub = len(sub)
     if end is None: end = len(text)
-    for i in reversed(range(start, end+1)):
+    for i in range(end, start-1, -1):
         if sub == text[i: i+len_sub]:
-            if len(sub) != 0:
-                return i
-            return i+1
+            if sub == '':
+                return i + 1
+            return i
 
     raise ValueError("substring not found")
 
@@ -643,15 +634,15 @@ def count(text, sub, start=0, end=None):
     if end is None: end = len(text)
     _count = 0  # holds substring occurrences
     if isinstance(text, str):
-        # !issue with counting empty string
-        # !returns wrong result for this case
+        #! issue with counting empty string
+        #! returns wrong result for this case
         s_len = len(sub)
         for i in range(start, end):
             if sub == text[i: i+s_len]:
                 _count += 1
 
         if s_len == 0:
-            return _count+1
+            return _count + 1
         return _count
 
     if not hasattr(text, '__getitem__'):
@@ -679,11 +670,12 @@ def join(text, iterable):
         raise TypeError("can only join an iterable") from None
 
     letters = ""
-    for idx, char in enumerate(it):
-        if not isinstance(char, str):
-            raise TypeError(
-                f"sequence item {idx}: expected str instance, {type(char).__name__} found")
-        letters += char + text
+    try:
+        for idx, char in enumerate(it):
+            letters += char + text
+    except TypeError:
+        raise TypeError(
+            f"sequence item {idx}: expected str instance, {type(char).__name__} found") from None
     return letters
 
 
@@ -888,7 +880,7 @@ def split(text, sep=None, maxsplit=-1):
     # Checks for valid arguments and raises error if not valid
     errorhandler([text, str], [maxsplit, int])
     if sep is not None: errorhandler([sep, str])
-    if len(sep) == 0:
+    if sep == '':
         raise ValueError("empty separator")
 
     if sep is None:
@@ -911,7 +903,7 @@ def rsplit(text, sep=None, maxsplit=-1):
     # Checks for valid arguments and raises error if not valid
     errorhandler([text, str], [maxsplit, int])
     if sep is not None: errorhandler([sep, str])
-    if len(sep) == 0:
+    if sep == '':
         raise ValueError("empty separator")
 
     if sep is None:

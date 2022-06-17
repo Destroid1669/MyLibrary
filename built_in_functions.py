@@ -170,17 +170,17 @@ def Len(obj, /) -> int:
         f"object of type {type(obj).__name__!r} has no Len()")
 
 
-def Min(*iterable, default=MISSING, key=None):
+def Min(*args, default=MISSING, key=None):
     """With a single iterable argument, return its smallest item. The
     default keyword-only argument specifies an object to return if
     the provided iterable is empty.
     With two or more arguments, return the smallest argument."""
 
-    if not iterable:
+    if not args:
         raise TypeError("Min expected at least 1 argument, got 0")
 
-    if len(iterable) == 1:
-        val = iterable[0]
+    if len(args) == 1:
+        val = args[0]
         if not is_iter(val):
             raise TypeError(
                 f"{type(val).__name__!r} object is not iterable")
@@ -192,7 +192,7 @@ def Min(*iterable, default=MISSING, key=None):
 
         it = iter(val)
     else:
-        it = iter(iterable)
+        it = iter(args)
 
     if key is None:
         key = lambda x: x
@@ -208,17 +208,17 @@ def Min(*iterable, default=MISSING, key=None):
     return small
 
 
-def Max(*iterable, default=MISSING, key=None):
+def Max(*args, default=MISSING, key=None):
     """With a single iterable argument, return its biggest item. The
     default keyword-only argument specifies an object to return if
     the provided iterable is empty.
     With two or more arguments, return the largest argument."""
 
-    if not iterable:
+    if not args:
         raise TypeError("Max expected at least 1 argument, got 0")
 
-    if len(iterable) == 1:
-        val = iterable[0]
+    if len(args) == 1:
+        val = args[0]
         if not is_iter(val):
             raise TypeError(
                 f"{type(val).__name__!r} object is not iterable")
@@ -230,7 +230,7 @@ def Max(*iterable, default=MISSING, key=None):
 
         it = iter(val)
     else:
-        it = iter(iterable)
+        it = iter(args)
 
     if key is None:
         key = lambda x: x
@@ -415,10 +415,10 @@ class Reversed:
     "Return a reverse iterator over the values of the given sequence."
 
     def __init__(self, sequence, /):
-        if hasattr(sequence, '__getitem__'):
-            self.__data = sequence
-        elif hasattr(sequence, 'keys'):
+        if hasattr(sequence, 'keys'):
             self.__data = sequence.keys()
+        elif hasattr(sequence, '__getitem__'):
+            self.__data = sequence
         else:
             raise TypeError(
                 f"{type(sequence).__name__!r} object is not reversible")
@@ -462,13 +462,13 @@ class Map:
 
     each of the iterables. stops when the shortest iterable is exhausted."""
 
-    def __init__(self, /, func, *iterables):
-        if not iterables:
+    def __init__(self, /, func, *args):
+        if not args:
             raise TypeError(
                 f"{self.__class__.__name__}() must have at least two arguments.")
 
         self.__func = func
-        self.__iters = [iter(i) for i in iterables]
+        self.__iters = [iter(i) for i in args]
 
     def __iter__(self, /):
         return self
@@ -510,10 +510,10 @@ class Zip:
     If strict is true and one of the arguments is exhausted before the others,
     raise a ValueError."""
 
-    def __init__(self, /, *iterables, strict=False):
+    def __init__(self, /, *args, strict=False):
         self.__strict = strict
-        self.__pargs = iterables
-        self.__iters = [iter(i) for i in iterables]
+        self.__pargs = args
+        self.__iters = [iter(i) for i in args]
 
     def __iter__(self, /):
         self.__check_eq()
@@ -548,13 +548,13 @@ class Zip:
 
     def __check_eq(self, /):
         if self.__strict and self.__pargs:
-            initial = self.__pargs[0]
+            initial = len(self.__pargs[0])
             name = self.__class__.__name__
-            for pos, value in enumerate(self.__pargs, start=1):
-                if len(value) > len(initial):
+            for pos, value in enumerate(map(len, self.__pargs), start=1):
+                if value > initial:
                     raise ValueError(
                         f"{name}() argument {pos} is longer than argument 1{1-pos if pos != 2 else ''}")
-                if len(value) < len(initial):
+                if value < initial:
                     raise ValueError(
                         f"{name}() argument {pos} is shorter than arguments 1{1-pos if pos != 2 else ''}")
 
@@ -637,9 +637,9 @@ def IS(value, iterable, /) -> bool:
             raise TypeError(
                 f"'IS <string>' requires string as left operand, not '{type(value).__name__}'")
 
-        v_len = len(value)
+        length = len(value)
         for i in range(len(iterable)):
-            if value == iterable[i: i+v_len]:
+            if value == iterable[i: i+length]:
                 return True
         return False
 

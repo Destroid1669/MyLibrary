@@ -81,10 +81,11 @@ class Range:
         return key in self._Range__data
 
     def __getitem__(self, key, /):
-        if key in self._Range__data:
-            return self._Range__data[key]
+        length = len(self)
+        if key >= length or ~key >= length:
+            raise IndexError("Range object index out of range")
 
-        raise IndexError("Range object index out of range")
+        return self._Range__data[key]
 
     def __len__(self, /):
         return (self.stop - self.start) // self.step

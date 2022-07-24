@@ -1,4 +1,4 @@
-r"""This Module is re-implementation of python existing built_in
+"""This Module is re-implementation of python existing built_in
 functions on the basis of their execution output, It's written to
 imitate those functions, not intended to be used in the programs.
 
@@ -195,7 +195,7 @@ def Min(*args, default=MISSING, key=None):
         it = iter(args)
 
     if key is None:
-        key = lambda x: x
+        def key(x): return x
 
     small = next(it)
     small_key = key(small)
@@ -233,7 +233,7 @@ def Max(*args, default=MISSING, key=None):
         it = iter(args)
 
     if key is None:
-        key = lambda x: x
+        def key(x): return x
 
     big = next(it)
     big_key = key(big)
@@ -567,7 +567,7 @@ class Filter:
 
     def __init__(self, /, function, iterable):
         if function is None:
-            function = lambda x: x
+            def function(x): return x
 
         self.__iters = iter([i for i in iterable if function(i)])
 

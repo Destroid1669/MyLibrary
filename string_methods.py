@@ -1,4 +1,4 @@
-r"""This Module is re-implementation of python existing string methods
+"""This Module is re-implementation of python existing string methods
 as functions on the basis of their execution output it's written
 to Imitate those methods, it's not intended to be used in programs.
 
@@ -76,7 +76,6 @@ def islower(text):
                 return False
             if not is_true:
                 is_true = True
-
     return is_true
 
 
@@ -94,7 +93,6 @@ def isupper(text):
                 return False
             if not is_true:
                 is_true = True
-
     return is_true
 
 
@@ -168,7 +166,6 @@ def istitle(text):
             is_true = False
         else:
             is_true = True
-
     return is_title
 
 
@@ -474,14 +471,14 @@ def startswith(text, prefix, start=0, end=None):
     if not isinstance(prefix, tuple):
         raise TypeError(
             f"startswith second arg must be str or a tuple of str, not {type(prefix).__name__}")
-    try:
-        for char in prefix:
-            if char in text:
-                return True
-        return False
-    except TypeError:
-        raise TypeError(
-            f"tuple for startswith must only contain str, not {type(char).__name__}") from None
+
+    for char in prefix:
+        if char == text[:len(char)]:
+            return True
+        if not isinstance(char, str):
+            raise TypeError(
+                f"tuple for startswith must only contain str, not {type(char).__name__}")
+    return False
 
 
 def endswith(text, suffix, start=0, end=None):
@@ -495,25 +492,21 @@ def endswith(text, suffix, start=0, end=None):
 
     if end is None: end = len(text)
     text = text[start: end]
+    length = len(text)
     if isinstance(suffix, str):
-        length = len(text)
         return suffix == text[length-len(suffix): length]
 
     if not isinstance(suffix, tuple):
         raise TypeError(
             f"endswith second arg must be str or a tuple of str, not {type(suffix).__name__}")
-    try:
-        is_true = False
-        for char in suffix:
-            if char in text:
-                if not is_true:
-                    is_true = True
-            else:
-                return False
-        return is_true
-    except TypeError:
-        raise TypeError(
-            f"tuple for endswith must only contain str, not {type(char).__name__}") from None
+
+    for char in suffix:
+        if char == text[length-len(char): length]:
+            return True
+        if not isinstance(char, str):
+            raise TypeError(
+                f"tuple for endswith must only contain str, not {type(char).__name__}")
+    return False
 
 
 def find(text, sub, start=0, end=None):

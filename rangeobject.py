@@ -16,8 +16,8 @@ class Range:
 
     __slots__ = ['start', 'stop', 'step'] + ['_Range__data']
 
-    def __init__(self, /, start, stop=0, step=1):
-        if start != 0 and stop == 0:
+    def __init__(self, /, start: int, stop: int = 0, step: int = 1):
+        if start != 0 and stop == 0 and step == 1:
             start, stop = stop, start
 
         if step == 0:
@@ -110,7 +110,7 @@ class Range:
         self.__dict__.update(state)
 
     def __iter__(self, /):
-        class iterator:
+        class Iterator:
             def __init__(self, sequence, /):
                 self.__iters = iter(sequence)
 
@@ -124,7 +124,7 @@ class Range:
                 return "<Range_iterator object at %s>" % str(
                     hex(id(self))).replace('x', 'x00000').upper()
 
-        return iterator(self._Range__data)
+        return Iterator(self._Range__data)
 
     def __reversed__(self, /):
         class Reverse(Reversed):

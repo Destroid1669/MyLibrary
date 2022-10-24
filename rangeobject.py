@@ -1,4 +1,4 @@
-from built_in_functions import Reversed, errorhandler
+from built_in_functions import Enumerate, errorhandler
 
 
 class Range:
@@ -14,7 +14,7 @@ class Range:
     These are exactly the valid indices for a list of 4 elements.
     When step is given, it specifies the increment (or decrement)."""
 
-    __slots__ = ['start', 'stop', 'step'] + ['_Range__data']
+    __slots__ = ['start', 'stop', 'step']
 
     def __init__(self, /, start: int, stop: int = 0, step: int = 1):
         if start != 0 and stop == 0 and step == 1:
@@ -30,18 +30,6 @@ class Range:
         object.__setattr__(self, 'stop', stop)
         object.__setattr__(self, 'step', step)
 
-        sequence = ()
-        if step > 0:
-            while start < stop:
-                sequence += (start,)
-                start += step
-        else:
-            while start > stop:
-                sequence += (start,)
-                start += step
-
-        object.__setattr__(self, '_Range__data', sequence)
-
     def __getattribute__(self, name, /):
         return object.__getattribute__(self, name)
 
@@ -49,43 +37,45 @@ class Range:
         raise AttributeError("read only attribute")
 
     def __bool__(self, /):
-        return True if self._Range__data else False
+        return bool(len(self))
 
     def __eq__(self, value, /):
         if not isinstance(value, self.__class__):
             return False
-        if len(self._Range__data) != len(value):
+        if len(self) != len(value):
             return False
-        if len(self._Range__data) == 0:
-            return True
         if self.start != value.start:
             return False
-        if self._Range__data[-1] == value[-1]:
+        if self.stop != value.stop:
+            return False
+        if self.step == value.step:
             return True
         return False
 
     def __ne__(self, value, /):
         if not isinstance(value, self.__class__):
             return True
-        if len(self._Range__data) != len(value):
+        if len(self) != len(value):
             return True
-        if len(self._Range__data) == 0:
-            return False
         if self.start != value.start:
             return True
-        if self._Range__data[-1] == value[-1]:
+        if self.stop != value.stop:
+            return True
+        if self.step == value.step:
             return False
         return True
 
     def __contains__(self, key, /):
-        return key in self._Range__data
+        return key in iter(self)
 
     def __getitem__(self, key, /):
-        length = len(self)
-        if key >= length or ~key >= length:
-            raise IndexError("Range object index out of range")
+        if key < 0:
+            key = len(self) + key
 
-        return self._Range__data[key]
+        for idx, num in Enumerate(iter(self)):
+            if key == idx:
+                return num
+        raise IndexError("Range object index out of range")
 
     def __len__(self, /):
         return (self.stop - self.start) // self.step
@@ -93,7 +83,7 @@ class Range:
     def __hash__(self, /):
         if len(self) == 0:
             return id(Range)
-        return hash((len(self), self.start, self[-1]))
+        return hash((len(self), self.start, self.step))
 
     def __getstate__(self, /):
         "Return state information for pickling."
@@ -110,29 +100,31 @@ class Range:
         self.__dict__.update(state)
 
     def __iter__(self, /):
-        class Iterator:
-            def __init__(self, sequence, /):
-                self.__iters = iter(sequence)
+        start = self.start
+        stop = self.stop
+        step = self.step
 
-            def __iter__(self, /):
-                return self
-
-            def __next__(self, /):
-                return next(self.__iters)
-
-            def __repr__(self, /):
-                return "<Range_iterator object at %s>" % str(
-                    hex(id(self))).replace('x', 'x00000').upper()
-
-        return Iterator(self._Range__data)
+        if step > 0:
+            while start < stop:
+                yield start
+                start += step
+        else:
+            while start > stop:
+                yield start
+                start += step
 
     def __reversed__(self, /):
-        class Reverse(Reversed):
-            def __repr__(self, /):
-                return "<Range_iterator object at %s>" % str(
-                    hex(id(self))).replace('x', 'x00000').upper()
-
-        return Reverse(self._Range__data)
+        start = self.start
+        stop = self.stop
+        step = self.step
+        # To reverse
+        if step > 0:
+            start -= 1
+            stop -= 1
+        else:
+            start += 1
+            stop += 1
+        return iter(Range(stop, start, -step))
 
     def __repr__(self, /):
         if self.step == 1:
@@ -143,21 +135,16 @@ class Range:
     def count(self, value, /):
         "rangeobject.count(value) -> integer -- return number of occurrences of value"
 
-        i, _count = 0, 0
-        length = len(self)
-        while i < length:
-            if value == self._Range__data[i]:
-                _count += 1
-            i += 1
-        return _count
+        counter = 0
+        for num in iter(self):
+            if value == num:
+                counter += 1
+        return counter
 
     def index(self, value, /):
         "rangeobject.index(value) -> integer -- return index of value."
 
-        i = 0; length = len(self)
-        while i < length:
-            if value == self._Range__data[i]:
-                return i
-            i += 1
-
+        for idx, num in Enumerate(iter(self)):
+            if value == num:
+                return idx
         raise ValueError(f"{value} is not in Range")

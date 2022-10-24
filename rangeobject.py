@@ -66,13 +66,13 @@ class Range:
         return True
 
     def __contains__(self, key, /):
-        return key in iter(self)
+        return key in self
 
     def __getitem__(self, key, /):
         if key < 0:
             key = len(self) + key
 
-        for idx, num in Enumerate(iter(self)):
+        for idx, num in Enumerate(self):
             if key == idx:
                 return num
         raise IndexError("Range object index out of range")
@@ -136,7 +136,7 @@ class Range:
         "rangeobject.count(value) -> integer -- return number of occurrences of value"
 
         counter = 0
-        for num in iter(self):
+        for num in self:
             if value == num:
                 counter += 1
         return counter
@@ -144,7 +144,7 @@ class Range:
     def index(self, value, /):
         "rangeobject.index(value) -> integer -- return index of value."
 
-        for idx, num in Enumerate(iter(self)):
+        for idx, num in Enumerate(self):
             if value == num:
                 return idx
         raise ValueError(f"{value} is not in Range")

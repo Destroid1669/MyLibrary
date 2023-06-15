@@ -1,220 +1,171 @@
-from built_in_functions import Reversed, Sorted, verifier
+import sys
+from typing import Any, Callable, Generic, Iterable, Self, TypeVar
+
+T = TypeVar('T')
+
+MISSING: tuple[object, ...] = ()
 
 
-class List:
-    """Built-in mutable sequence re-implementation.
+class List(Generic[T]):
+    """List a sequence of mutable Python objects.
 
     If no argument is given, the constructor creates a new empty list.
-    The argument must be an iterable if specified."""
+    The argument must be an iterable if specified.
+    """
 
-    def __init__(self, iterable=(), /):
-        self.__data = ()
-        if iterable != ():
-            if isinstance(iterable, type(self.__data)):
-                self.__data = iterable
-            elif isinstance(iterable, self.__class__):
-                self.__data = iterable.__data
-            else:
-                self.__data = tuple(iterable)
+    def __init__(self, iterable: Iterable[T] = MISSING, /) -> None:
+        if iterable is MISSING:
+            self.__data: list[T] = []
+            return
+        if isinstance(iterable, list):
+            self.__data = iterable
+        elif isinstance(iterable, self.__class__):
+            self.__data = iterable.__data
+        else:
+            self.__data = list(iterable)
 
-    def __eq__(self, value, /):
-        if not isinstance(value, self.__class__):
-            return False
-        return self.__data == self.__cast(value)
+    def __eq__(self, value: object, /) -> bool:
+        return self.__data == self.__cast(value)  # type: ignore
 
-    def __ne__(self, value, /):
-        if not isinstance(value, self.__class__):
-            return True
-        return self.__data != self.__cast(value)
+    def __ne__(self, value: object, /) -> bool:
+        return self.__data != self.__cast(value)  # type: ignore
 
-    @verifier
-    def __lt__(self, value, /):
+    def __lt__(self, value: Self | list[T], /) -> bool:
         return self.__data < self.__cast(value)
 
-    @verifier
-    def __le__(self, value, /):
+    def __le__(self, value: Self | list[T], /) -> bool:
         return self.__data <= self.__cast(value)
 
-    @verifier
-    def __gt__(self, value, /):
+    def __gt__(self, value: Self | list[T], /) -> bool:
         return self.__data > self.__cast(value)
 
-    @verifier
-    def __ge__(self, value, /):
+    def __ge__(self, value: Self | list[T], /) -> bool:
         return self.__data >= self.__cast(value)
 
-    def __cast(self, value, /):
-        return value.__data if isinstance(value, self.__class__) else value
+    def __cast(self, value: Self | list[T], /) -> list[T]:
+        if isinstance(value, self.__class__):
+            return value.__data
+        return value  # type: ignore
 
-    @verifier
-    def __add__(self, value, /):
-        return self.__class__(self.__data + value.__data)
+    def __add__(self, value: Self | list[T], /) -> Self:
+        return self.__class__(self.__data + self.__cast(value))
 
-    @verifier
-    def __radd__(self, value, /):
-        return self.__class__(value.__data + self.__data)
+    def __radd__(self, value: Self | list[T], /) -> Self:
+        return self.__class__(self.__cast(value) + self.__data)
 
-    @verifier
-    def __iadd__(self, value, /):
-        self.__data += value.__data
+    def __iadd__(self, value: Self | list[T], /) -> Self:
+        self.__data += self.__cast(value)
         return self
 
-    @verifier
-    def __mul__(self, value, /):
-        return self.__class__(self.__data * value)
+    def __mul__(self, value: Self | list[T], /) -> Self:
+        return self.__class__(self.__data * self.__cast(value))  # type: ignore
+
+    def __imul__(self, value: Self | list[T], /) -> Self:
+        self.__data *= self.__cast(value)  # type: ignore
+        return self
 
     __rmul__ = __mul__
 
-    @verifier
-    def __imul__(self, value, /):
-        self.__data *= value
-        return self
-
-    def __contains__(self, key, /):
+    def __contains__(self, key: T, /) -> bool:
         return key in self.__data
 
-    def __len__(self, /):
+    def __len__(self, /) -> int:
         return len(self.__data)
 
-    def __sizeof__(self, /):
+    def __sizeof__(self, /) -> int:
         return self.__data.__sizeof__()
 
-    def __getitem__(self, index, /):
-        if isinstance(index, slice):
-            return self.__class__(self.__data[index])
+    def __getitem__(self, index: int | slice, /) -> T | Self:
+        if isinstance(index, int):
+            return self.__data[index]
+        return self.__class__(self.__data[index])
 
-        return self.__data[index]
+    def __setitem__(self, index: int, value: T, /) -> None:
+        self.__data[index] = value
 
-    def __setitem__(self, index, value, /):
-        if not self.__data or index > 0 and index > len(
-                self)-1 or index < 0 and -index > len(self):
-            raise IndexError(
-                f"{self.__class__.__name__} assignment index out of range")
+    def __delitem__(self, key: int, /) -> None:
+        del self.__data[key]
 
-        if index < 0 and -index > len(self.__data)-1:
-            index = 0
-
-        if index < 0:
-            index = len(self.__data) + index + 1
-
-        self.__data = self.__data[:index] + (value,) + self.__data[index+1:]
-
-    def __delitem__(self, key, /):
-        if not self.__data or key > 0 and key > len(
-                self)-1 or key < 0 and -key > len(self):
-            raise IndexError(
-                f"{self.__class__.__name__} assignment index out of range")
-
-        if key < 0 and -key > len(self.__data)-1:
-            key = 0
-
-        if key < 0:
-            key = len(self.__data) + key
-
-        self.__data = self.__data[:key] + self.__data[key+1:]
-
-    def __copy__(self, /):
+    def __copy__(self, /) -> Self:
         inst = self.__class__.__new__(self.__class__)
         inst.__dict__.update(self.__dict__)
         # Create a copy and avoid triggering descriptors
-        inst.__dict__[f"_{self.__class__.__name__}__data"] = self.__dict__[
-            f"_{self.__class__.__name__}__data"][:]
+        inst.__dict__[f"_{self.__class__.__name__}__data"] = \
+            self.__dict__[f"_{self.__class__.__name__}__data"][:]
         return inst
 
-    def __repr__(self, /):
-        if len(self.__data) == 1:
-            return f"{self.__class__.__name__}({self.__data[0]})"
-        return f"{self.__class__.__name__}{repr(self.__data)}"
+    def __repr__(self, /) -> str:
+        return f"{self.__class__.__name__}({self.__data})"
 
-    def append(self, obj, /):
+    def append(self, obj: T, /) -> None:
         "Append object to the end of the list."
 
-        self.__data += (obj,)
+        self.__data.append(obj)
 
-    def insert(self, index, obj, /):
+    def insert(self, index: int, obj: T, /) -> None:
         "Insert object before index."
 
-        if index < 0 and -index > len(self.__data)-1:
-            index = 0
+        self.__data.insert(index, obj)
 
-        if index < 0:
-            index = len(self.__data) + index + 1
-
-        self.__data = self.__data[:index] + (obj,) + self.__data[index:]
-
-    def pop(self, index=-1, /):
+    def pop(self, index: int = -1, /) -> T:
         """Remove and return item at index (default last).
 
-        Raises IndexError if list is empty or index is out of range."""
+        Raise IndexError if list is empty or index is out of range.
+        """
+        return self.__data.pop(index)
 
-        if not self.__data:
-            raise IndexError("pop from empty List")
-        if index > 0 and index > len(self)-1 or index < 0 and -index > len(self):
-            raise IndexError("pop index out of range")
-
-        if index < 0:
-            index = len(self.__data) + index
-
-        element = self.__data[index]
-        self.__data = self.__data[:index] + self.__data[index+1:]
-
-        return element
-
-    def remove(self, value, /):
+    def remove(self, value: T, /) -> None:
         """Remove first occurrence of value.
 
-        Raises ValueError if the value is not present."""
-
-        for i in range(len(self.__data)):
-            if value == self[i]:
-                self.__data = self.__data[:i] + self.__data[i+1:]
+        Raise ValueError if the value is not present.
+        """
+        for idx in range(len(self.__data)):
+            if value == self[idx]:
+                del self.__data[idx]
                 return None
 
         name = self.__class__.__name__
-        raise ValueError(
-            f"{name}.remove(x): x not in {name}")
+        raise ValueError(f"{name}.remove(x): x not in {name}")
 
-    def clear(self, /):
+    def clear(self, /) -> None:
         "Remove all items from list."
 
-        self.__data = ()
+        self.__data.clear()
 
-    def copy(self, /):
+    def copy(self, /) -> Self:
         "Return a shallow copy of the list."
 
-        return self.__class__(self)
+        return self.__class__(self)  # type: ignore
 
-    def count(self, value, /):
+    def count(self, value: T, /) -> int:
         "Return number of occurrences of value."
 
-        _count = 0
+        occurrences = 0
         for item in self.__data:
             if item == value:
-                _count += 1
-        return _count
+                occurrences += 1
+        return occurrences
 
-    def index(self, value, start=0, stop=9223372036854775807, /):
+    def index(self, value: T, start: int = 0, stop: int = sys.maxsize, /) -> int:
         """Return first index of value.
 
-        Raises ValueError if the value is not present."""
-
+        Raise ValueError if the value is not present.
+        """
         length = len(self.__data)
         if length < stop:
             stop = length
 
-        for i in range(start, stop):
-            if value == self[i]:
-                return i
+        for idx in range(start, stop):
+            if value == self[idx]:
+                return idx
+        raise ValueError(f"{value} is not in {self.__class__.__name__}")
 
-        raise ValueError(
-            f"{value} is not in {self.__class__.__name__}")
-
-    def reverse(self, /):
+    def reverse(self, /) -> None:
         "Reverse *IN PLACE*."
 
-        self.__data = tuple(Reversed(self.__data))
+        self.__data.reverse()
 
-    def sort(self, /, *, key=None, reverse=False):
+    def sort(self, /, *, key: Callable[[T], Any] | None = None, reverse: bool = False):
         """Sort the list in ascending order and return None.
 
         The sort is in-place (i.e. the list itself is modified) and stable (i.e. the
@@ -223,15 +174,14 @@ class List:
         If a key function is given, apply it once to each list item and sort them,
         ascending or descending, according to their function values.
 
-        The reverse flag can be set to sort in descending order."""
+        The reverse flag can be set to sort in descending order.
+        """
+        if key is None:
+            self.__data.sort(reverse=reverse)  # type: ignore
+        else:
+            self.__data.sort(key=key, reverse=reverse)
 
-        self.__data = tuple(Sorted(self.__data, key=key, reverse=reverse))
-
-    def extend(self, iterable, /):
+    def extend(self, iterable: Iterable[T], /) -> None:
         "Extend list by appending elements from the iterable."
 
-        if isinstance(iterable, List):
-            self.__data += iterable.__data
-        else:
-            for x in iterable:
-                self.__data += (x,)
+        self.__data.extend(iterable)

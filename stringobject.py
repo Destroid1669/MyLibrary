@@ -1,6 +1,8 @@
 from sys import getdefaultencoding
+from typing import Iterable, LiteralString, Self
+
+from _types import FormatMapMapping, ReadableBuffer, TranslateTable
 from string_methods import *
-from built_in_functions import verifier
 
 
 class Str:
@@ -12,106 +14,99 @@ class Str:
     Otherwise, returns the result of object.__str__() (if defined)
     or repr(object).
     encoding defaults to sys.getdefaultencoding().
-    errors defaults to 'strict'."""
+    errors defaults to 'strict'.
+    """
 
-    def __init__(self, obj='', /, *, encoding=getdefaultencoding(), errors='strict'):
-        is_true = encoding == getdefaultencoding() and errors == 'strict'
-        if isinstance(obj, str) and is_true:
+    def __init__(self, obj: ReadableBuffer = '', /, *,
+                 encoding: str = getdefaultencoding(), errors: str = 'strict') -> None:
+
+        is_default = encoding == getdefaultencoding() and errors == 'strict'
+        if isinstance(obj, str) and is_default:
             self.__data = obj
-        elif isinstance(obj, self.__class__) and is_true:
+        elif isinstance(obj, self.__class__) and is_default:
             self.__data = obj.__data[:]
-        elif is_true:
+        elif is_default:
             self.__data = str(obj)
         else:
-            self.__data = str(obj, encoding, errors)
+            self.__data = str(obj, encoding, errors)  # type: ignore
 
-    def __str__(self, /):
-        return f"{self.__class__.__name__}('{self.__data}')"
+    def __str__(self, /) -> str:
+        return self.__data
 
-    def __repr__(self, /):
-        return f"{self.__class__.__name__}({repr(self.__data)})"
+    def __repr__(self, /) -> str:
+        return f"{self.__class__.__name__}({self.__data!r})"
 
-    def __int__(self, /):
+    def __int__(self, /) -> int:
         return int(self.__data)
 
-    def __float__(self, /):
+    def __float__(self, /) -> float:
         return float(self.__data)
 
-    def __complex__(self, /):
+    def __complex__(self, /) -> complex:
         return complex(self.__data)
 
-    def __hash__(self, /):
+    def __hash__(self, /) -> int:
         return hash(self.__data)
 
-    def __getnewargs__(self, /):
+    def __getnewargs__(self, /) -> tuple[str]:
         return (self.__data[:],)
 
-    def __len__(self, /):
+    def __len__(self, /) -> int:
         return len(self.__data)
 
-    def __sizeof__(self, /):
+    def __sizeof__(self, /) -> int:
         return self.__data.__sizeof__()
 
-    def __getitem__(self, key, /):
-        return self.__data[key]
+    def __getitem__(self, key: int | slice, /) -> Self:
+        return self.__class__(self.__data[key])
 
-    def __eq__(self, value, /):
-        if not isinstance(value, self.__class__):
-            return False
-        return self.__data == value.__data
+    def __eq__(self, value: object, /) -> bool:
+        return self.__data == self.__cast(value)  # type: ignore
 
-    def __ne__(self, value, /):
-        if not isinstance(value, self.__class__):
-            return True
-        return self.__data != value.__data
+    def __ne__(self, value: object, /) -> bool:
+        return self.__data != self.__cast(value)  # type: ignore
 
-    @verifier
-    def __lt__(self, value, /):
-        return self.__data < value.__data
+    def __lt__(self, value: Self | str, /) -> bool:
+        return self.__data < self.__cast(value)
 
-    @verifier
-    def __le__(self, value, /):
-        return self.__data <= value.__data
+    def __le__(self, value: Self | str, /) -> bool:
+        return self.__data <= self.__cast(value)
 
-    @verifier
-    def __gt__(self, value, /):
-        return self.__data > value.__data
+    def __gt__(self, value: Self | str, /) -> bool:
+        return self.__data > self.__cast(value)
 
-    @verifier
-    def __ge__(self, value, /):
-        return self.__data >= value.__data
+    def __ge__(self, value: Self | str, /) -> bool:
+        return self.__data >= self.__cast(value)
 
-    def __contains__(self, value, /):
-        if isinstance(value, Str):
-            value = value.__data
-        return value in self.__data
+    def __cast(self, value: Self | str, /) -> str:
+        if isinstance(value, self.__class__):
+            return value.__data
+        return value  # type: ignore
 
-    @verifier
-    def __add__(self, value, /):
-        return self.__class__(self.__data + value.__data)
+    def __contains__(self, value: Self | str, /) -> bool:
+        return self.__cast(value) in self.__data
 
-    @verifier
-    def __radd__(self, value, /):
-        return self.__class__(value.__data + self.__data)
+    def __add__(self, value: Self | str, /) -> Self:
+        return self.__class__(self.__data + self.__cast(value))
 
-    @verifier
-    def __mul__(self, value, /):
+    def __radd__(self, value: Self | str, /) -> Self:
+        return self.__class__(self.__cast(value) + self.__data)
+
+    def __mul__(self, value: int, /) -> Self:
         return self.__class__(self.__data * value)
 
-    __rmul__ = __mul__
+    def __rmul__(self, value: int, /) -> Self:
+        return self.__class__(value * self.__data)
 
-    def __mod__(self, value, /):
-        return self.__class__(self.__data % value)
+    def __mod__(self, value: Self | str, /) -> Self:
+        return self.__class__(self.__data % self.__cast(value))
 
-    def __rmod__(self, value, /):
-        return self.__class__(value % self.__data)
-
-    def __format__(self, format_spec, /):
+    def __format__(self, format_spec: str, /) -> str:
         return self.__data.__format__(format_spec)
 
     maketrans = str.maketrans
 
-    def translate(self, /, *args):
+    def translate(self, /, _table: TranslateTable) -> Self:
         """Replace each character in the string using the given translation table.
 
         table
@@ -120,11 +115,11 @@ class Str:
 
         The table must implement lookup/indexing via __getitem__, for instance a
         dictionary or list.  If this operation raises LookupError, the character is
-        left untouched.  Characters mapped to None are deleted."""
+        left untouched.  Characters mapped to None are deleted.
+        """
+        return self.__class__(self.__data.translate(_table))
 
-        return self.__class__(self.__data.translate(*args))
-
-    def encode(self, /, encoding='utf-8', errors='strict'):
+    def encode(self, /, encoding: str = 'utf-8', errors: str = 'strict') -> bytes:
         """Encode the string using the codec registered for encoding.
 
         encoding
@@ -134,355 +129,343 @@ class Str:
             The default is 'strict' meaning that encoding errors raise a
             UnicodeEncodeError.  Other possible values are 'ignore', 'replace' and
             'xmlcharrefreplace' as well as any other name registered with
-            codecs.register_error that can handle UnicodeEncodeErrors."""
-
+            codecs.register_error that can handle UnicodeEncodeErrors.
+        """
         return self.__data.encode(encoding, errors)
 
-    def format(self, /, *args, **kwds):
+    def format(self, /, *args: LiteralString, **kwds: LiteralString) -> str:
         """Return a formatted version of S, using substitutions from args and kwargs.
-        The substitutions are identified by braces ('{' and '}')."""
 
+        The substitutions are identified by braces ('{' and '}').
+        """
         return self.__data.format(*args, **kwds)
 
-    def format_map(self, /, mapping):
+    def format_map(self, /, mapping: FormatMapMapping) -> str:
         """Return a formatted version of S, using substitutions from mapping.
-        The substitutions are identified by braces ('{' and '}')."""
 
+        The substitutions are identified by braces ('{' and '}').
+        """
         return self.__data.format_map(mapping)
 
-    def isdigit(self, /):
+    def isdigit(self, /) ->bool:
         """Return True if the string is a digit string, False otherwise.
 
-        A string is a digit string if all characters in the string are digits and there"""
-
+        A string is a digit string if all characters in the string are digits and there
+        """
         return self.__data.isdigit()
 
-    def isascii(self, /):
+    def isascii(self, /) ->bool:
         """Return True if all characters in the string are ASCII, False otherwise.
 
         ASCII characters have code points in the range U+0000-U+007F.
-        Empty string is ASCII too."""
-
+        Empty string is ASCII too.
+        """
         return self.__data.isascii()
 
-    def isnumeric(self, /):
+    def isnumeric(self, /) ->bool:
         """Return True if the string is a numeric string, False otherwise.
 
         A string is numeric if all characters in the string are numeric and there is at
-        least one character in the string."""
-
+        least one character in the string.
+        """
         return self.__data.isnumeric()
 
-    def isidentifier(self, /):
+    def isidentifier(self, /) ->bool:
         """Return True if the string is a valid Python identifier, False otherwise.
 
         Call keyword.iskeyword(s) to test whether string s is a reserved identifier,
-        such as "def" or "class"."""
-
+        such as "def" or "class".
+        """
         return self.__data.isidentifier()
 
-    def casefold(self, /):
+    def casefold(self, /) -> Self:
         "Return a version of the string suitable for caseless comparisons."
 
         return self.__class__(self.__data.casefold())
 
-    def isdecimal(self, /):
+    def isdecimal(self, /) -> bool:
         """Return True if the string is a decimal string, False otherwise.
 
-        A string is a decimal string if all characters in the string are decimal and there is at least one character in the string."""
-
+        A string is a decimal string if all characters in the string are
+        decimal and there is at least one character in the string.
+        """
         return isdecimal(self.__data)
 
-    def isalpha(self, /):
-        """Returns True if the string is an alphabetic string, False otherwise.
+    def isalpha(self, /) -> bool:
+        """Return True if the string is an alphabetic string, False otherwise.
 
-        A string is alphabetic if all characters in the string are alphabetic and there is at least one character in the string."""
-
+        A string is alphabetic if all characters in the string are
+        alphabetic and there is at least one character in the string.
+        """
         return isalpha(self.__data)
 
-    def isalnum(self, /):
-        """Returns True if the string is an alphanumeric string, False otherwise.
+    def isalnum(self, /) -> bool:
+        """Return True if the string is an alphanumeric string, False otherwise.
 
-        A string is alphanumeric if all characters in the string are alphanumeric and there is at least one character in the string."""
-
+        A string is alphanumeric if all characters in the string are
+        alphanumeric and there is at least one character in the string.
+        """
         return isalnum(self.__data)
 
-    def islower(self, /):
-        """Returns True if the string is a lowercase string, False otherwise.
+    def islower(self, /) -> bool:
+        """Return True if the string is a lowercase string, False otherwise.
 
-        A string is lowercase if all cased characters in the string are lowercase and there is at least one cased character in the string."""
-
+        A string is lowercase if all cased characters in the string are
+        lowercase and there is at least one cased character in the string.
+        """
         return islower(self.__data)
 
-    def isupper(self, /):
-        """Returns True if the string is an uppercase string, False otherwise.
+    def isupper(self, /) -> bool:
+        """Return True if the string is an uppercase string, False otherwise.
 
-        A string is uppercase if all cased characters in the string are uppercase and there is at least one cased character in the string."""
-
+        A string is uppercase if all cased characters in the string are
+        uppercase and there is at least one cased character in the string.
+        """
         return isupper(self.__data)
 
-    def istitle(self, /):
-        """Returns a version of the string where each word is titlecased.
+    def istitle(self, /) -> bool:
+        """Return a version of the string where each word is titlecased.
 
-        More specifically, words start with uppercased characters and all remaining cased characters have lower case."""
-
+        More specifically, words start with uppercased characters
+        and all remaining cased characters have lower case.
+        """
         return istitle(self.__data)
 
-    def isspace(self, /):
-        """Returns True if the string is a whitespace string, False otherwise.
+    def isspace(self, /) -> bool:
+        """Return True if the string is a whitespace string, False otherwise.
 
-        A string is whitespace if all characters in the string are whitespace and there is at least one character in the string."""
-
+        A string is whitespace if all characters in the string are
+        whitespace and there is at least one character in the string.
+        """
         return isspace(self.__data)
 
-    def isprintable(self, /):
-        """Returns True if the string is printable, False otherwise.
+    def isprintable(self, /) -> bool:
+        """Return True if the string is printable, False otherwise.
 
-        A string is printable if all of its characters are considered printable in repr() or if it is empty."""
-
+        A string is printable if all of its characters are
+        considered printable in repr() or if it is empty.
+        """
         return isprintable(self.__data)
 
-    def lower(self, /):
-        "Returns a copy of the string converted to lowercase."
+    def lower(self, /) -> Self:
+        "Return a copy of the string converted to lowercase."
 
         return self.__class__(lower(self.__data))
 
-    def upper(self, /):
-        "Returns a copy of the string converted to uppercase."
+    def upper(self, /) -> Self:
+        "Return a copy of the string converted to uppercase."
 
         return self.__class__(upper(self.__data))
 
-    def swapcase(self, /):
+    def swapcase(self, /) -> Self:
         "Converts uppercase characters to lowercase and lowercase characters to uppercase."
 
         return self.__class__(swapcase(self.__data))
 
-    def capitalize(self, /):
-        """Returns a capitalized version of the string.
+    def capitalize(self, /) -> Self:
+        """Return a capitalized version of the string.
 
-        More specifically, make the first character have upper case and the rest lower case."""
-
+        More specifically, make the first character have upper case and the rest lower case.
+        """
         return self.__class__(capitalize(self.__data))
 
-    def title(self, /):
-        """Returns a version of the string where each word is titlecased.
+    def title(self, /) -> Self:
+        """Return a version of the string where each word is titlecased.
 
-        More specifically, words start with uppercased characters and all remaining cased characters have lower case."""
-
+        More specifically, words start with uppercased characters
+        and all remaining cased characters have lower case.
+        """
         return self.__class__(title(self.__data))
 
-    def center(self, /, width, fillchar=" "):
-        """Returns a centered string of length width.
+    def center(self, /, width: int, fillchar: Self | str = " ") -> Self:
+        """Return a centered string of length width.
 
-        Padding is done using the specified fill character (default is a space)."""
+        Padding is done using the specified fill character (default is a space).
+        """
+        return self.__class__(center(self.__data, width, self.__cast(fillchar)))
 
-        if isinstance(fillchar, self.__class__):
-            fillchar = fillchar.__data
-        return self.__class__(center(self.__data, width, fillchar))
+    def ljust(self, /, width: int, fillchar: Self | str = " ") -> Self:
+        """Return a left-justified string of length width.
 
-    def ljust(self, /, width, fillchar=" "):
-        """Returns a left-justified string of length width.
+        Padding is done using the specified fill character (default is a space).
+        """
+        return self.__class__(ljust(self.__data, width, self.__cast(fillchar)))
 
-        Padding is done using the specified fill character (default is a space)."""
+    def rjust(self, /, width: int, fillchar: str = " ") -> Self:
+        """Return a right-justified string of length width.
 
-        if isinstance(fillchar, self.__class__):
-            fillchar = fillchar.__data
-        return self.__class__(ljust(self.__data, width, fillchar))
+        Padding is done using the specified fill character (default is a space).
+        """
+        return self.__class__(rjust(self.__data, width, self.__cast(fillchar)))
 
-    def rjust(self, /, width, fillchar=" "):
-        """Returns a right-justified string of length width.
-
-        Padding is done using the specified fill character (default is a space)."""
-
-        if isinstance(fillchar, self.__class__):
-            fillchar = fillchar.__data
-        return self.__class__(rjust(self.__data, width, fillchar))
-
-    def zfill(self, /, width):
+    def zfill(self, /, width: int) -> Self:
         """Pad a numeric string with zeros on the left, to fill a field of the given width.
 
-        The string is never truncated."""
-
+        The string is never truncated.
+        """
         return self.__class__(zfill(self.__data, width))
 
-    def expandtabs(self, /, tabsize=8):
+    def expandtabs(self, /, tabsize: int = 8) -> Self:
         """Returns a copy where all tab characters are expanded using spaces.
 
-        If tabsize is not given, a tab size of 8 characters is assumed."""
-
+        If tabsize is not given, a tab size of 8 characters is assumed.
+        """
         return self.__class__(expandtabs(self.__data, tabsize))
 
-    def partition(self, /, sep):
+    def partition(self, /, sep: Self | str) -> tuple[str, str, str]:
         """Partition the string into three parts using the given separator.
+
         This will search for the separator in the string.  If the separator is found,
         returns a 3-tuple containing the part before the separator, the separator
         itself, and the part after it. If the separator is not found,
-        returns a 3-tuple containing the original string and two empty strings."""
 
-        if isinstance(sep, self.__class__):
-            sep = sep.__data
-        return partition(self.__data, sep)
+        Return a 3-tuple containing the original string and two empty strings.
+        """
+        return partition(self.__data, self.__cast(sep))
 
-    def rpartition(self, /, sep):
+    def rpartition(self, /, sep: Self | str) -> tuple[str, str, str]:
         """Partition the string into three parts using the given separator.
+
         This will search for the separator in the string, starting at the end.
         If the separator is found, returns a 3-tuple containing the part before the
         separator, the separator itself, and the part after it. If the separator is not found,
-        returns a 3-tuple containing two empty strings and the original string."""
 
-        if isinstance(sep, self.__class__):
-            sep = sep.__data
-        return rpartition(self.__data, sep)
+        Return a 3-tuple containing two empty strings and the original string.
+        """
+        return rpartition(self.__data, self.__cast(sep))
 
-    def splitlines(self, /, keepends=False):
-        """Returns a list of the lines in the string, breaking at line boundaries.
+    def splitlines(self, /, keepends: bool = False) -> list[str]:
+        """Return a list of the lines in the string, breaking at line boundaries.
 
-        Line breaks are not included in the resulting list unless keepends is given and true."""
-
+        Line breaks are not included in the resulting list unless keepends is given and true.
+        """
         return splitlines(self.__data, keepends)
 
-    def removeprefix(self, /, prefix):
-        """Returns a str with the given prefix string removed if present.
+    def removeprefix(self, /, prefix: Self | str) -> Self:
+        """Return a str with the given prefix string removed if present.
 
         If the string starts with the prefix string, return string[len(prefix):].
-        Otherwise, return a copy of the original string."""
+        Otherwise, return a copy of the original string.
+        """
+        return self.__class__(removeprefix(self.__data, self.__cast(prefix)))
 
-        if isinstance(prefix, self.__class__):
-            prefix = prefix.__data
-        return self.__class__(removeprefix(self.__data, prefix))
-
-    def removesuffix(self, /, suffix):
-        """Returns a str with the given suffix string removed if present.
+    def removesuffix(self, /, suffix: Self | str) -> Self:
+        """Return a str with the given suffix string removed if present.
 
         If the string ends with the suffix string and that suffix is not empty,
-        return string[:-len(suffix)]. Otherwise, return a copy of the original string."""
+        return string[:-len(suffix)]. Otherwise, return a copy of the original string.
+        """
+        return self.__class__(removesuffix(self.__data, self.__cast(suffix)))
 
-        if isinstance(suffix, self.__class__):
-            suffix = suffix.__data
-        return self.__class__(removesuffix(self.__data, suffix))
-
-    def startswith(self, /, prefix, start=0, end=None):
-        """Returns True if self starts with the specified prefix, False otherwise.
+    def startswith(self, /, prefix: Self | str, start: int = 0, end: int | None = None) -> bool:
+        """Return True if self starts with the specified prefix, False otherwise.
 
         With optional start, test self beginning at that position.
         With optional end, stop comparing self at that position.
-        Prefix can also be a tuple of strings to try."""
-        if isinstance(prefix, self.__class__):
-            prefix = prefix.__data
-        return startswith(self.__data, prefix, start, end)
+        Prefix can also be a tuple of strings to try.
+        """
+        return startswith(self.__data, self.__cast(prefix), start, end)
 
-    def endswith(self, /, suffix, start=0, end=None):
-        """Returns True if self ends with the specified suffix, False otherwise.
+    def endswith(self, /, suffix: Self | str, start: int = 0, end: int | None = None) -> bool:
+        """Return True if self ends with the specified suffix, False otherwise.
+
         With optional start, test self beginning at that position.
         With optional end, stop comparing self at that position.
-        suffix can also be a tuple of strings to try."""
+        suffix can also be a tuple of strings to try.
+        """
+        return endswith(self.__data, self.__cast(suffix), start, end)
 
-        if isinstance(suffix, self.__class__):
-            suffix = suffix.__data
-        return endswith(self.__data, suffix, start, end)
-
-    def find(self, /, sub, start=0, end=None):
-        """Returns the lowest index in self where substring sub is found,
+    def find(self, /, sub: Self | str, start: int = 0, end: int | None = None) -> int:
+        """Return the lowest index in self where substring sub is found,
         such that sub is contained within self[start:end].
         Optional arguments start and end are interpreted as in slice notation.
-        Returns -1 on failure."""
 
-        if isinstance(sub, self.__class__):
-            sub = sub.__data
-        return find(self.__data, sub, start, end)
+        Return -1 on failure.
+        """
+        return find(self.__data, self.__cast(sub), start, end)
 
-    def rfind(self, /, sub, start=0, end=None):
-        """Returns the highest index in self where substring sub is found,
+    def rfind(self, /, sub: Self | str, start: int = 0, end: int | None = None) -> int:
+        """Return the highest index in self where substring sub is found,
         such that sub is contained within self[start:end].
-        Optional arguments start and end are interpreted
-        as in slice notation. Returns -1 on failure."""
 
-        if isinstance(sub, self.__class__):
-            sub = sub.__data
-        return rfind(self.__data, sub, start, end)
-
-    def index(self, /, sub, start=0, end=None):
-        """Returns the lowest index in self where substring sub is found,
-        such that sub is contained within self[start:end].
         Optional arguments start and end are interpreted as in slice notation.
-        Raises ValueError when the substring is not found."""
 
-        if isinstance(sub, self.__class__):
-            sub = sub.__data
-        return index(self.__data, sub, start, end)
+        Return -1 on failure.
+        """
+        return rfind(self.__data, self.__cast(sub), start, end)
 
-    def rindex(self, /,  sub, start=0, end=None):
-        """Returns the highest index in self where substring sub is found,
+    def index(self, /, sub: Self | str, start: int = 0, end: int | None = None) -> int:
+        """Return the lowest index in self where substring sub is found,
         such that sub is contained within self[start:end].
+
         Optional arguments start and end are interpreted as in slice notation.
-        Raises ValueError when the substring is not found."""
 
-        if isinstance(sub, self.__class__):
-            sub = sub.__data
-        return rindex(self.__data, sub, start, end)
+        Raise ValueError when the substring is not found.
+        """
+        return index(self.__data, self.__cast(sub), start, end)
 
-    def count(self, /, sub, start=0, end=None):
-        """Returns the number of non-overlapping occurrences of substring sub in string self[start:end].
+    def rindex(self, /, sub: Self | str, start: int = 0, end: int | None = None) -> int:
+        """Return the highest index in self where substring sub is found,
+        such that sub is contained within self[start:end].
 
-        Optional arguments start and end are interpreted as in slice notation."""
+        Optional arguments start and end are interpreted as in slice notation.
 
-        if isinstance(sub, self.__class__):
-            sub = sub.__data
-        return count(self.__data, sub, start, end)
+        Raise ValueError when the substring is not found.
+        """
+        return rindex(self.__data, self.__cast(sub), start, end)
 
-    def join(self, /, iterable):
+    def count(self, /, sub: Self | str, start: int = 0, end: int | None = None) -> int:
+        """Return the number of non-overlapping occurrences of substring sub in string self[start:end].
+
+        Optional arguments start and end are interpreted as in slice notation.
+        """
+        return count(self.__data, self.__cast(sub), start, end)
+
+    def join(self, /, iterable: Iterable[str]) -> Self:
         """Concatenate any number of strings.
 
         The string whose method is called is inserted in between each given string.
         The result is returned as a new string.
 
-        Example: join('.', ['ab', 'pq', 'rs']) -> 'ab.pq.rs'"""
-
+        Example: join('.', ['ab', 'pq', 'rs']) -> 'ab.pq.rs'
+        """
         return self.__class__(join(self.__data, iterable))
 
-    def replace(self, /, old, new, maxsplit=-1):
-        """Returns a copy with all occurrences of substring old replaced by new.
+    def replace(self, /, old: Self | str, new: Self | str, maxsplit: int = -1) -> Self:
+        """Return a copy with all occurrences of substring old replaced by new.
+
         count
             Maximum number of occurrences to replace.
             -1 (the default value) means replace all occurrences.
 
-        If the optional argument count is given, only the first count occurrences are replaced."""
+        If the optional argument count is given, only the first count occurrences are replaced.
+        """
+        return self.__class__(replace(self.__data, self.__cast(old), self.__cast(new), maxsplit))
 
-        if isinstance(old, self.__class__):
-            old = old.__data
-        if isinstance(new, self.__class__):
-            new = new.__data
-        return self.__class__(replace(self.__data, old, new, maxsplit))
+    def strip(self, /, chars: Self | str | None = None) -> Self:
+        """Return a copy of the string S with leading and trailing whitespace removed.
 
-    def strip(self, /, chars=None):
-        """Returns a copy of the string S with leading and trailing whitespace removed.
+        If chars is given and not None, remove characters in chars instead.
+        """
+        return self.__class__(strip(self.__data, self.__cast(chars)))  # type: ignore
 
-        If chars is given and not None, remove characters in chars instead."""
+    def lstrip(self, /, chars: Self | str | None = None) -> Self:
+        """Return a copy of the string self with leading whitespace removed.
 
-        if isinstance(chars, self.__class__):
-            chars = chars.__data
-        return self.__class__(strip(self.__data, chars))
+        If chars is given and not None, remove characters in chars instead.
+        """
+        return self.__class__(lstrip(self.__data, self.__cast(chars)))  # type: ignore
 
-    def lstrip(self, /, chars=None):
-        """Returns a copy of the string self with leading whitespace removed.
+    def rstrip(self, /, chars: Self | str | None = None) -> Self:
+        """Return a copy of the string self with trailing whitespace removed.
 
-        If chars is given and not None, remove characters in chars instead."""
+        If chars is given and not None, remove characters in chars instead.
+        """
+        return self.__class__(rstrip(self.__data, self.__cast(chars)))  # type: ignore
 
-        if isinstance(chars, self.__class__):
-            chars = chars.__data
-        return self.__class__(lstrip(self.__data, chars))
+    def split(self, /, sep: Self | str | None = None, maxsplit: int = -1) -> list[str]:
+        """Return a list of the words in the string, using sep as the delimiter string.
 
-    def rstrip(self, /, chars=None):
-        """Returns a copy of the string self with trailing whitespace removed.
-
-        If chars is given and not None, remove characters in chars instead."""
-
-        if isinstance(chars, self.__class__):
-            chars = chars.__data
-        return self.__class__(rstrip(self.__data, chars))
-
-    def split(self, /, sep=None, maxsplit=-1):
-        """Returns a list of the words in the string, using sep as the delimiter string.
         sep
             The delimiter according which to split the string.
             None (the default value) means split according to any whitespace,
@@ -491,13 +474,11 @@ class Str:
             Maximum number of splits to do.
             -1 (the default value) means no limit.
         """
+        return split(self.__data, self.__cast(sep), maxsplit)  # type: ignore
 
-        if isinstance(sep, self.__class__):
-            sep = sep.__data
-        return split(self.__data, sep, maxsplit)
+    def rsplit(self, /, sep: str | Self | None = None, maxsplit: int = -1) -> list[str]:
+        """Return a list of the words in the string, using sep as the delimiter string.
 
-    def rsplit(self, /, sep=None, maxsplit=-1):
-        """Returns a list of the words in the string, using sep as the delimiter string.
         sep
             The delimiter according which to split the string.
             None (the default value) means split according to any whitespace,
@@ -506,7 +487,4 @@ class Str:
             Maximum number of splits to do.
             -1 (the default value) means no limit.
         """
-
-        if isinstance(sep, self.__class__):
-            sep = sep.__data
-        return rsplit(self.__data, sep, maxsplit)
+        return rsplit(self.__data, self.__cast(sep), maxsplit)  # type: ignore
